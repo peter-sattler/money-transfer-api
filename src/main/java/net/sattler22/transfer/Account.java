@@ -2,6 +2,7 @@ package net.sattler22.transfer;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Revolut&copy; Account
@@ -16,6 +17,7 @@ public final class Account implements Serializable {
     private final int number;
     private final int customerId;
     private final BigDecimal balance;
+    private final Object lockObject = new Object();
 
     /**
      * Constructs a new account
@@ -24,6 +26,29 @@ public final class Account implements Serializable {
         this.number = number;
         this.customerId = customerId;
         this.balance = (balance == null) ? BigDecimal.ZERO : balance;
+    }
+
+    /**
+     * Credit funds to the account
+     */
+    public Account credit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("Amount must be greater than zero");
+        synchronized (lockObject) {
+            return new Account(number, customerId, balance.add(amount));
+        }
+    }
+
+    /**
+     * Debit funds from the account
+     */
+    public Account debit(BigDecimal amount) {
+        synchronized (lockObject) {
+            final BigDecimal newBalance = balance.add(amount);
+            if (newBalance.compareTo(BigDecimal.ZERO) < 0)
+                throw new IllegalStateException("Transaction would lead to an overdrawn account");
+            return new Account(number, customerId, newBalance);
+        }
     }
 
     public int getNumber() {
@@ -40,7 +65,7 @@ public final class Account implements Serializable {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(number);
+        return Objects.hash(number, customerId, balance);
     }
 
     @Override
@@ -52,7 +77,7 @@ public final class Account implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final Account that = (Account) other;
-        return this.number == that.number;
+        return this.number == that.number && this.customerId == that.customerId && Objects.equals(this.balance, that.balance);
     }
 
     @Override
