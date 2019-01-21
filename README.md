@@ -18,6 +18,13 @@ requirement #2 - keep it simple and avoid heavy frameworks.
 1. The code produced by you is expected to be of high quality.
 2. There are no detailed requirements, use common sense.
 
+## Assumptions
+
+1. There is only one bank. (Revolut of course!!!) ;)
+2. There is only a single generic account type; no checking account, savings account, etc.
+3. Transactions always clear immediately.
+4. All currency is US Dollars (USD).
+
 Pete Sattler   
 21 January 2019  
 _peter@sattler22.net_  
