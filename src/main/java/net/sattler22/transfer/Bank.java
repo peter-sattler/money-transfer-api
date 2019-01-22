@@ -5,10 +5,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Revolut&copy; Banking Institution
- * 
+ *
  * @author Pete Sattler
  * @version January 2019
  * @implSpec This class is immutable and thread-safe
@@ -16,15 +17,16 @@ import java.util.Set;
 public final class Bank implements Serializable {
 
     private static final long serialVersionUID = 8414304479231837140L;
+    private static final AtomicInteger counter = new AtomicInteger(0);
     private final int id;
     private final String name;
-    private final Set<Account> accounts = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Customer> customers = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Constructs a new banking institution
      */
-    public Bank(int id, String name) {
-        this.id = id;
+    public Bank(String name) {
+        this.id = counter.incrementAndGet();
         this.name = Objects.requireNonNull(name, "Bank name is required");
     }
 
@@ -36,12 +38,19 @@ public final class Bank implements Serializable {
         return name;
     }
 
-    public boolean addAccount(Account account) {
-        return accounts.add(account);
+    public boolean addCustomer(Customer customer) {
+        return customers.add(customer);
     }
 
-    public Set<Account> getAccounts() {
-        return new HashSet<>(accounts);  //Defensive copy
+    /**
+     * Customer of the bank check
+     */
+    public boolean isCustomer(Customer customer) {
+        return customers.contains(customer);
+    }
+
+    public Set<Customer> getCustomers() {
+        return new HashSet<>(customers);  // Defensive copy
     }
 
     @Override
@@ -63,6 +72,6 @@ public final class Bank implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Bank [id=%s, name=%s, accounts=%s]", id, name, accounts);
+        return String.format("Bank [id=%s, name=%s, customers=%s]", id, name, customers);
     }
 }

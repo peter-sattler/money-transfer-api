@@ -3,10 +3,11 @@ package net.sattler22.transfer;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Revolut&copy; Account
- * 
+ *
  * @author Pete Sattler
  * @version January 2019
  * @implSpec This class is immutable and thread-safe
@@ -14,17 +15,22 @@ import java.util.Objects;
 public final class Account implements Serializable {
 
     private static final long serialVersionUID = -9088851442796213109L;
+    private static final AtomicInteger counter = new AtomicInteger(0);
     private final int number;
-    private final int customerId;
+    private final Customer owner;
     private final BigDecimal balance;
     private final Object lockObject = new Object();
 
     /**
      * Constructs a new account
      */
-    public Account(int number, int customerId, BigDecimal balance) {
+    public Account(Customer customer, BigDecimal balance) {
+        this(counter.incrementAndGet(), customer, balance);
+    }
+
+    private Account(int number, Customer owner, BigDecimal balance) {
         this.number = number;
-        this.customerId = customerId;
+        this.owner = owner;
         this.balance = (balance == null) ? BigDecimal.ZERO : balance;
     }
 
@@ -35,7 +41,7 @@ public final class Account implements Serializable {
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Amount must be greater than zero");
         synchronized (lockObject) {
-            return new Account(number, customerId, balance.add(amount));
+            return new Account(number, owner, balance.add(amount));
         }
     }
 
@@ -44,10 +50,10 @@ public final class Account implements Serializable {
      */
     public Account debit(BigDecimal amount) {
         synchronized (lockObject) {
-            final BigDecimal newBalance = balance.add(amount);
+            final BigDecimal newBalance = balance.subtract(amount);
             if (newBalance.compareTo(BigDecimal.ZERO) < 0)
                 throw new IllegalStateException("Transaction would lead to an overdrawn account");
-            return new Account(number, customerId, newBalance);
+            return new Account(number, owner, newBalance);
         }
     }
 
@@ -55,8 +61,8 @@ public final class Account implements Serializable {
         return number;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getOwner() {
+        return owner;
     }
 
     public BigDecimal getBalance() {
@@ -65,7 +71,7 @@ public final class Account implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, customerId, balance);
+        return Objects.hash(number, owner, balance);
     }
 
     @Override
@@ -77,11 +83,15 @@ public final class Account implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final Account that = (Account) other;
-        return this.number == that.number && this.customerId == that.customerId && Objects.equals(this.balance, that.balance);
+        if (this.number == that.number)
+            return true;
+        if (Objects.equals(this.owner, that.owner))
+            return true;
+        return Objects.equals(this.balance, that.balance);
     }
 
     @Override
     public String toString() {
-        return String.format("Account [number=%s, customerId=%s, balance=%s]", number, customerId, balance);
+        return String.format("Account [number=%s, owner=%s, balance=%s]", number, owner, balance);
     }
 }

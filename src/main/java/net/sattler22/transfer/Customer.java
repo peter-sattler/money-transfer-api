@@ -2,10 +2,11 @@ package net.sattler22.transfer;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Revolut&copy; Customer
- * 
+ *
  * @author Pete Sattler
  * @version January 2019
  * @implSpec This class is immutable and thread-safe
@@ -13,6 +14,7 @@ import java.util.Objects;
 public final class Customer implements Serializable {
 
     private static final long serialVersionUID = 5697946845021941295L;
+    private static final AtomicInteger counter = new AtomicInteger(0);
     private final int id;
     private final String firstName;
     private final String lastName;
@@ -20,8 +22,8 @@ public final class Customer implements Serializable {
     /**
      * Constructs a new customer
      */
-    public Customer(int id, String firstName, String lastName) {
-        this.id = id;
+    public Customer(String firstName, String lastName) {
+        this.id = counter.incrementAndGet();
         this.firstName = Objects.requireNonNull(firstName, "First name is required");
         this.lastName = Objects.requireNonNull(lastName, "Last name is required");
     }
