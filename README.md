@@ -7,7 +7,7 @@ Design and implement a RESTful API (including data model and the backing impleme
 1. There is only one bank. (Revolut of course!!!) ;)
 2. There is only a single generic account type; no checking account, savings account, etc.
 3. Transactions always clear immediately.
-4. All currency is US Dollars (USD).
+4. All currency is in US Dollars (USD).
 
 
 ## Explicit requirements:
