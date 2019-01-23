@@ -1,8 +1,7 @@
-package net.sattler22.transfer;
+package net.sattler22.transfer.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Revolut&copy; Customer
@@ -14,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class Customer implements Serializable {
 
     private static final long serialVersionUID = 5697946845021941295L;
-    private static final AtomicInteger counter = new AtomicInteger(0);
     private final int id;
     private final String firstName;
     private final String lastName;
@@ -22,8 +20,8 @@ public final class Customer implements Serializable {
     /**
      * Constructs a new customer
      */
-    public Customer(String firstName, String lastName) {
-        this.id = counter.incrementAndGet();
+    public Customer(int id, String firstName, String lastName) {
+        this.id = id;
         this.firstName = Objects.requireNonNull(firstName, "First name is required");
         this.lastName = Objects.requireNonNull(lastName, "Last name is required");
     }

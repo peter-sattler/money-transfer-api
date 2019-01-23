@@ -2,15 +2,15 @@
 
 Design and implement a RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
-## Assumptions:
+## Assumptions and Simplifications:
 
 1. There is only one bank. (Revolut of course!!!) ;)
 2. There is only a single generic account type; no checking account, savings account, etc.
 3. Transactions always clear immediately.
 4. All currency is in US Dollars (USD).
+5. Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
 
-
-## Explicit requirements:
+## Explicit Requirements:
 
 1. You can use Java, Scala or Kotlin.
 2. Keep it simple and to the point (e.g. no need to implement any authentication).
@@ -21,7 +21,7 @@ requirement #2 - keep it simple and avoid heavy frameworks.
 6. The final result should be executable as a standalone program (should not require a pre-installed container/server).
 7. Demonstrate with tests that the API works as expected.
 
-## Implicit requirements:
+## Implicit Requirements:
 
 1. The code produced by you is expected to be of high quality.
 2. There are no detailed requirements, use common sense.

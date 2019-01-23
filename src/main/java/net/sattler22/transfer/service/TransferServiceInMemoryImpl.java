@@ -1,10 +1,13 @@
-package net.sattler22.transfer;
+package net.sattler22.transfer.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.sattler22.transfer.model.Account;
+import net.sattler22.transfer.model.Bank;
 
 /**
  * Revolut&copy; In-Memory Money Transfer Service Implementation

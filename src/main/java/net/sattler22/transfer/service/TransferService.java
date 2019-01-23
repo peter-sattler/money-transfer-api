@@ -1,9 +1,12 @@
-package net.sattler22.transfer;
+package net.sattler22.transfer.service;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import net.sattler22.transfer.model.Account;
+import net.sattler22.transfer.model.Bank;
 
 /**
  * Revolut&copy; Money Transfer Service Interface

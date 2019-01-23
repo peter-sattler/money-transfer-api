@@ -1,11 +1,10 @@
-package net.sattler22.transfer;
+package net.sattler22.transfer.model;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Revolut&copy; Banking Institution
@@ -17,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class Bank implements Serializable {
 
     private static final long serialVersionUID = 8414304479231837140L;
-    private static final AtomicInteger counter = new AtomicInteger(0);
     private final int id;
     private final String name;
     private final Set<Customer> customers = Collections.synchronizedSet(new HashSet<>());
@@ -25,8 +23,8 @@ public final class Bank implements Serializable {
     /**
      * Constructs a new banking institution
      */
-    public Bank(String name) {
-        this.id = counter.incrementAndGet();
+    public Bank(int id, String name) {
+        this.id = id;
         this.name = Objects.requireNonNull(name, "Bank name is required");
     }
 

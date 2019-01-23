@@ -1,9 +1,8 @@
-package net.sattler22.transfer;
+package net.sattler22.transfer.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Revolut&copy; Account
@@ -15,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class Account implements Serializable {
 
     private static final long serialVersionUID = -9088851442796213109L;
-    private static final AtomicInteger counter = new AtomicInteger(0);
     private final int number;
     private final Customer owner;
     private final BigDecimal balance;
@@ -24,11 +22,7 @@ public final class Account implements Serializable {
     /**
      * Constructs a new account
      */
-    public Account(Customer customer, BigDecimal balance) {
-        this(counter.incrementAndGet(), customer, balance);
-    }
-
-    private Account(int number, Customer owner, BigDecimal balance) {
+    public Account(int number, Customer owner, BigDecimal balance) {
         this.number = number;
         this.owner = owner;
         this.balance = (balance == null) ? BigDecimal.ZERO : balance;
