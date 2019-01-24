@@ -9,6 +9,7 @@ Design and implement a RESTful API (including data model and the backing impleme
 3. Transactions always clear immediately.
 4. All currency is in US Dollars (USD).
 5. Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
+6. The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. 
 
 ## Explicit Requirements:
 
