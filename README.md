@@ -6,10 +6,11 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 1. There is only one bank: _Revolut World Banking Empire_ 
 2. There is only a single generic account type; no checking account, savings account, etc.
-3. Transactions always clear immediately.
-4. All currency is in US Dollars (USD).
-5. Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
-6. The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. As a result, you may need to adjust your integrated development environment (IDE) accordingly. Please see this [Stack Overflow](https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api) post for additional details.
+3. Customers are allowed to open a new account with a zero balance.
+4. Transactions always clear immediately.
+5. All currency is in US Dollars (USD).
+6. Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
+7. The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. As a result, you may need to adjust your integrated development environment (IDE) accordingly. Please see this [Stack Overflow](https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api) post for additional details.
 
 ## The World Domination API
 
