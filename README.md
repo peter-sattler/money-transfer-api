@@ -24,7 +24,7 @@ Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customer
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number}&balance={balance} | 201 (Success)<br/>409 (Account already exists)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Customer or account does not exist)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)<br/>404 (Customer or either account does not exist)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)<br/>404 (Customer or either account does not exist)<br/> 409 (Invalid amount)
 
 ## Explicit Requirements:
 
