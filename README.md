@@ -19,12 +19,12 @@ Action              | Verb   | Resource Locator (URL)                           
 :-----              |:------ | :----------------------------------------------------- | :-------------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank          | 200 (Success)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)<br/>409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)<br/>404 (Customer does not exist)
+Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)<br/>404 (Non-existent customer)
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number}&balance={balance} | 201 (Success)<br/>409 (Account exists)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Customer or account does not exist)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)<br/>404 (Customer, source account or target account do not exist)<br/> 409 (Invalid amount)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Non-existent customer or account)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)<br/>404 (Non-existent customer, source account or target)<br/> 409 (Invalid amount)
 
 ## Explicit Requirements:
 
