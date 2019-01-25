@@ -21,7 +21,7 @@ Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customer
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customers/{id}              | 200 (Success)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customers/{id}              | 204 (Success)<br/>404 (Not found)
 
-## Explicit Requirements (Original):
+## Explicit Requirements:
 
 1. You can use Java, Scala or Kotlin.
 2. Keep it simple and to the point (e.g. no need to implement any authentication).
@@ -32,7 +32,7 @@ requirement #2 - keep it simple and avoid heavy frameworks.
 6. The final result should be executable as a standalone program (should not require a pre-installed container/server).
 7. Demonstrate with tests that the API works as expected.
 
-## Implicit Requirements (Original):
+## Implicit Requirements:
 
 1. The code produced by you is expected to be of high quality.
 2. There are no detailed requirements, use common sense.
