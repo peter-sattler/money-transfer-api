@@ -4,25 +4,27 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 ## Simplifications and Assumptions:
 
-1. There is only one bank: _Revolut World Banking Empire_ 
+1. There is only one bank: _Revolut World Banking Empire_. Since there's only one, might as well strive for world domination. 
 2. There is only a single generic account type; no checking account, savings account, etc.
 3. Customers are allowed to open a new account with a zero balance.
-4. Transactions always clear immediately.
-5. All currency is in US Dollars (USD).
-6. Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
-7. The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. As a result, you may need to adjust your integrated development environment (IDE) accordingly. Please see this [Stack Overflow](https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api) post for additional details.
+4. Transfers can only happen between accounts owned by the same customer.
+5. Transactions always clear immediately.
+6. All currency is in US Dollars (USD).
+7. Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
+8. The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. As a result, you may need to adjust your integrated development environment (IDE) accordingly. Please see this [Stack Overflow](https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api) post for additional details.
 
 ## The World Domination API
 
-Action              | Verb   | Resource Locator (URL)                                   | Status Code(s)
+Action              | Verb   | Resource Locator (URL)                                 | Status Code(s)
 :-----              |:------ | :----------------------------------------------------- | :-------------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank          | 200 (Success)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)<br/>409 (Already exists)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)<br/>404 (Does not exist)
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account?number={number}&customerId={customerId}&balance={balance} | 201 (Success)<br/>409 (Already exists)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?number={number}&customerId={customerId} | 204 (Success)<br/>404 (Does not exist)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number}&balance={balance} | 201 (Success)<br/>409 (Already exists)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Does not exist)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 204 (Success)
 
 ## Explicit Requirements:
 
