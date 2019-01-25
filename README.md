@@ -18,9 +18,9 @@ Design and implement a RESTful API (including data model and the backing impleme
 Action              | Verb   | Resource Locator (URL)                                 | Status Code(s)
 :-----              |:------ | :----------------------------------------------------- | :-------------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank          | 200 (Success)
+Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)<br/>409 (Customer exists)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)<br/>404 (Non-existent customer)
-Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number}&balance={balance} | 201 (Success)<br/>409 (Account exists)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Non-existent customer or account)
