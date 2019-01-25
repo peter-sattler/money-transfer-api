@@ -14,14 +14,15 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 ## The World Domination API
 
-Action              | Verb   | Resource Locator (URL)                                               | Status Code(s)
-:-----              |:------ | :------------------------------------------------------------------  | :-------------
-Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank                        | 200 (Success)
-Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 200 (Success)<br/>409 (Already exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}               | 204 (Success)<br/>404 (Does not exist)
-Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers                   | 200 (Success)
-Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}               | 200 (Success)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account?number={number]&customerId={customerId}&balance={balance} | 200 (Success)<br/>409 (Already exists)
+Action              | Verb   | Resource Locator (URL)                                   | Status Code(s)
+:-----              |:------ | :----------------------------------------------------- | :-------------
+Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank          | 200 (Success)
+Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)<br/>409 (Already exists)
+Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)<br/>404 (Does not exist)
+Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
+Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account?number={number}&customerId={customerId}&balance={balance} | 201 (Success)<br/>409 (Already exists)
+Delete an account   | POST   | http://localhost:8080/api/money-transfer/account?number={number}&customerId={customerId} | 204 (Success)<br/>404 (Does not exist)
 
 ## Explicit Requirements:
 
