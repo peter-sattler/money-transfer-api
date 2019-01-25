@@ -4,7 +4,7 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 ## Simplifications and Assumptions:
 
-1. There is only one bank; _Revolut&copy; World Banking Empire_ of course!!!  ;)
+1. There is only one bank; _Revolut&copy; World Banking Empire_ 
 2. There is only a single generic account type; no checking account, savings account, etc.
 3. Transactions always clear immediately.
 4. All currency is in US Dollars (USD).
