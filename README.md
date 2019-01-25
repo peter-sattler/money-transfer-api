@@ -22,7 +22,7 @@ Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account?number={number}&customerId={customerId}&balance={balance} | 201 (Success)<br/>409 (Already exists)
-Delete an account   | POST   | http://localhost:8080/api/money-transfer/account?number={number}&customerId={customerId} | 204 (Success)<br/>404 (Does not exist)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?number={number}&customerId={customerId} | 204 (Success)<br/>404 (Does not exist)
 
 ## Explicit Requirements:
 
