@@ -4,7 +4,7 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 ## Simplifications and Assumptions:
 
-1. There is only one bank; _Revolut&copy; World Banking Empire_ 
+1. There is only one bank: _Revolut World Banking Empire_ 
 2. There is only a single generic account type; no checking account, savings account, etc.
 3. Transactions always clear immediately.
 4. All currency is in US Dollars (USD).
@@ -21,7 +21,7 @@ Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customer
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customers/{id}              | 200 (Success)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customers/{id}              | 204 (Success)<br/>404 (Not found)
 
-## Original Explicit Requirements:
+## Explicit Requirements (Original):
 
 1. You can use Java, Scala or Kotlin.
 2. Keep it simple and to the point (e.g. no need to implement any authentication).
@@ -32,7 +32,7 @@ requirement #2 - keep it simple and avoid heavy frameworks.
 6. The final result should be executable as a standalone program (should not require a pre-installed container/server).
 7. Demonstrate with tests that the API works as expected.
 
-## Original Implicit Requirements:
+## Implicit Requirements (Original):
 
 1. The code produced by you is expected to be of high quality.
 2. There are no detailed requirements, use common sense.
