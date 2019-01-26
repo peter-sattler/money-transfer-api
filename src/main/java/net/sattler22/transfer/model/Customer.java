@@ -1,10 +1,14 @@
 package net.sattler22.transfer.model;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
- * Revolut&copy; Customer
+ * Revolut Customer Business Object
  *
  * @author Pete Sattler
  * @version January 2019
@@ -16,6 +20,7 @@ public final class Customer implements Serializable {
     private final int id;
     private final String firstName;
     private final String lastName;
+    private final Set<Account> accounts = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Constructs a new customer
@@ -36,6 +41,40 @@ public final class Customer implements Serializable {
 
     public String getLastName() {
         return lastName;
+    }
+
+    /**
+     * Add a new account
+     * 
+     * @return True if the account was added. Otherwise, returns false when the account already exists.
+     */
+    public boolean addAccount(Account account) {
+        return accounts.add(account);
+    }
+
+    /**
+     * Delete an existing account
+     * 
+     * @return True if the account was deleted. Otherwise, returns false when the account is non-existent.
+     */
+    public boolean deleteAccount(Account account) {
+        return accounts.remove(account);
+    }
+
+    /**
+     * Get all of the customer's accounts
+     */
+    public Set<Account> getAccounts() {
+        return Collections.unmodifiableSet(accounts);
+    }
+
+    /**
+     * Find a specific account
+     * 
+     * @param number The account number
+     */
+    public Optional<Account> findAccount(int number) {
+        return accounts.stream().filter(account -> account.getNumber() == number).findFirst();
     }
 
     @Override
