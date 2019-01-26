@@ -2,7 +2,7 @@
 
 Design and implement a RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
-## Simplifications and Assumptions:
+## Simplifications:
 
 1. There is only one bank: _Revolut World Banking Empire_. Since there's only one, might as well strive for world domination. 
 2. There is only a single generic account type; no checking account, savings account, etc.
@@ -26,7 +26,9 @@ Add an account      | POST   | http://localhost:8080/api/money-transfer/account?
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Non-existent customer or account)
 Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)<br/>404 (Non-existent customer, source or target account)<br/> 409 (Invalid amount)
 
-## Explicit Requirements:
+## Given Requirements:
+
+### Explicit:
 
 1. You can use Java, Scala or Kotlin.
 2. Keep it simple and to the point (e.g. no need to implement any authentication).
@@ -37,7 +39,7 @@ requirement #2 - keep it simple and avoid heavy frameworks.
 6. The final result should be executable as a standalone program (should not require a pre-installed container/server).
 7. Demonstrate with tests that the API works as expected.
 
-## Implicit Requirements:
+### Implicit:
 
 1. The code produced by you is expected to be of high quality.
 2. There are no detailed requirements, use common sense.
