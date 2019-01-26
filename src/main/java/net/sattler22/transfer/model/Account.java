@@ -2,7 +2,6 @@ package net.sattler22.transfer.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -75,7 +74,7 @@ public final class Account implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(number, owner, balance);
+        return Integer.hashCode(number);
     }
 
     @Override
@@ -87,11 +86,7 @@ public final class Account implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final Account that = (Account) other;
-        if (this.number == that.number)
-            return true;
-        if (Objects.equals(this.owner, that.owner))
-            return true;
-        return Objects.equals(this.balance, that.balance);
+        return this.number == that.number;
     }
 
     @Override

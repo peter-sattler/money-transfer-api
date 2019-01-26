@@ -63,9 +63,16 @@ public final class MoneyTransferRestService {
         return Response.ok().entity(bank).build();
     }
 
+    @GET
+    @Path("/customers")
+    public Response getAllCustomers() {
+        final Set<Customer> customers = transferService.getCustomers();
+        LOGGER.info("Retrieved [{}] {}", customers.size(), customers.size() == 1 ? "customer" : "customers");
+        return Response.ok().entity(customers).build();
+    }
+
     @POST
     @Path("/customer/{id}/{firstName}/{lastName}")
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response addCustomer(@Context UriInfo uriInfo, @PathParam("id") int id, @PathParam("firstName") String firstName, @PathParam("lastName") String lastName) {
         final Customer customer = new Customer(id, firstName, lastName);
         if (!transferService.addCustomer(customer)) {
@@ -85,14 +92,6 @@ public final class MoneyTransferRestService {
         transferService.deleteCustomer(customer);
         LOGGER.info("Deleted {}", customer);
         return Response.noContent().build();
-    }
-
-    @GET
-    @Path("/customers")
-    public Response getAllCustomers() {
-        final Set<Customer> customers = transferService.getCustomers();
-        LOGGER.info("Retrieved [{}] {}", customers.size(), customers.size() == 1 ? "customer" : "customers");
-        return Response.ok().entity(customers).build();
     }
 
     @GET
