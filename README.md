@@ -58,5 +58,5 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: There are no detailed requirements, use common sense.
 
 Pete Sattler   
-25 January 2019  
+26 January 2019  
 _peter@sattler22.net_  
