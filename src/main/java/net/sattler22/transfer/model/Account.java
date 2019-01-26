@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
- * Revolut&copy; Account
+ * Revolut Account Business Object
  *
  * @author Pete Sattler
  * @version January 2019
@@ -15,9 +17,17 @@ public final class Account implements Serializable {
 
     private static final long serialVersionUID = -9088851442796213109L;
     private final int number;
+    @JsonIgnore
     private final Customer owner;
     private final BigDecimal balance;
     private final Object lockObject = new Object();
+
+    /**
+     * Constructs a new account with a ZERO balance
+     */
+    public Account(int number, Customer owner) {
+        this(number, owner, null);
+    }
 
     /**
      * Constructs a new account
@@ -86,6 +96,6 @@ public final class Account implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Account [number=%s, owner=%s, balance=%s]", number, owner, balance);
+        return String.format("Account [number=%s, owner=%s, balance=%s]", number, owner.getId(), balance);
     }
 }
