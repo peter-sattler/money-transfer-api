@@ -2,15 +2,18 @@ package net.sattler22.transfer.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sattler22.transfer.model.Account;
 import net.sattler22.transfer.model.Bank;
+import net.sattler22.transfer.model.Customer;
 
 /**
- * Revolut&copy; In-Memory Money Transfer Service Implementation
+ * Revolut Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
  * @version January 2019
@@ -34,28 +37,54 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public BigDecimal checkBalance(Account account) {
-        assertIsCustomer(account);
-        return account.getBalance();
+    public Set<Customer> getCustomers() {
+        return bank.getCustomers();
     }
 
     @Override
-    public TransferResult transfer(Account sourceAccount, Account targetAccount, BigDecimal amount) {
-        assertIsCustomer(sourceAccount);
-        assertIsCustomer(targetAccount);
+    public boolean addCustomer(Customer customer) {
+        return bank.addCustomer(customer);
+    }
+
+    @Override
+    public boolean isCustomer(Customer customer) {
+        return bank.isCustomer(customer);
+    }
+
+    @Override
+    public boolean deleteCustomer(Customer customer) {
+        return bank.deleteCustomer(customer);
+    }
+
+    @Override
+    public Optional<Customer> findCustomer(int id) {
+        return bank.findCustomer(id);
+    }
+
+    @Override
+    public boolean addAccount(Account account) {
+        return account.getOwner().addAccount(account);
+    }
+
+    @Override
+    public boolean deleteAccount(int customerId, int number) {
+        Optional<Customer> owner = findCustomer(customerId);
+        if (owner.isPresent()) {
+            final Account account = new Account(number, owner.get());
+            return owner.get().deleteAccount(account);
+        }
+        return false;
+    }
+
+    @Override
+    public TransferResult transfer(Customer owner, Account sourceAccount, Account targetAccount, BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Transaction amount must be greater than zero");
         synchronized (lockObject) {
             final Account newSourceAccount = sourceAccount.debit(amount);
             final Account newTargetAccount = targetAccount.credit(amount);
-            LOGGER.info("{} transfered ${} from account [#{}] to account [#{}]", sourceAccount.getOwner(), amount,
-                    sourceAccount.getNumber(), targetAccount.getNumber());
+            LOGGER.info("{} transfered ${} from account #{} to account #{}", sourceAccount.getOwner(), amount, sourceAccount.getNumber(), targetAccount.getNumber());
             return new TransferResult(LocalDateTime.now(), newSourceAccount, newTargetAccount);
         }
-    }
-
-    private void assertIsCustomer(Account sourceAccount) {
-        if (!bank.isCustomer(sourceAccount.getOwner()))
-            throw new IllegalStateException(String.format("%s is not a customer of the bank", sourceAccount.getOwner()));
     }
 }
