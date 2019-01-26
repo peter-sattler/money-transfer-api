@@ -1,4 +1,5 @@
 # Revolut Money Transfer 2019
+![Money Stack](https://github.com/peter-sattler/money-transfer/blob/master/img/money-stack.gif)
 
 Design and implement a RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
@@ -10,8 +11,11 @@ Design and implement a RESTful API (including data model and the backing impleme
 4. Transfers can only happen between accounts owned by the same customer.
 5. Transactions always clear immediately.
 6. All currency is in US Dollars (USD).
-7. Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
-8. The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. As a result, you may need to adjust your integrated development environment (IDE) accordingly. Please see this [Stack Overflow](https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api) post for additional details.
+7. The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. As a result, you may need to adjust your integrated development environment (IDE) accordingly. Please see this [Stack Overflow](https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api) post for additional details.
+
+## Implementation Details:
+
+* Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)
 
 ## The World Domination API
 
