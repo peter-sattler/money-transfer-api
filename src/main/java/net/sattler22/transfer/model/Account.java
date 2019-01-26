@@ -96,6 +96,6 @@ public final class Account implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Account [number=%s, owner=%s, balance=%s]", number, owner.getId(), balance);
+        return String.format("Account [number=%s, owner=%s, balance=%s]", number, owner, balance);
     }
 }
