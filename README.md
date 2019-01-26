@@ -19,8 +19,8 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 ## The World Domination API
 
-Action              | Verb   | Resource Locator (URL)                                 | Status Code(s)
-:-----              |:------ | :----------------------------------------------------- | :-------------
+Action              | Verb   | Resource Locator (URL)                                 | Status Codes
+:-----------------  |:------ | :----------------------------------------------------- | :------------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank          | 200 (Success)
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)<br/>409 (Customer exists)
