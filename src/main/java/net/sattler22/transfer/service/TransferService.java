@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import net.sattler22.transfer.model.Account;
 import net.sattler22.transfer.model.Bank;
+import net.sattler22.transfer.model.Customer;
 
 /**
- * Revolut&copy; Money Transfer Service Interface
+ * Revolut Money Transfer Service Interface
  *
  * @author Pete Sattler
  * @version January 2019
@@ -22,14 +25,57 @@ public interface TransferService {
     Bank getBank();
 
     /**
-     * Check the balance of an account
+     * Get all customers of the bank
      */
-    BigDecimal checkBalance(Account account);
+    Set<Customer> getCustomers();
 
     /**
-     * Transfer money between accounts
+     * Add a new customer
      */
-    TransferResult transfer(Account sourceAccount, Account targetAccount, BigDecimal amount);
+    boolean addCustomer(Customer customer);
+
+    /**
+     * Bank customer existence check
+     */
+    boolean isCustomer(Customer customer);
+
+    /**
+     * Delete an existing customer
+     * 
+     * @return True if the customer was deleted. Otherwise, returns false when the customer is non-existent.
+     */
+    boolean deleteCustomer(Customer customer);
+
+    /**
+     * Find a specific customer
+     * 
+     * @param id The customer identifier
+     */
+    Optional<Customer> findCustomer(int id);
+
+    /**
+     * Add a new account
+     * 
+     * @return True if the account was added. Otherwise, returns false when the account already exists.
+     */
+    boolean addAccount(Account account);
+
+    /**
+     * Delete an existing account
+     * 
+     * @return True if the account was deleted. Otherwise, returns false when the account is non-existent.
+     */
+    boolean deleteAccount(int customerId, int number);
+
+    /**
+     * Transfer money between accounts of the same owner
+     * 
+     * @param customerId The account owner's identifier
+     * @param sourceNumber The source account number
+     * @param targetNumber The target account number
+     * @throws IllegalArgumentException If the transaction amount is <= 0
+     */
+    TransferResult transfer(Customer owner, Account sourceAccount, Account targetAccount, BigDecimal amount);
 
     /**
      * Results of a money transfer
@@ -70,8 +116,7 @@ public interface TransferService {
 
         @Override
         public String toString() {
-            return String.format("TransferResult [dateTime=%s, sourceAccount=%s, targetAccount=%s]", dateTime, sourceAccount,
-                    targetAccount);
+            return String.format("TransferResult [dateTime=%s, sourceAccount=%s, targetAccount=%s]", dateTime, sourceAccount, targetAccount);
         }
     }
 }
