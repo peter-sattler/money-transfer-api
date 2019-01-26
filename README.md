@@ -10,7 +10,17 @@ Design and implement a RESTful API (including data model and the backing impleme
 :moneybag: Customers are allowed to open a new account with a zero balance.  
 :moneybag: Transfers can only happen between accounts owned by the same customer.  
 :moneybag: Transactions always clear immediately.  
-:moneybag: All currency is in US Dollars (USD).  
+:moneybag: All currency is in US Dollars (USD). 
+
+## Getting Started
+
+These instructions will get you a copy of this project up and running on your local machine. Once the REST service is running, see the [API section](#the-world-domination-api) for the available options.
+
+```text
+git clone https://github.com/peter-sattler/money-transfer
+cd money-transfer
+gradlew run
+``` 
 
 ## Implementation Details:
 
