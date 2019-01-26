@@ -23,12 +23,12 @@ Action              | Verb   | Resource Locator (URL)                           
 :-----              |:------ | :----------------------------------------------------- | :-------------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank          | 200 (Success)
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
-Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)  409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)  404 (Non-existent customer)
+Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)<br/>409 (Customer exists)
+Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)<br/>404 (Non-existent customer)
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number}&balance={balance} | 201 (Success)  409 (Account exists)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)  404 (Non-existent customer or account)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)  404 (Non-existent customer, source or target account)  409 (Invalid amount)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number}&balance={balance} | 201 (Success)<br/>409 (Account exists)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Non-existent customer or account)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)<br/>404 (Non-existent customer, source or target account)<br/>409 (Invalid amount)
 
 ## Given Requirements:
 
