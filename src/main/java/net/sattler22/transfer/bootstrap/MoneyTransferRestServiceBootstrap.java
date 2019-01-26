@@ -17,7 +17,15 @@ import com.sun.net.httpserver.HttpServer;
 import net.sattler22.transfer.api.MoneyTransferRestService;
 
 /**
- * Revolut&copy; Money Transfer REST Service Bootstrap
+ * Revolut Money Transfer REST Service Bootstrap
+ * <p/>
+ * 
+ * @implNote This bootstrap utility uses a restricted class from the <code>com.sun</code> package. Normally, this
+ *           is not recommended, but in the spirit of keeping this project simple and to the point, a compromise
+ *           was made. As a result, you may need to adjust your integrated development environment (IDE)
+ *           accordingly. Please see this
+ *           <a href="https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api">Stack Overflow</a> post
+ *           for additional details.
  *
  * @author Pete Sattler
  * @version January 2019
@@ -32,7 +40,7 @@ public final class MoneyTransferRestServiceBootstrap {
     public static void main(String[] args) throws IOException {
         final URI baseUri = UriBuilder.fromPath(BASE_URI).build();
         final ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
-        final ResourceConfig config = new ResourceConfig(MoneyTransferRestService.class);
+        final ResourceConfig config = new ResourceConfig().register(MoneyTransferRestService.class);
         final HttpServer httpServer = JdkHttpServerFactory.createHttpServer(baseUri, config, false);
         httpServer.setExecutor(threadExecutor);
         httpServer.start();
