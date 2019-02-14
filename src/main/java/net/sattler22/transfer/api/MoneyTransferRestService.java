@@ -160,7 +160,7 @@ public final class MoneyTransferRestService {
         return customer.get();
     }
 
-    private Account findAccountHelper(Customer owner, int number) throws NotFoundException {
+    private static Account findAccountHelper(Customer owner, int number) throws NotFoundException {
         final Optional<Account> account = owner.findAccount(number);
         if (!account.isPresent()) {
             final String notFoundMessage = String.format("Account #%d not found", number);
