@@ -16,12 +16,12 @@ import net.jcip.annotations.Immutable;
 @Immutable
 public final class Account implements Serializable {
 
-    private static final long serialVersionUID = -9088851442796213109L;
+    private static final long serialVersionUID = -4438864871049574622L;
     private final int number;
     @JsonIgnore
     private final Customer owner;
     private final BigDecimal balance;
-    private final Object lockObject = new Object();
+    private final Object lock = new Object();
 
     /**
      * Constructs a new account with a ZERO balance
@@ -45,7 +45,7 @@ public final class Account implements Serializable {
     public Account credit(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Amount must be greater than zero");
-        synchronized (lockObject) {
+        synchronized (lock) {
             return new Account(number, owner, balance.add(amount));
         }
     }
@@ -54,7 +54,7 @@ public final class Account implements Serializable {
      * Debit funds from the account
      */
     public Account debit(BigDecimal amount) {
-        synchronized (lockObject) {
+        synchronized (lock) {
             final BigDecimal newBalance = balance.subtract(amount);
             if (newBalance.compareTo(BigDecimal.ZERO) < 0)
                 throw new IllegalStateException("Transaction would lead to an overdrawn account");
@@ -72,6 +72,10 @@ public final class Account implements Serializable {
 
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    public Object getLock() {
+        return lock;
     }
 
     @Override

@@ -22,7 +22,6 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransferServiceInMemoryImpl.class);
     private final Bank bank;
-    private final Object lockObject = new Object();
 
     /**
      * Constructs a new in-memory money transfer service
@@ -68,7 +67,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public boolean deleteAccount(int customerId, int number) {
-        Optional<Customer> owner = findCustomer(customerId);
+        final Optional<Customer> owner = findCustomer(customerId);
         if (owner.isPresent()) {
             final Account account = new Account(number, owner.get());
             return owner.get().deleteAccount(account);
@@ -77,14 +76,20 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public TransferResult transfer(Customer owner, Account sourceAccount, Account targetAccount, BigDecimal amount) {
+    public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Transaction amount must be greater than zero");
-        synchronized (lockObject) {
-            final Account newSourceAccount = sourceAccount.debit(amount);
-            final Account newTargetAccount = targetAccount.credit(amount);
-            LOGGER.info("{} transfered ${} from account #{} to account #{}", sourceAccount.getOwner(), amount, sourceAccount.getNumber(), targetAccount.getNumber());
-            return new TransferResult(LocalDateTime.now(), newSourceAccount, newTargetAccount);
+        //Lock both accounts (always in the SAME order to avoid deadlocking) before making the transfer:
+        final Object lock1 = source.getNumber() < target.getNumber() ? source.getLock() : target.getLock();
+        final Object lock2 = source.getNumber() < target.getNumber() ? target.getLock() : source.getLock();
+        synchronized (lock1) {
+            synchronized (lock2) {
+                final Account newSource = source.debit(amount);
+                final Account newTarget = target.credit(amount);
+                LOGGER.info("{} transfered ${} from account #{} to account #{}",
+                             source.getOwner(), amount, source.getNumber(), target.getNumber());
+                return new TransferResult(LocalDateTime.now(), newSource, newTarget);
+            }
         }
     }
 }
