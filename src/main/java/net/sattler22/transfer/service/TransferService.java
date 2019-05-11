@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
 import net.sattler22.transfer.model.Account;
 import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
@@ -15,7 +16,7 @@ import net.sattler22.transfer.model.Customer;
  * Revolut Money Transfer Service Interface
  *
  * @author Pete Sattler
- * @version January 2019
+ * @version May 2019
  */
 public interface TransferService {
 
@@ -79,9 +80,8 @@ public interface TransferService {
 
     /**
      * Results of a money transfer
-     *
-     * @implSpec This class is immutable and thread-safe
      */
+    @Immutable
     final class TransferResult implements Serializable {
 
         private static final long serialVersionUID = -9218940161080465179L;

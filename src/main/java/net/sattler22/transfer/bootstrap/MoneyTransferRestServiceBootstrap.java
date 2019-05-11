@@ -30,7 +30,6 @@ import net.sattler22.transfer.api.MoneyTransferRestService;
  * @author Pete Sattler
  * @version January 2019
  */
-@SuppressWarnings("restriction")
 public final class MoneyTransferRestServiceBootstrap {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferRestServiceBootstrap.class);

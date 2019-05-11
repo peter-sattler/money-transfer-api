@@ -7,13 +7,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * Revolut Customer Business Object
  *
  * @author Pete Sattler
- * @version January 2019
- * @implSpec This class is immutable and thread-safe
+ * @version May 2019
  */
+@Immutable
 public final class Customer implements Serializable {
 
     private static final long serialVersionUID = 5697946845021941295L;

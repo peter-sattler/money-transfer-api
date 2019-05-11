@@ -14,10 +14,10 @@ mainClassName = 'net.sattler22.transfer.bootstrap.MoneyTransferRestServiceBootst
 apply plugin: 'eclipse'
 
 group = 'net.sattler22'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 repositories {
     mavenCentral()
@@ -30,6 +30,8 @@ dependencies {
     implementation("org.glassfish.jersey.containers:jersey-container-jdk-http:${jerseyVersion}")
     implementation("org.glassfish.jersey.inject:jersey-hk2:${jerseyVersion}")
     implementation("org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}")
+
+    implementation('net.jcip:jcip-annotations:1.0')
 
     testImplementation("org.slf4j:slf4j-api:${slf4jVersion}")
     testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")

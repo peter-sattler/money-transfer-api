@@ -5,13 +5,15 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * Revolut Account Business Object
  *
  * @author Pete Sattler
- * @version January 2019
- * @implSpec This class is immutable and thread-safe
+ * @version May 2019
  */
+@Immutable
 public final class Account implements Serializable {
 
     private static final long serialVersionUID = -9088851442796213109L;
