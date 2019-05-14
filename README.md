@@ -58,6 +58,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: There are no detailed requirements, use common sense.
 
 ## May 2019 Enhancements (0.0.2-SNAPSHOT)
+:moneybag: Send JSON payload instead of using query parameters  
 :moneybag: Use account level locking  
 :moneybag: Use JCIP (Java Concurrency In Practice) annotations  
 :moneybag: Fix CRLF  
