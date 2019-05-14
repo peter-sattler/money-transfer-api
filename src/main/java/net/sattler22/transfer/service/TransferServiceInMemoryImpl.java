@@ -16,7 +16,7 @@ import net.sattler22.transfer.model.Customer;
  * Revolut Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
- * @version January 2019
+ * @version May 2019
  */
 public final class TransferServiceInMemoryImpl implements TransferService {
 
