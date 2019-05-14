@@ -1,6 +1,9 @@
 buildscript {
     ext {
+        jcipVersion = '1.0'
         jerseyVersion = '2.27'
+        jaxbVersion = '2.3.1'
+        junitVersion = '4.12'
         slf4jVersion = '1.7.25'
     }
     repositories {
@@ -24,18 +27,19 @@ repositories {
 }
 
 dependencies {
-    implementation("org.slf4j:slf4j-api:${slf4jVersion}")
-    implementation("org.slf4j:slf4j-simple:${slf4jVersion}")
-    
+    implementation("net.jcip:jcip-annotations:${jcipVersion}")
+
     implementation("org.glassfish.jersey.containers:jersey-container-jdk-http:${jerseyVersion}")
     implementation("org.glassfish.jersey.inject:jersey-hk2:${jerseyVersion}")
     implementation("org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}")
+    implementation("javax.xml.bind:jaxb-api:${jaxbVersion}")
 
-    implementation('net.jcip:jcip-annotations:1.0')
+    implementation("org.slf4j:slf4j-api:${slf4jVersion}")
+    implementation("org.slf4j:slf4j-simple:${slf4jVersion}")
 
+    testImplementation("junit:junit:${junitVersion}")
     testImplementation("org.slf4j:slf4j-api:${slf4jVersion}")
     testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
-    testImplementation('junit:junit:4.12')
 }
 run {
     standardInput = System.in

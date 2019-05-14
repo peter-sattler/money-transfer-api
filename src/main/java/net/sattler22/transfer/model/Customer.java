@@ -7,6 +7,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import net.jcip.annotations.Immutable;
 
 /**
@@ -27,7 +31,10 @@ public final class Customer implements Serializable {
     /**
      * Constructs a new customer
      */
-    public Customer(int id, String firstName, String lastName) {
+    @JsonCreator(mode=Mode.PROPERTIES)
+    public Customer(@JsonProperty("id") int id,
+                    @JsonProperty("firstName") String firstName,
+                    @JsonProperty("lastName") String lastName) {
         this.id = id;
         this.firstName = Objects.requireNonNull(firstName, "First name is required");
         this.lastName = Objects.requireNonNull(lastName, "Last name is required");
@@ -47,7 +54,7 @@ public final class Customer implements Serializable {
 
     /**
      * Add a new account
-     * 
+     *
      * @return True if the account was added. Otherwise, returns false when the account already exists.
      */
     public boolean addAccount(Account account) {
@@ -56,7 +63,7 @@ public final class Customer implements Serializable {
 
     /**
      * Delete an existing account
-     * 
+     *
      * @return True if the account was deleted. Otherwise, returns false when the account is non-existent.
      */
     public boolean deleteAccount(Account account) {
@@ -72,7 +79,7 @@ public final class Customer implements Serializable {
 
     /**
      * Find a specific account
-     * 
+     *
      * @param number The account number
      */
     public Optional<Account> findAccount(int number) {

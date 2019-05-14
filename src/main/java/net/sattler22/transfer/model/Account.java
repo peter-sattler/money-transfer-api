@@ -21,6 +21,7 @@ public final class Account implements Serializable {
     @JsonIgnore
     private final Customer owner;
     private final BigDecimal balance;
+    @JsonIgnore
     private final Object lock = new Object();
 
     /**

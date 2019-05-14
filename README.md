@@ -3,7 +3,7 @@
 
 Design and implement a RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
-## Simplifications:
+## Simplifications
 
 :moneybag: There is only one bank: _Revolut World Banking Empire_. Since there's only one, might as well strive for world domination.  
 :moneybag: There is only a single generic account type; no checking account, savings account, etc.  
@@ -20,29 +20,29 @@ These instructions will get you a copy of this project up and running on your lo
 git clone https://github.com/peter-sattler/money-transfer
 cd money-transfer
 gradlew run
-``` 
+```
 
-## Implementation Details:
+## Implementation Details
 
 :moneybag: Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)  
 :moneybag: The bootstrap utility uses a restricted class from the _com.sun_ package. Normally, this is not recommended, but in the spirit of keeping this project simple and to the point, a compromise was made. As a result, you may need to adjust your integrated development environment (IDE) accordingly. Please see this [Stack Overflow](https://stackoverflow.com/questions/41099332/java-httpserver-error-access-restriction-the-type-httpserver-is-not-api) post for additional details.
 
 ## The World Domination API
 
-Action              | Verb   | Resource Locator (URL)                                 | Status Codes
-:-----------------  |:------ | :----------------------------------------------------- | :------------
-Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank          | 200 (Success)
-Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers     | 200 (Success)
-Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer/{id}/{firstName}/{lastName} | 201 (Success)<br/>409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id} | 204 (Success)<br/>404 (Non-existent customer)
-Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id} | 200 (Success)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number}&balance={balance} | 201 (Success)<br/>409 (Account exists)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account?customerId={customerId}&number={number} | 204 (Success)<br/>404 (Non-existent customer or account)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer?customerId={customerId}&sourceNumber={sourceNumber}&targetNumber={targetNumber}&amount={amount} | 200 (Success)<br/>404 (Non-existent customer, source or target account)<br/>409 (Invalid amount)
+Action              | Verb   | Resource Locator (URL)                                    | JSON Payload               | Status Codes
+:-----------------  |:------ | :-------------------------------------------------------- | :------------------------- | :------------
+Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                            | 200 (Success)
+Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                            | 200 (Success)
+Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 200 (Success)
+Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br/>"id":1,<br/>"firstName":"Barb",<br/>"lastName":"Wire"<br/>} | 201 (Success)<br/>409 (Customer exists)
+Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 204 (Success)<br/>404 (Non-existent customer)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br/>"customerId":1,<br/>"number":123,<br/>"balance":100.25<br/>} | 201 (Success)<br/>409 (Account exists)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |               | 204 (Success)<br/>404 (Non-existent customer or account)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br/>"customerId":1,<br/>"sourceNumber":123,<br/>"targetNumber":234,<br/>"amount":50<br/>} | 200 (Success)<br/>404 (Non-existent customer, source or target account)<br/>409 (Invalid amount)
 
-## Given Requirements:
+## Given Requirements
 
-### Explicit:
+### Explicit Requirements
 
 :moneybag: You can use Java, Scala or Kotlin.  
 :moneybag: Keep it simple and to the point (e.g. no need to implement any authentication).  
@@ -52,11 +52,16 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: The final result should be executable as a standalone program (should not require a pre-installed container/server).  
 :moneybag: Demonstrate with tests that the API works as expected.
 
-### Implicit:
+### Implicit Requirements
 
 :moneybag: The code produced by you is expected to be of high quality.  
 :moneybag: There are no detailed requirements, use common sense.
 
+## May 2019 Enhancements (0.0.2-SNAPSHOT)
+:moneybag: Use account level locking  
+:moneybag: Use JCIP (Java Concurrency In Practice) annotations  
+:moneybag: Fix CRLF  
+
 Pete Sattler   
-26 January 2019  
+12 May 2019  
 _peter@sattler22.net_  
