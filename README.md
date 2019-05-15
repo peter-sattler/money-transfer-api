@@ -60,9 +60,11 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 ## May 2019 Enhancements (0.0.2-SNAPSHOT)
 :moneybag: Send JSON payload instead of using query parameters  
 :moneybag: Use account level locking  
+:moneybag: Clarify behavior on account creation (JavaDoc only)  
+:moneybag: Make idiomatic use of Java 8 _Optional_  
 :moneybag: Use JCIP (Java Concurrency In Practice) annotations  
 :moneybag: Fix CRLF  
 
 Pete Sattler   
-12 May 2019  
+15 May 2019  
 _peter@sattler22.net_  
