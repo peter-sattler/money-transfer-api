@@ -46,11 +46,6 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public boolean isCustomer(Customer customer) {
-        return bank.isCustomer(customer);
-    }
-
-    @Override
     public boolean deleteCustomer(Customer customer) {
         return bank.deleteCustomer(customer);
     }
@@ -67,19 +62,14 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public boolean deleteAccount(int customerId, int number) {
-        final Optional<Customer> owner = findCustomer(customerId);
-        if (owner.isPresent()) {
-            final Account account = new Account(number, owner.get());
-            return owner.get().deleteAccount(account);
-        }
-        return false;
+        return findCustomer(customerId).map(owner -> owner.deleteAccount(new Account(number, owner))).orElse(false);
     }
 
     @Override
-    public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) {
+    public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Transaction amount must be greater than zero");
-        //Lock both accounts (always in the SAME order to avoid deadlocking) before making the transfer:
+        //Lock both accounts before making the transfer, but always in the SAME order to avoid deadlocking:
         final Object lock1 = source.getNumber() < target.getNumber() ? source.getLock() : target.getLock();
         final Object lock2 = source.getNumber() < target.getNumber() ? target.getLock() : source.getLock();
         synchronized (lock1) {

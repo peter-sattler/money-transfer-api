@@ -3,7 +3,6 @@ package net.sattler22.transfer.api;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.inject.Singleton;
@@ -75,9 +74,15 @@ public final class MoneyTransferRestService {
     @GET
     @Path("/customer/{id}")
     public Response findCustomer(@PathParam("id") int id) {
-        final Customer customer = findCustomerHelper(id);
-        LOGGER.info("Retrieved {}", customer);
-        return Response.ok().entity(customer).build();
+        try {
+            final Customer customer = findCustomerHelper(id);
+            LOGGER.info("Retrieved {}", customer);
+            return Response.ok().entity(customer).build();
+        }
+        catch(NotFoundException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+        }
     }
 
     @POST
@@ -99,80 +104,83 @@ public final class MoneyTransferRestService {
     @DELETE
     @Path("/customer/{id}")
     public Response deleteCustomer(@PathParam("id") int id) {
-        final Customer customer = findCustomerHelper(id);
-        transferService.deleteCustomer(customer);
-        LOGGER.info("Deleted {}", customer);
-        return Response.noContent().build();
+        try {
+            final Customer customer = findCustomerHelper(id);
+            transferService.deleteCustomer(customer);
+            LOGGER.info("Deleted {}", customer);
+            return Response.noContent().build();
+        }
+        catch(NotFoundException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+        }
     }
 
     @POST
     @Path("/account")
     @Consumes(APPLICATION_JSON)
     public Response addAccount(@Context UriInfo uriInfo, AccountDTO accountDTO) {
-        final Customer owner = findCustomerHelper(accountDTO.getCustomerId());
-        final Account account = new Account(accountDTO.getNumber(), owner, accountDTO.getBalance());
-        if (!transferService.addAccount(account)) {
-            final String alreadyExistsMessage = String.format("Account #%d already exists", account.getNumber());
-            LOGGER.warn(alreadyExistsMessage);
-            throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
+        try {
+            final Customer owner = findCustomerHelper(accountDTO.getCustomerId());
+            final Account account = new Account(accountDTO.getNumber(), owner, accountDTO.getBalance());
+            if (!transferService.addAccount(account)) {
+                final String alreadyExistsMessage = String.format("Account #%d already exists", account.getNumber());
+                LOGGER.warn(alreadyExistsMessage);
+                throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
+            }
+            LOGGER.info("{} created successfully", account);
+            final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferRestService.class)
+                                                            .path("customer")
+                                                            .path(Integer.toString(owner.getId())).build();
+            return Response.created(location).entity(owner).build();
         }
-        LOGGER.info("{} created successfully", account);
-        final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferRestService.class)
-                                                        .path("customer")
-                                                        .path(Integer.toString(owner.getId())).build();
-        return Response.created(location).entity(owner).build();
+        catch(NotFoundException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+        }
     }
 
     @DELETE
     @Path("/account/{customerId}/{number}")
     public Response deleteAccount(@PathParam("customerId") int customerId, @PathParam("number") int number) {
-        final Customer owner = findCustomerHelper(customerId);
-        final Account account = new Account(number, owner);
-        if (!owner.deleteAccount(account)) {
-            final String doesNotExist = String.format("Account #%d does not exist", number);
-            LOGGER.warn(doesNotExist);
-            throw new WebApplicationException(doesNotExist, Response.Status.NOT_FOUND);
+        try {
+            final Customer owner = findCustomerHelper(customerId);
+            final Account account = new Account(number, owner);
+            if (!owner.deleteAccount(account))
+                throw new NotFoundException(String.format("Account #%d does not exist", number));
+            LOGGER.info("Deleted {}", account);
+            return Response.noContent().build();
         }
-        LOGGER.info("Deleted {}", account);
-        return Response.noContent().build();
+        catch(NotFoundException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+        }
     }
 
     @PUT
     @Path("/account/transfer")
     @Consumes(APPLICATION_JSON)
     public Response transfer(AccountTransferDTO accountTransferDTO) {
-        final Customer owner = findCustomerHelper(accountTransferDTO.getCustomerId());
-        final Account sourceAccount = findAccountHelper(owner, accountTransferDTO.getSourceNumber());
-        final Account targetAccount = findAccountHelper(owner, accountTransferDTO.getTargetNumber());
         final TransferResult transferResult;
         try {
+            final Customer owner = findCustomerHelper(accountTransferDTO.getCustomerId());
+            final Account sourceAccount = findAccountHelper(owner, accountTransferDTO.getSourceNumber());
+            final Account targetAccount = findAccountHelper(owner, accountTransferDTO.getTargetNumber());
             transferResult = transferService.transfer(owner, sourceAccount, targetAccount, accountTransferDTO.getAmount());
         }
-        catch (IllegalArgumentException e) {
-            final String doesNotExist = e.getMessage();
-            LOGGER.warn("{}", doesNotExist);
-            throw new WebApplicationException(doesNotExist, e.getCause(), Response.Status.CONFLICT);
+        catch(NotFoundException | IllegalArgumentException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
         }
         return Response.ok().entity(transferResult).build();
     }
 
     private Customer findCustomerHelper(int id) throws NotFoundException {
-        final Optional<Customer> customer = transferService.findCustomer(id);
-        if (!customer.isPresent()) {
-            final String notFoundMessage = String.format("Customer ID #%d not found", id);
-            LOGGER.warn(notFoundMessage);
-            throw new NotFoundException(notFoundMessage);
-        }
-        return customer.get();
+        return transferService.findCustomer(id)
+                              .orElseThrow(() -> new NotFoundException(String.format("Customer ID %d not found", id)));
     }
 
     private static Account findAccountHelper(Customer owner, int number) throws NotFoundException {
-        final Optional<Account> account = owner.findAccount(number);
-        if (!account.isPresent()) {
-            final String notFoundMessage = String.format("Account #%d not found", number);
-            LOGGER.warn(notFoundMessage);
-            throw new NotFoundException(notFoundMessage);
-        }
-        return account.get();
+        return owner.findAccount(number).orElseThrow(() -> new NotFoundException(String.format("Account #%d not found", number)));
     }
 }
