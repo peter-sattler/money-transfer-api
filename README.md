@@ -33,12 +33,12 @@ Action              | Verb   | Resource Locator (URL)                           
 :-----------------  |:------ | :-------------------------------------------------------- | :------------------------- | :------------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                            | 200 (Success)
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                            | 200 (Success)
-Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 200 (Success)
+Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 200 (Success)<br/>404 (Customer not found)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br/>"id":1,<br/>"firstName":"Barb",<br/>"lastName":"Wire"<br/>} | 201 (Success)<br/>409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 204 (Success)<br/>404 (Non-existent customer)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br/>"customerId":1,<br/>"number":123,<br/>"balance":100.25<br/>} | 201 (Success)<br/>409 (Account exists)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |               | 204 (Success)<br/>404 (Non-existent customer or account)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br/>"customerId":1,<br/>"sourceNumber":123,<br/>"targetNumber":234,<br/>"amount":50<br/>} | 200 (Success)<br/>404 (Non-existent customer, source or target account)<br/>409 (Invalid amount)
+Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 204 (Success)<br/>404 (Customer not found)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br/>"customerId":1,<br/>"number":123,<br/>"balance":100.25<br/>} | 201 (Success)<br/>404 (Customer not found)<br/>409 (Account exists)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |               | 204 (Success)<br/>404 (Customer or account not found)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br/>"customerId":1,<br/>"sourceNumber":123,<br/>"targetNumber":234,<br/>"amount":50<br/>} | 200 (Success)<br/>404 (Customer, source or target account not found)<br/>409 (Invalid amount)
 
 ## Given Requirements
 
@@ -60,9 +60,11 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 ## May 2019 Enhancements (0.0.2-SNAPSHOT)
 :moneybag: Send JSON payload instead of using query parameters  
 :moneybag: Use account level locking  
+:moneybag: Clarify behavior on account creation (JavaDoc only)  
+:moneybag: Make idiomatic use of Java 8 _Optional_  
 :moneybag: Use JCIP (Java Concurrency In Practice) annotations  
 :moneybag: Fix CRLF  
 
 Pete Sattler   
-12 May 2019  
+15 May 2019  
 _peter@sattler22.net_  
