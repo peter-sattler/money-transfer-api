@@ -55,7 +55,7 @@ public final class Customer implements Serializable {
     /**
      * Add a new account
      *
-     * @return True if the account was added. Otherwise, returns false when the account already exists.
+     * @return True if the account was added. Otherwise, returns false.
      */
     public boolean addAccount(Account account) {
         return accounts.add(account);
@@ -64,7 +64,7 @@ public final class Customer implements Serializable {
     /**
      * Delete an existing account
      *
-     * @return True if the account was deleted. Otherwise, returns false when the account is non-existent.
+     * @return True if the account was deleted. Otherwise, returns false.
      */
     public boolean deleteAccount(Account account) {
         return accounts.remove(account);

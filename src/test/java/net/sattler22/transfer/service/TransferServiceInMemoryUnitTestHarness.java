@@ -56,12 +56,12 @@ public class TransferServiceInMemoryUnitTestHarness {
 
         // Check source account:
         final BigDecimal expectedSourceAccountBalance = initialSourceAccountBalance.subtract(transferAmount);
-        final BigDecimal actualSourceAccountBalance = transferResult.getSourceAccount().getBalance();
+        final BigDecimal actualSourceAccountBalance = transferResult.getSource().getBalance();
         assertEquals(expectedSourceAccountBalance.compareTo(actualSourceAccountBalance), 0);
 
         // Check target account:
         final BigDecimal expectedTargetAccountBalance = initialTargetAccountBalance.add(transferAmount);
-        final BigDecimal actualTargetAccountBalance = transferResult.getTargetAccount().getBalance();
+        final BigDecimal actualTargetAccountBalance = transferResult.getTarget().getBalance();
         assertEquals(expectedTargetAccountBalance.compareTo(actualTargetAccountBalance), 0);
     }
 }

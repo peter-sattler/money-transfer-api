@@ -31,92 +31,92 @@ public interface TransferService {
     Set<Customer> getCustomers();
 
     /**
-     * Add a new customer
-     */
-    boolean addCustomer(Customer customer);
-
-    /**
-     * Bank customer existence check
-     */
-    boolean isCustomer(Customer customer);
-
-    /**
-     * Delete an existing customer
-     * 
-     * @return True if the customer was deleted. Otherwise, returns false when the customer is non-existent.
-     */
-    boolean deleteCustomer(Customer customer);
-
-    /**
      * Find a specific customer
-     * 
+     *
      * @param id The customer identifier
      */
     Optional<Customer> findCustomer(int id);
 
     /**
+     * Add a new customer
+     *
+     * @return True if the customer was added. Otherwise, return false.
+     */
+    boolean addCustomer(Customer customer);
+
+    /**
+     * Delete an existing customer
+     *
+     * @return True if the customer was deleted. Otherwise, returns false.
+     */
+    boolean deleteCustomer(Customer customer);
+
+    /**
      * Add a new account
-     * 
-     * @return True if the account was added. Otherwise, returns false when the account already exists.
+     *
+     * @return True if the account was added. Otherwise, returns false.
      */
     boolean addAccount(Account account);
 
     /**
      * Delete an existing account
-     * 
-     * @return True if the account was deleted. Otherwise, returns false when the account is non-existent.
+     *
+     * @param customerId The customer identifier
+     * @param number The account number
+     * @return True if the account was deleted. Otherwise, returns false.
      */
     boolean deleteAccount(int customerId, int number);
 
     /**
      * Transfer money between accounts of the same owner
-     * 
-     * @param customerId The account owner's identifier
-     * @param sourceNumber The source account number
-     * @param targetNumber The target account number
-     * @throws IllegalArgumentException If the transaction amount is <= 0
+     *
+     * @param owner The account owner
+     * @param source The source account
+     * @param target The target account
+     * @param amount The transfer amount
+     * @throws IllegalArgumentException If the transaction amount is not greater than zero
      */
-    TransferResult transfer(Customer owner, Account sourceAccount, Account targetAccount, BigDecimal amount);
+    TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException;
 
     /**
-     * Results of a money transfer
+     * Money transfer result
      */
     @Immutable
     final class TransferResult implements Serializable {
 
         private static final long serialVersionUID = -9218940161080465179L;
         private final LocalDateTime dateTime;
-        private final Account sourceAccount;
-        private final Account targetAccount;
+        private final Account source;
+        private final Account target;
 
         /**
          * Constructs a new transfer result
          *
-         * @param dateTime The date and time of the transfer (current date/time if null)
-         * @param sourceAccount The resulting source account
-         * @param targetAccount The resulting target account
+         * @param dateTime The date and time of the transfer (or the current date/time if null)
+         * @param source The resulting source account
+         * @param target The resulting target account
          */
-        public TransferResult(LocalDateTime dateTime, Account sourceAccount, Account targetAccount) {
+        public TransferResult(LocalDateTime dateTime, Account source, Account target) {
             this.dateTime = (dateTime == null) ? LocalDateTime.now() : dateTime;
-            this.sourceAccount = Objects.requireNonNull(sourceAccount, "Source account is required");
-            this.targetAccount = Objects.requireNonNull(targetAccount, "Target account is required");
+            this.source = Objects.requireNonNull(source, "Source account is required");
+            this.target = Objects.requireNonNull(target, "Target account is required");
         }
 
         public LocalDateTime getDateTime() {
             return dateTime;
         }
 
-        public Account getSourceAccount() {
-            return sourceAccount;
+        public Account getSource() {
+            return source;
         }
 
-        public Account getTargetAccount() {
-            return targetAccount;
+        public Account getTarget() {
+            return target;
         }
 
         @Override
         public String toString() {
-            return String.format("TransferResult [dateTime=%s, sourceAccount=%s, targetAccount=%s]", dateTime, sourceAccount, targetAccount);
+            return String.format("TransferResult [dateTime=%s, source=%s, target=%s]", dateTime, source, target);
         }
     }
 }

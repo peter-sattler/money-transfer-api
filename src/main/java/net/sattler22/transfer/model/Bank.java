@@ -48,8 +48,8 @@ public final class Bank implements Serializable {
 
     /**
      * Add a new customer
-     * 
-     * @return True if the customer was added. Otherwise, returns false when the customer already exists.
+     *
+     * @return True if the customer was added. Otherwise, returns false.
      */
     public boolean addCustomer(Customer customer) {
         return customers.add(customer);
@@ -64,8 +64,8 @@ public final class Bank implements Serializable {
 
     /**
      * Delete an existing customer
-     * 
-     * @return True if the customer was deleted. Otherwise, returns false when the customer is non-existent.
+     *
+     * @return True if the customer was deleted. Otherwise, returns false.
      */
     public boolean deleteCustomer(Customer customer) {
         return customers.remove(customer);
@@ -73,7 +73,7 @@ public final class Bank implements Serializable {
 
     /**
      * Find a specific customer
-     * 
+     *
      * @param id The customer identifier
      */
     public Optional<Customer> findCustomer(int id) {
