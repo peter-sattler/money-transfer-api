@@ -67,7 +67,6 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 
 ## July 2019 Enhancements (0.0.3-SNAPSHOT)
 :moneybag: Add integration test harness so API is covered  
-:moneybag: Load data upon start-up  
 
 Pete Sattler   
 4 July 2019  
