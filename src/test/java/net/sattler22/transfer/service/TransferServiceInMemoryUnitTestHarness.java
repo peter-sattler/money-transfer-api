@@ -16,7 +16,7 @@ import net.sattler22.transfer.service.TransferService.TransferResult;
  * Revolut Money Transfer Service In-Memory Implementation Unit Test Harness
  *
  * @author Pete Sattler
- * @version January 2019
+ * @version July 2019
  */
 public class TransferServiceInMemoryUnitTestHarness {
 
@@ -24,7 +24,7 @@ public class TransferServiceInMemoryUnitTestHarness {
 
     @Before
     public void setUp() throws Exception {
-        final Bank bank = new Bank(1, "Show Me the Money Bank");
+        final Bank bank = new Bank(1, "Transfer Service In-Memory Unit Test Harness Bank");
         bank.addCustomer(new Customer(1, "Barb", "Wire"));
         bank.addCustomer(new Customer(2, "Burt", "Rentals"));
         bank.addCustomer(new Customer(3, "Hairy", "Pottery"));

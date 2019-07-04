@@ -13,34 +13,34 @@ import net.jcip.annotations.Immutable;
  * Revolut Account Data Transfer Object (DTO)
  *
  * @author Pete Sattler
- * @version May 2019
+ * @version July 2019
  */
 @Immutable
 public final class AccountDTO implements Serializable {
 
-    private static final long serialVersionUID = 2075275373309614702L;
-    private final int customerId;
+    private static final long serialVersionUID = 8064618198189338330L;
     private final int number;
+    private final int customerId;
     private final BigDecimal balance;
 
     /**
      * Constructs a new account DTO
      */
-    @JsonCreator(mode = Mode.PROPERTIES)
-    public AccountDTO(@JsonProperty("customerId") int customerId,
-                      @JsonProperty("number") int number,
+    @JsonCreator(mode=Mode.PROPERTIES)
+    public AccountDTO(@JsonProperty("number") int number,
+                      @JsonProperty("customerId") int customerId,
                       @JsonProperty("balance") BigDecimal balance) {
-        this.customerId = customerId;
         this.number = number;
+        this.customerId = customerId;
         this.balance = balance;
-    }
-
-    public int getCustomerId() {
-        return customerId;
     }
 
     public int getNumber() {
         return number;
+    }
+
+    public int getCustomerId() {
+        return customerId;
     }
 
     public BigDecimal getBalance() {
@@ -66,6 +66,6 @@ public final class AccountDTO implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("AccountDTO [customerId=%s, number=%s, balance=%s]", customerId, number, balance);
+        return String.format("AccountDTO [number=%s, customerId=%s, balance=%s]", number, customerId, balance);
     }
 }

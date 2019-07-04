@@ -65,6 +65,10 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Use JCIP (Java Concurrency In Practice) annotations  
 :moneybag: Fix CRLF  
 
+## July 2019 Enhancements (0.0.3-SNAPSHOT)
+:moneybag: Add integration test harness so API is covered  
+:moneybag: Load data upon start-up  
+
 Pete Sattler   
-15 May 2019  
+4 July 2019  
 _peter@sattler22.net_  

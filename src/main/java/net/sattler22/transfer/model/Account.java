@@ -3,7 +3,10 @@ package net.sattler22.transfer.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
 
@@ -11,14 +14,13 @@ import net.jcip.annotations.Immutable;
  * Revolut Account Business Object
  *
  * @author Pete Sattler
- * @version May 2019
+ * @version July 2019
  */
 @Immutable
 public final class Account implements Serializable {
 
-    private static final long serialVersionUID = -4438864871049574622L;
+    private static final long serialVersionUID = -5230064948832981890L;
     private final int number;
-    @JsonIgnore
     private final Customer owner;
     private final BigDecimal balance;
     @JsonIgnore
@@ -34,7 +36,10 @@ public final class Account implements Serializable {
     /**
      * Constructs a new account
      */
-    public Account(int number, Customer owner, BigDecimal balance) {
+    @JsonCreator(mode=Mode.PROPERTIES)
+    public Account(@JsonProperty("number") int number,
+                   @JsonProperty("owner") Customer owner,
+                   @JsonProperty("balance") BigDecimal balance) {
         this.number = number;
         this.owner = owner;
         this.balance = (balance == null) ? BigDecimal.ZERO : balance;

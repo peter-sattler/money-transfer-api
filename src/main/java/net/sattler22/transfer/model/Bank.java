@@ -7,26 +7,34 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import net.jcip.annotations.Immutable;
 
 /**
  * Revolut Banking Institution Business Object
  *
  * @author Pete Sattler
- * @version May 2019
+ * @version July 2019
  */
 @Immutable
 public final class Bank implements Serializable {
 
-    private static final long serialVersionUID = 8414304479231837140L;
+    private static final long serialVersionUID = -7306722910569018912L;
     private final int id;
     private final String name;
+    @JsonIgnore
     private final Set<Customer> customers = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Constructs a new banking institution
      */
-    public Bank(int id, String name) {
+    @JsonCreator(mode=Mode.PROPERTIES)
+    public Bank(@JsonProperty("id") int id,
+                @JsonProperty("name") String name) {
         this.id = id;
         this.name = Objects.requireNonNull(name, "Bank name is required");
     }

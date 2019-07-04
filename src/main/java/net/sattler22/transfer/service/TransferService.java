@@ -7,6 +7,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 import net.jcip.annotations.Immutable;
 import net.sattler22.transfer.model.Account;
 import net.sattler22.transfer.model.Bank;
@@ -16,7 +24,7 @@ import net.sattler22.transfer.model.Customer;
  * Revolut Money Transfer Service Interface
  *
  * @author Pete Sattler
- * @version May 2019
+ * @version July 2019
  */
 public interface TransferService {
 
@@ -74,7 +82,7 @@ public interface TransferService {
      * @param source The source account
      * @param target The target account
      * @param amount The transfer amount
-     * @throws IllegalArgumentException If the transaction amount is not greater than zero
+     * @throws IllegalArgumentException If the transaction amount is not greater than zero or is more than the amount available
      */
     TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException;
 
@@ -84,10 +92,24 @@ public interface TransferService {
     @Immutable
     final class TransferResult implements Serializable {
 
-        private static final long serialVersionUID = -9218940161080465179L;
+        private static final long serialVersionUID = 6774168590117225325L;
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
         private final LocalDateTime dateTime;
         private final Account source;
         private final Account target;
+
+        /**
+         * Constructs a new transfer result
+         *
+         * @param source The resulting source account
+         * @param target The resulting target account
+         */
+        @JsonCreator(mode = Mode.PROPERTIES)
+        public TransferResult(@JsonProperty("source") Account source,
+                              @JsonProperty("target") Account target) {
+            this(null, source, target);
+        }
 
         /**
          * Constructs a new transfer result

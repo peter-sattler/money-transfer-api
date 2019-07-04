@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
@@ -17,15 +18,16 @@ import net.jcip.annotations.Immutable;
  * Revolut Customer Business Object
  *
  * @author Pete Sattler
- * @version May 2019
+ * @version July 2019
  */
 @Immutable
 public final class Customer implements Serializable {
 
-    private static final long serialVersionUID = 5697946845021941295L;
+    private static final long serialVersionUID = -2303189692652134564L;
     private final int id;
     private final String firstName;
     private final String lastName;
+    @JsonIgnore
     private final Set<Account> accounts = Collections.synchronizedSet(new HashSet<>());
 
     /**

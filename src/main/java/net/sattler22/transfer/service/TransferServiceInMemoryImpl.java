@@ -16,7 +16,7 @@ import net.sattler22.transfer.model.Customer;
  * Revolut Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
- * @version May 2019
+ * @version July 2019
  */
 public final class TransferServiceInMemoryImpl implements TransferService {
 
@@ -68,7 +68,9 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     @Override
     public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
-            throw new IllegalArgumentException("Transaction amount must be greater than zero");
+            throw new IllegalArgumentException("Transfer amount must be greater than zero");
+        if (amount.compareTo(source.getBalance()) > 0)
+            throw new IllegalArgumentException("Transfer amount exceeds the amount of available funds");
         //Lock both accounts before making the transfer, but always in the SAME order to avoid deadlocking:
         final Object lock1 = source.getNumber() < target.getNumber() ? source.getLock() : target.getLock();
         final Object lock2 = source.getNumber() < target.getNumber() ? target.getLock() : source.getLock();
@@ -76,10 +78,15 @@ public final class TransferServiceInMemoryImpl implements TransferService {
             synchronized (lock2) {
                 final Account newSource = source.debit(amount);
                 final Account newTarget = target.credit(amount);
-                LOGGER.info("{} transfered ${} from account #{} to account #{}",
+                LOGGER.info("{} transferred ${} from account #{} to account #{}",
                              source.getOwner(), amount, source.getNumber(), target.getNumber());
                 return new TransferResult(LocalDateTime.now(), newSource, newTarget);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("TransferServiceInMemoryImpl [bank=%s]", bank);
     }
 }

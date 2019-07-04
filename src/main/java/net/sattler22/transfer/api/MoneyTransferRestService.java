@@ -17,6 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -36,7 +37,7 @@ import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
  * Revolut Money Transfer REST Service
  *
  * @author Pete Sattler
- * @version May 2019
+ * @version July 2019
  */
 @Singleton
 @Path("/api/money-transfer")
@@ -47,12 +48,12 @@ public final class MoneyTransferRestService {
     private final TransferService transferService;
 
     /**
-     * Constructs a new money transfer REST resource
+     * Constructs a new money transfer REST service
      */
     public MoneyTransferRestService() {
-        final Bank bank = new Bank(1, "Revolut World Banking Empire");
+        final Bank bank = new Bank(1, "Revolut World Banking Empire Bank");
         this.transferService = new TransferServiceInMemoryImpl(bank);
-        LOGGER.info("Money transfer resource initialization complete");
+        LOGGER.info("Initialized {}", this);
     }
 
     @GET
@@ -68,7 +69,7 @@ public final class MoneyTransferRestService {
     public Response getAllCustomers() {
         final Set<Customer> customers = transferService.getCustomers();
         LOGGER.info("Retrieved [{}] {}", customers.size(), customers.size() == 1 ? "customer" : "customers");
-        return Response.ok().entity(customers).build();
+        return Response.ok().entity(new GenericEntity<>(customers) { }).build();
     }
 
     @GET
@@ -168,7 +169,11 @@ public final class MoneyTransferRestService {
             final Account targetAccount = findAccountHelper(owner, accountTransferDTO.getTargetNumber());
             transferResult = transferService.transfer(owner, sourceAccount, targetAccount, accountTransferDTO.getAmount());
         }
-        catch(NotFoundException | IllegalArgumentException e) {
+        catch(NotFoundException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+        }
+        catch(IllegalArgumentException e) {
             LOGGER.warn("{}", e.getMessage());
             throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
         }
@@ -182,5 +187,10 @@ public final class MoneyTransferRestService {
 
     private static Account findAccountHelper(Customer owner, int number) throws NotFoundException {
         return owner.findAccount(number).orElseThrow(() -> new NotFoundException(String.format("Account #%d not found", number)));
+    }
+
+    @Override
+    public String toString() {
+        return String.format("MoneyTransferRestService [transferService=%s]", transferService);
     }
 }
