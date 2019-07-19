@@ -13,7 +13,7 @@ import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
 
 /**
- * Revolut Money Transfer Service In-Memory Implementation
+ * Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
  * @version July 2019
@@ -87,6 +87,6 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public String toString() {
-        return String.format("TransferServiceInMemoryImpl [bank=%s]", bank);
+        return String.format("%s [bank=%s]", getClass().getSimpleName(), bank);
     }
 }

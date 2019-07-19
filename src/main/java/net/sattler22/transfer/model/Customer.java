@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import net.jcip.annotations.Immutable;
 
 /**
- * Revolut Customer Business Object
+ * Customer Business Object
  *
  * @author Pete Sattler
  * @version July 2019
@@ -107,6 +107,6 @@ public final class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Customer [id=%s, firstName=%s, lastName=%s]", id, firstName, lastName);
+        return String.format("%s [id=%s, firstName=%s, lastName=%s]", getClass().getSimpleName(), id, firstName, lastName);
     }
 }

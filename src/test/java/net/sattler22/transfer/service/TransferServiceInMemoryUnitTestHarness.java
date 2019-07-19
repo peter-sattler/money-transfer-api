@@ -13,7 +13,7 @@ import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService.TransferResult;
 
 /**
- * Revolut Money Transfer Service In-Memory Implementation Unit Test Harness
+ * Money Transfer Service In-Memory Implementation Unit Test Harness
  *
  * @author Pete Sattler
  * @version July 2019

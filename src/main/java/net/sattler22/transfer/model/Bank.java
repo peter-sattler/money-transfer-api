@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import net.jcip.annotations.Immutable;
 
 /**
- * Revolut Banking Institution Business Object
+ * Banking Institution Business Object
  *
  * @author Pete Sattler
  * @version July 2019
@@ -107,6 +107,6 @@ public final class Bank implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Bank [id=%s, name=%s, customers=%s]", id, name, customers);
+        return String.format("%s [id=%s, name=%s, customers=%s]", getClass().getSimpleName(), id, name, customers);
     }
 }

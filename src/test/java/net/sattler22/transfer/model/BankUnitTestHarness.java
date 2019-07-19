@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Revolut Money Transfer Bank Business Object Unit Test Harness
+ * Money Transfer Bank Business Object Unit Test Harness
  *
  * @author Pete Sattler
- * @version January 2019
+ * @version July 2019
  */
 public class BankUnitTestHarness {
 

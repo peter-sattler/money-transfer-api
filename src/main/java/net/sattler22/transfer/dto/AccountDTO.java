@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import net.jcip.annotations.Immutable;
 
 /**
- * Revolut Account Data Transfer Object (DTO)
+ * Account Data Transfer Object (DTO)
  *
  * @author Pete Sattler
  * @version July 2019
@@ -66,6 +66,6 @@ public final class AccountDTO implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("AccountDTO [number=%s, customerId=%s, balance=%s]", number, customerId, balance);
+        return String.format("%s [number=%s, customerId=%s, balance=%s]", getClass().getSimpleName(), number, customerId, balance);
     }
 }

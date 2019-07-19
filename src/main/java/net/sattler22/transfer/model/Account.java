@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import net.jcip.annotations.Immutable;
 
 /**
- * Revolut Account Business Object
+ * Account Business Object
  *
  * @author Pete Sattler
  * @version July 2019
@@ -103,6 +103,6 @@ public final class Account implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Account [number=%s, owner=%s, balance=%s]", number, owner, balance);
+        return String.format("%s [number=%s, owner=%s, balance=%s]", getClass().getSimpleName(), number, owner, balance);
     }
 }

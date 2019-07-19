@@ -21,7 +21,7 @@ import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
 
 /**
- * Revolut Money Transfer Service Interface
+ * Money Transfer Service Interface
  *
  * @author Pete Sattler
  * @version July 2019
@@ -138,7 +138,7 @@ public interface TransferService {
 
         @Override
         public String toString() {
-            return String.format("TransferResult [dateTime=%s, source=%s, target=%s]", dateTime, source, target);
+            return String.format("%s [dateTime=%s, source=%s, target=%s]", getClass().getSimpleName(), dateTime, source, target);
         }
     }
 }

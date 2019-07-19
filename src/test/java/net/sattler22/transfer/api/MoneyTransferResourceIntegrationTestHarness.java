@@ -16,6 +16,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
@@ -25,24 +26,39 @@ import net.sattler22.transfer.dto.AccountTransferDTO;
 import net.sattler22.transfer.model.Account;
 import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
+import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferService.TransferResult;
+import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
 
 /**
- * Revolut Money Transfer REST Service Integration Test Harness
+ * Money Transfer REST Resource Integration Test Harness
  *
  * @author Pete Sattler
  * @version July 2019
  */
-public final class MoneyTransferRestServiceIntegrationTestHarness extends JerseyTest {
+public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTest {
 
     private static final String API_BASE_PATH = "/api/money-transfer";
-    private static final Bank BANK = new Bank(1, "Money Transfer API Integration Test Harness Bank");
     private static final Customer BOB_WIRE = new Customer(1, "Bob", "Wire");
 
     @Override
     protected Application configure() {
         this.set(CONTAINER_PORT, "0");  //Use a free port
-        return new ResourceConfig(MoneyTransferRestService.class);
+        final ResourceConfig config = new ResourceConfig();
+        config.register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                final Bank bank = initBank();
+                final TransferServiceInMemoryImpl transferService = new TransferServiceInMemoryImpl(bank);
+                this.bind(transferService).to(TransferService.class);
+            }
+        });
+        config.register(MoneyTransferResource.class);
+        return config;
+    }
+
+    private Bank initBank() {
+        return new Bank(1, "Money Transfer API Integration Test Harness Bank");
     }
 
     @Test
@@ -50,8 +66,9 @@ public final class MoneyTransferRestServiceIntegrationTestHarness extends Jersey
         final Response response = target(API_BASE_PATH).path("bank").request().get();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
         assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
+        final Bank expected = initBank();
         final Bank actual = response.readEntity(Bank.class);
-        assertEquals(BANK, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -62,7 +79,7 @@ public final class MoneyTransferRestServiceIntegrationTestHarness extends Jersey
         final Response response = target(API_BASE_PATH).path("customers").request().get();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
         assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final Set<Customer> actual = response.readEntity(new GenericType<Set<Customer>>() { });
+        final Set<Customer> actual = response.readEntity(new GenericType<Set<Customer>>() {});
         final Set<Customer> expected = new HashSet<>();
         expected.add(BOB_WIRE);
         expected.add(burt);
