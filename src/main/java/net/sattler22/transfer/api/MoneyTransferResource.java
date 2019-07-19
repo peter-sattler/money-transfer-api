@@ -3,8 +3,10 @@ package net.sattler22.transfer.api;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,10 +33,9 @@ import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferService.TransferResult;
-import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
 
 /**
- * Revolut Money Transfer REST Service
+ * Money Transfer REST Resource
  *
  * @author Pete Sattler
  * @version July 2019
@@ -42,17 +43,17 @@ import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
 @Singleton
 @Path("/api/money-transfer")
 @Produces(APPLICATION_JSON)
-public final class MoneyTransferRestService {
+public final class MoneyTransferResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferRestService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferResource.class);
     private final TransferService transferService;
 
     /**
-     * Constructs a new money transfer REST service
+     * Constructs a new money transfer REST resource
      */
-    public MoneyTransferRestService() {
-        final Bank bank = new Bank(1, "Revolut World Banking Empire Bank");
-        this.transferService = new TransferServiceInMemoryImpl(bank);
+    @Inject
+    public MoneyTransferResource(TransferService transferService) {
+        this.transferService = Objects.requireNonNull(transferService, "Transfer service implementation is required");
         LOGGER.info("Initialized {}", this);
     }
 
@@ -69,7 +70,7 @@ public final class MoneyTransferRestService {
     public Response getAllCustomers() {
         final Set<Customer> customers = transferService.getCustomers();
         LOGGER.info("Retrieved [{}] {}", customers.size(), customers.size() == 1 ? "customer" : "customers");
-        return Response.ok().entity(new GenericEntity<>(customers) { }).build();
+        return Response.ok().entity(new GenericEntity<Set<Customer>>(customers) {}).build();
     }
 
     @GET
@@ -96,7 +97,7 @@ public final class MoneyTransferRestService {
             throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
         }
         LOGGER.info("{} created successfully", customer);
-        final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferRestService.class)
+        final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResource.class)
                                                         .path("customer")
                                                         .path(Integer.toString(customer.getId())).build();
         return Response.created(location).entity(customer).build();
@@ -130,7 +131,7 @@ public final class MoneyTransferRestService {
                 throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
             }
             LOGGER.info("{} created successfully", account);
-            final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferRestService.class)
+            final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResource.class)
                                                             .path("customer")
                                                             .path(Integer.toString(owner.getId())).build();
             return Response.created(location).entity(owner).build();
@@ -191,6 +192,6 @@ public final class MoneyTransferRestService {
 
     @Override
     public String toString() {
-        return String.format("MoneyTransferRestService [transferService=%s]", transferService);
+        return String.format("%s [transferService=%s]", getClass().getSimpleName(), transferService);
     }
 }
