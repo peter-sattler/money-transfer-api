@@ -1,5 +1,7 @@
 package net.sattler22.transfer.service;
 
+import static net.sattler22.transfer.model.AccountType.CHECKING;
+import static net.sattler22.transfer.model.AccountType.SAVINGS;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
@@ -11,6 +13,7 @@ import net.sattler22.transfer.model.Account;
 import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService.TransferResult;
+import net.sattler22.transfer.util.TestDataFactory;
 
 /**
  * Money Transfer Service In-Memory Implementation Unit Test Harness
@@ -25,17 +28,17 @@ public class TransferServiceInMemoryUnitTestHarness {
     @Before
     public void setUp() throws Exception {
         final Bank bank = new Bank(1, "Transfer Service In-Memory Unit Test Harness Bank");
-        bank.addCustomer(new Customer(1, "Barb", "Wire"));
-        bank.addCustomer(new Customer(2, "Burt", "Rentals"));
-        bank.addCustomer(new Customer(3, "Hairy", "Pottery"));
+        bank.addCustomer(TestDataFactory.getBob(1, true));
+        bank.addCustomer(TestDataFactory.getEileen(2, false));
+        bank.addCustomer(TestDataFactory.getBurt(3, true));
         this.transferService = new TransferServiceInMemoryImpl(bank);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testTransferZeroAmount() {
         final Customer owner = transferService.getCustomers().iterator().next();
-        final Account sourceAccount = new Account(1, owner, BigDecimal.TEN);
-        final Account targetAccount = new Account(2, owner, BigDecimal.TEN);
+        final Account sourceAccount = new Account(1, CHECKING, owner, BigDecimal.TEN);
+        final Account targetAccount = new Account(2, CHECKING, owner, BigDecimal.TEN);
         owner.addAccount(sourceAccount);
         owner.addAccount(targetAccount);
         transferService.transfer(owner, sourceAccount, targetAccount, BigDecimal.ZERO);
@@ -47,8 +50,8 @@ public class TransferServiceInMemoryUnitTestHarness {
         final Customer owner = transferService.getCustomers().iterator().next();
         final BigDecimal initialSourceAccountBalance = new BigDecimal(100);
         final BigDecimal initialTargetAccountBalance = new BigDecimal(50);
-        final Account sourceAccount = new Account(1, owner, initialSourceAccountBalance);
-        final Account targetAccount = new Account(2, owner, initialTargetAccountBalance);
+        final Account sourceAccount = new Account(1, SAVINGS, owner, initialSourceAccountBalance);
+        final Account targetAccount = new Account(2, CHECKING, owner, initialTargetAccountBalance);
 
         // Do the transfer:
         final BigDecimal transferAmount = BigDecimal.TEN;

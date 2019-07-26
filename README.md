@@ -6,7 +6,6 @@ Design and implement a RESTful API (including data model and the backing impleme
 ## Simplifications
 
 :moneybag: There is only one bank; _Pete's World Banking Empire_. Since there's only one, might as well strive for world domination.  
-:moneybag: There is only a single generic account type; no checking account, savings account, etc.  
 :moneybag: Customers are allowed to open a new account with a zero balance.  
 :moneybag: Transfers can only happen between accounts owned by the same customer.  
 :moneybag: Transactions always clear immediately.  
@@ -29,16 +28,16 @@ gradlew run
 
 ## The World Domination API
 
-Action              | Verb   | Resource Locator (URL)                                    | JSON Payload               | Status Codes
-:-----------------  |:------ | :-------------------------------------------------------- | :------------------------- | :------------
-Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                            | 200 (Success)
-Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                            | 200 (Success)
-Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 200 (Success)<br/>404 (Customer not found)
-Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br/>"id":1,<br/>"firstName":"Barb",<br/>"lastName":"Wire"<br/>} | 201 (Success)<br/>409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                            | 204 (Success)<br/>404 (Customer not found)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br/>"customerId":1,<br/>"number":123,<br/>"balance":100.25<br/>} | 201 (Success)<br/>404 (Customer not found)<br/>409 (Account exists)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |               | 204 (Success)<br/>404 (Customer or account not found)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br/>"customerId":1,<br/>"sourceNumber":123,<br/>"targetNumber":234,<br/>"amount":50<br/>} | 200 (Success)<br/>404 (Customer, source or target account not found)<br/>409 (Invalid amount)
+Action              | Verb   | Resource Locator (URL)                                    | JSON Payload                    | Status Codes
+:-----------------  |:------ | :-------------------------------------------------------- | :------------------------------ | :-------
+Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                                 | 200 (Success)
+Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                                 | 200 (Success)
+Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 200 (Success)<br>404 (Customer not found)
+Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": 1,<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "3 Main St",<br>"city": "Java",<br>"state": "IL",<br>"zip": 97791<br>},<br>"phone": "(123) 456-7890",<br>"email": "barb.wire@fences.cow",<br>"pic": "barb-wire.jpg",<br>"birthDate": "1963-10-08",<br>"joinDate": "2016-06-13",<br>"active": true<br>}      | 201 (Success)<br>409 (Customer exists)
+Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": 1,<br>"number": 123,<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": 1,<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}.     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
 
 ## Given Requirements
 
@@ -68,7 +67,9 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Add integration test harness so API is fully covered  
 :moneybag: Remove restricted class usage from the bootstrap utility  
 :moneybag: Inject transfer service implementation using Jersey's HK2 dependency injection (DI) framework  
+:moneybag: Added gender, address, phone, email, picture, birth date, join date and active flag fields to Customer  
+:moneybag: Added checking and savings account types  
 
 Pete Sattler  
-19 July 2019  
+25 July 2019  
 _peter@sattler22.net_  

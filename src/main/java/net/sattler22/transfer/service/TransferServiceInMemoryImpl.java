@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.ws.rs.NotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +64,11 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public boolean deleteAccount(int customerId, int number) {
-        return findCustomer(customerId).map(owner -> owner.deleteAccount(new Account(number, owner))).orElse(false);
+        final Customer owner = 
+            findCustomer(customerId).orElseThrow(() -> new NotFoundException(String.format("Customer ID #%d not found", customerId)));
+        final Account account = 
+            Account.find(owner, number).orElseThrow(() -> new NotFoundException(String.format("Account #%d not found", number)));
+        return owner.deleteAccount(account);
     }
 
     @Override
@@ -78,8 +84,9 @@ public final class TransferServiceInMemoryImpl implements TransferService {
             synchronized (lock2) {
                 final Account newSource = source.debit(amount);
                 final Account newTarget = target.credit(amount);
-                LOGGER.info("{} transferred ${} from account #{} to account #{}",
-                             source.getOwner(), amount, source.getNumber(), target.getNumber());
+                LOGGER.info("[{} {}] transferred ${} from account #{} to account #{}",
+                             source.getOwner().getFirstName(), source.getOwner().getLastName(),
+                             amount, source.getNumber(), target.getNumber());
                 return new TransferResult(LocalDateTime.now(), newSource, newTarget);
             }
         }

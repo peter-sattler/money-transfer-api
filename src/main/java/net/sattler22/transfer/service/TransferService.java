@@ -93,8 +93,8 @@ public interface TransferService {
     final class TransferResult implements Serializable {
 
         private static final long serialVersionUID = 6774168590117225325L;
-        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         private final LocalDateTime dateTime;
         private final Account source;
         private final Account target;

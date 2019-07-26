@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
@@ -21,12 +21,12 @@ import net.jcip.annotations.Immutable;
  * @version July 2019
  */
 @Immutable
+@JsonIgnoreProperties({ "customers" })
 public final class Bank implements Serializable {
 
     private static final long serialVersionUID = -7306722910569018912L;
     private final int id;
     private final String name;
-    @JsonIgnore
     private final Set<Customer> customers = Collections.synchronizedSet(new HashSet<>());
 
     /**

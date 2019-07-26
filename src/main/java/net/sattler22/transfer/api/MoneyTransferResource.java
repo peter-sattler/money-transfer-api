@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import net.sattler22.transfer.dto.AccountDTO;
 import net.sattler22.transfer.dto.AccountTransferDTO;
 import net.sattler22.transfer.model.Account;
+import net.sattler22.transfer.model.AccountType;
 import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService;
@@ -77,7 +78,7 @@ public final class MoneyTransferResource {
     @Path("/customer/{id}")
     public Response findCustomer(@PathParam("id") int id) {
         try {
-            final Customer customer = findCustomerHelper(id);
+            final Customer customer = findCustomerImpl(id);
             LOGGER.info("Retrieved {}", customer);
             return Response.ok().entity(customer).build();
         }
@@ -107,7 +108,7 @@ public final class MoneyTransferResource {
     @Path("/customer/{id}")
     public Response deleteCustomer(@PathParam("id") int id) {
         try {
-            final Customer customer = findCustomerHelper(id);
+            final Customer customer = findCustomerImpl(id);
             transferService.deleteCustomer(customer);
             LOGGER.info("Deleted {}", customer);
             return Response.noContent().build();
@@ -123,10 +124,11 @@ public final class MoneyTransferResource {
     @Consumes(APPLICATION_JSON)
     public Response addAccount(@Context UriInfo uriInfo, AccountDTO accountDTO) {
         try {
-            final Customer owner = findCustomerHelper(accountDTO.getCustomerId());
-            final Account account = new Account(accountDTO.getNumber(), owner, accountDTO.getBalance());
+            final Customer owner = findCustomerImpl(accountDTO.getCustomerId());
+            final AccountType accountType = AccountType.findAccountType(accountDTO.getTypeId());
+            final Account account = new Account(accountDTO.getNumber(), accountType, owner, accountDTO.getBalance());
             if (!transferService.addAccount(account)) {
-                final String alreadyExistsMessage = String.format("Account #%d already exists", account.getNumber());
+                final String alreadyExistsMessage = String.format("Account #[%d] already exists", account.getNumber());
                 LOGGER.warn(alreadyExistsMessage);
                 throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
             }
@@ -146,8 +148,8 @@ public final class MoneyTransferResource {
     @Path("/account/{customerId}/{number}")
     public Response deleteAccount(@PathParam("customerId") int customerId, @PathParam("number") int number) {
         try {
-            final Customer owner = findCustomerHelper(customerId);
-            final Account account = new Account(number, owner);
+            final Customer owner = findCustomerImpl(customerId);
+            final Account account = findAccountImpl(owner, number);
             if (!owner.deleteAccount(account))
                 throw new NotFoundException(String.format("Account #%d does not exist", number));
             LOGGER.info("Deleted {}", account);
@@ -165,9 +167,9 @@ public final class MoneyTransferResource {
     public Response transfer(AccountTransferDTO accountTransferDTO) {
         final TransferResult transferResult;
         try {
-            final Customer owner = findCustomerHelper(accountTransferDTO.getCustomerId());
-            final Account sourceAccount = findAccountHelper(owner, accountTransferDTO.getSourceNumber());
-            final Account targetAccount = findAccountHelper(owner, accountTransferDTO.getTargetNumber());
+            final Customer owner = findCustomerImpl(accountTransferDTO.getCustomerId());
+            final Account sourceAccount = findAccountImpl(owner, accountTransferDTO.getSourceNumber());
+            final Account targetAccount = findAccountImpl(owner, accountTransferDTO.getTargetNumber());
             transferResult = transferService.transfer(owner, sourceAccount, targetAccount, accountTransferDTO.getAmount());
         }
         catch(NotFoundException e) {
@@ -181,13 +183,13 @@ public final class MoneyTransferResource {
         return Response.ok().entity(transferResult).build();
     }
 
-    private Customer findCustomerHelper(int id) throws NotFoundException {
+    private Customer findCustomerImpl(int id) throws NotFoundException {
         return transferService.findCustomer(id)
-                              .orElseThrow(() -> new NotFoundException(String.format("Customer ID %d not found", id)));
+                              .orElseThrow(() -> new NotFoundException(String.format("Customer ID [%d] not found", id)));
     }
 
-    private static Account findAccountHelper(Customer owner, int number) throws NotFoundException {
-        return owner.findAccount(number).orElseThrow(() -> new NotFoundException(String.format("Account #%d not found", number)));
+    private static Account findAccountImpl(Customer owner, int number) throws NotFoundException {
+        return Account.find(owner, number).orElseThrow(() -> new NotFoundException(String.format("Account #%d not found", number)));
     }
 
     @Override

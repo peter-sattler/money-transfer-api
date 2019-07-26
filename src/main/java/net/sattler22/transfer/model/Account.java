@@ -2,10 +2,12 @@ package net.sattler22.transfer.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
@@ -17,20 +19,21 @@ import net.jcip.annotations.Immutable;
  * @version July 2019
  */
 @Immutable
+@JsonIgnoreProperties({ "lock" })
 public final class Account implements Serializable {
 
     private static final long serialVersionUID = -5230064948832981890L;
     private final int number;
+    private final AccountType type;
     private final Customer owner;
     private final BigDecimal balance;
-    @JsonIgnore
     private final Object lock = new Object();
 
     /**
      * Constructs a new account with a ZERO balance
      */
-    public Account(int number, Customer owner) {
-        this(number, owner, null);
+    public Account(int number, AccountType type, Customer owner) {
+        this(number, type, owner, null);
     }
 
     /**
@@ -38,10 +41,12 @@ public final class Account implements Serializable {
      */
     @JsonCreator(mode=Mode.PROPERTIES)
     public Account(@JsonProperty("number") int number,
+                   @JsonProperty("type") AccountType type,
                    @JsonProperty("owner") Customer owner,
                    @JsonProperty("balance") BigDecimal balance) {
         this.number = number;
-        this.owner = owner;
+        this.type = Objects.requireNonNull(type, "Account type is required");
+        this.owner = Objects.requireNonNull(owner, "Account owner is required");
         this.balance = (balance == null) ? BigDecimal.ZERO : balance;
     }
 
@@ -52,7 +57,7 @@ public final class Account implements Serializable {
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Amount must be greater than zero");
         synchronized (lock) {
-            return new Account(number, owner, balance.add(amount));
+            return new Account(number, type, owner, balance.add(amount));
         }
     }
 
@@ -64,7 +69,7 @@ public final class Account implements Serializable {
             final BigDecimal newBalance = balance.subtract(amount);
             if (newBalance.compareTo(BigDecimal.ZERO) < 0)
                 throw new IllegalStateException("Transaction would lead to an overdrawn account");
-            return new Account(number, owner, newBalance);
+            return new Account(number, type, owner, newBalance);
         }
     }
 
@@ -72,6 +77,10 @@ public final class Account implements Serializable {
         return number;
     }
 
+    public AccountType getType() {
+        return type;
+    }
+    
     public Customer getOwner() {
         return owner;
     }
@@ -82,6 +91,10 @@ public final class Account implements Serializable {
 
     public Object getLock() {
         return lock;
+    }
+
+    public static Optional<Account> find(Customer owner, int number) {
+        return owner.findAccount(number);
     }
 
     @Override
@@ -103,6 +116,6 @@ public final class Account implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [number=%s, owner=%s, balance=%s]", getClass().getSimpleName(), number, owner, balance);
+        return String.format("%s [number=%s, type=%s, owner=%s, balance=%s]", getClass().getSimpleName(), number, type, owner, balance);
     }
 }

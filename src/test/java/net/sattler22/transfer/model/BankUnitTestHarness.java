@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import net.sattler22.transfer.util.TestDataFactory;
+
 /**
  * Money Transfer Bank Business Object Unit Test Harness
  *
@@ -23,8 +25,8 @@ public class BankUnitTestHarness {
 
     @Test
     public void testAddCustomer() {
-        final int customerId = 1;
-        final Customer expected = new Customer(customerId, "Bob", "Wire");
+        final int customerId = 10;
+        final Customer expected = TestDataFactory.getBob(customerId, true); 
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));
         assertEquals(bank.getCustomers().size(), 1);
@@ -33,8 +35,8 @@ public class BankUnitTestHarness {
 
     @Test
     public void testDeleteCustomer() {
-        final int customerId = 1;
-        final Customer expected = new Customer(customerId, "Eileen", "Dover");
+        final int customerId = 20;
+        final Customer expected = TestDataFactory.getEileen(customerId, false);
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));
         assertEquals(bank.getCustomers().size(), 1);
