@@ -1,7 +1,6 @@
 package net.sattler22.transfer.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
@@ -85,8 +84,8 @@ public final class TransferServiceInMemoryImpl implements TransferService {
                 final Account newSource = source.debit(amount);
                 final Account newTarget = target.credit(amount);
                 LOGGER.info("{} transferred ${} from account #{} to account #{}",
-                             source.getOwner(), amount, source.getNumber(), target.getNumber());
-                return new TransferResult(LocalDateTime.now(), newSource, newTarget);
+                            source.getOwner(), amount, source.getNumber(), target.getNumber());
+                return new TransferResult(newSource, newTarget);
             }
         }
     }
