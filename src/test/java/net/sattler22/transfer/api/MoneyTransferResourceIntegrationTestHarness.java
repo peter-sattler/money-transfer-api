@@ -191,7 +191,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
     }
 
     @Test
-    public void accountTransferHappyPathTestCasex() {
+    public void accountTransferHappyPathTestCase() {
         final Customer bob = TestDataFactory.getBob(1);
         addCustomerImpl(bob);
         final BigDecimal sourceAccountInitialBalance = new BigDecimal("100");
