@@ -26,7 +26,7 @@ public class BankUnitTestHarness {
     @Test
     public void testAddCustomer() {
         final int customerId = 10;
-        final Customer expected = TestDataFactory.getBob(customerId, true); 
+        final Customer expected = TestDataFactory.getBob(customerId);
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));
         assertEquals(bank.getCustomers().size(), 1);
@@ -36,7 +36,7 @@ public class BankUnitTestHarness {
     @Test
     public void testDeleteCustomer() {
         final int customerId = 20;
-        final Customer expected = TestDataFactory.getEileen(customerId, false);
+        final Customer expected = TestDataFactory.getEileen(customerId);
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));
         assertEquals(bank.getCustomers().size(), 1);

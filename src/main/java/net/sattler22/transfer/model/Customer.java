@@ -2,8 +2,10 @@ package net.sattler22.transfer.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -15,7 +17,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import net.jcip.annotations.Immutable;
 
@@ -37,15 +41,14 @@ public final class Customer implements Serializable {
     private final Address address;
     private final String phone;
     private final String email;
-    private final String pic;
+    private final List<Image> images;
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private final LocalDate birthDate;
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    private final LocalDate joinDate;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private final LocalDateTime joinedDate;
     private final Set<Account> accounts = Collections.synchronizedSet(new HashSet<>());
-    private final boolean active;
 
     /**
      * Constructs a new customer
@@ -58,21 +61,18 @@ public final class Customer implements Serializable {
                     @JsonProperty("address") Address address,
                     @JsonProperty("phone") String phone,
                     @JsonProperty("email") String email,
-                    @JsonProperty("pic") String pic,
-                    @JsonProperty("birthDate") LocalDate birthDate,
-                    @JsonProperty("joinDate") LocalDate joinDate,
-                    @JsonProperty("active") boolean active) {
+                    @JsonProperty("images") List<Image> images,
+                    @JsonProperty("birthDate") LocalDate birthDate) {
         this.id = id;
         this.firstName = Objects.requireNonNull(firstName, "First name is required");
         this.lastName = Objects.requireNonNull(lastName, "Last name is required");
         this.gender = Objects.requireNonNull(gender, "Gender is required");
         this.address = Objects.requireNonNull(address, "Address is required");
         this.phone = Objects.requireNonNull(phone, "Phone is required");
-        this.email = Objects.requireNonNull(email, "Email is required");
-        this.pic = pic;
+        this.email = email;
+        this.images = images;
         this.birthDate = Objects.requireNonNull(birthDate, "Date of birth is required");
-        this.joinDate = Objects.requireNonNull(joinDate, "Join date is required");
-        this.active = active;
+        this.joinedDate = LocalDateTime.now();
     }
 
     public int getId() {
@@ -103,16 +103,16 @@ public final class Customer implements Serializable {
         return email;
     }
 
-    public String getPic() {
-        return pic;
+    public List<Image> getImages() {
+        return Collections.unmodifiableList(images);
     }
 
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public LocalDate getJoinDate() {
-        return joinDate;
+    public LocalDateTime getJoinedDate() {
+        return joinedDate;
     }
 
     /**
@@ -149,10 +149,6 @@ public final class Customer implements Serializable {
         return accounts.stream().filter(account -> account.getNumber() == number).findFirst();
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
     @Override
     public int hashCode() {
         return Integer.hashCode(id);
@@ -172,7 +168,7 @@ public final class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [id=%s, firstName=%s, lastName=%s, active=%s]",
-                              getClass().getSimpleName(), id, firstName, lastName, active);
+        return String.format("%s [id=%s, firstName=%s, lastName=%s]",
+                              getClass().getSimpleName(), id, firstName, lastName);
     }
 }

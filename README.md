@@ -71,5 +71,5 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added checking and savings account types  
 
 Pete Sattler  
-26 July 2019  
+27 July 2019  
 _peter@sattler22.net_  

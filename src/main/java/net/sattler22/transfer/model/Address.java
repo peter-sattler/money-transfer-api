@@ -61,6 +61,7 @@ public final class Address implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [street=%s, city=%s, state=%s, zip=%s]", getClass().getSimpleName(), street, city, state, zip);
+        return String.format("%s [street=%s, city=%s, state=%s, zip=%s]",
+                             getClass().getSimpleName(), street, city, state, zip);
     }
 }
