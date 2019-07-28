@@ -28,7 +28,7 @@ public final class TestDataFactory {
         try {
             final Address address =
                 new Address("22 Main Street", "West City", "NJ", "56789");
-            final URI uri = new URI("http://localhost/images/bob-wire.png");
+            final URI uri = new URI("/images/bob-wire.png");
             final List<Image> images =
                 Collections.singletonList(new Image(uri, "Bob Wire Image"));
             final LocalDate birthDate = LocalDate.of(1964, 2, 27);
@@ -48,7 +48,7 @@ public final class TestDataFactory {
         try {
             final Address address =
                 new Address("3 Fence Street", "Redtown", "NY", "12345");
-            final URI uri = new URI("http://localhost/images/edover.png");
+            final URI uri = new URI("/images/edover.png");
             final List<Image> images =
                 Collections.singletonList(new Image(uri, "Eileen Dover Image"));
             final LocalDate birthDate = LocalDate.of(1965, 1, 15);
@@ -68,7 +68,7 @@ public final class TestDataFactory {
         try {
             final Address address =
                 new Address("5 Broken Down Lane", "Los Angeles", "CA", "90214");
-            final URI uri = new URI("http://localhost/images/burt-rentals.png");
+            final URI uri = new URI("/images/burt-rentals.png");
             final List<Image> images =
                 Collections.singletonList(new Image(uri, "Burt Renals Image"));
             final LocalDate birthDate = LocalDate.of(1953, 9, 23);
