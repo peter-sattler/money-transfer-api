@@ -10,9 +10,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -30,7 +30,6 @@ import net.jcip.annotations.Immutable;
  * @version July 2019
  */
 @Immutable
-@JsonIgnoreProperties({ "accounts" })
 public final class Customer implements Serializable {
 
     private static final long serialVersionUID = -2303189692652134564L;
@@ -48,6 +47,7 @@ public final class Customer implements Serializable {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime joinedDate;
+    @JsonBackReference
     private final Set<Account> accounts = Collections.synchronizedSet(new HashSet<>());
 
     /**

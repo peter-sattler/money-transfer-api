@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
@@ -25,6 +26,7 @@ public final class Account implements Serializable {
     private static final long serialVersionUID = -5230064948832981890L;
     private final int number;
     private final AccountType type;
+    @JsonManagedReference
     private final Customer owner;
     private final BigDecimal balance;
     private final Object lock = new Object();
@@ -80,7 +82,7 @@ public final class Account implements Serializable {
     public AccountType getType() {
         return type;
     }
-    
+
     public Customer getOwner() {
         return owner;
     }
