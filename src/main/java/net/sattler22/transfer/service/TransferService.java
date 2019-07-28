@@ -108,18 +108,7 @@ public interface TransferService {
         @JsonCreator(mode = Mode.PROPERTIES)
         public TransferResult(@JsonProperty("source") Account source,
                               @JsonProperty("target") Account target) {
-            this(null, source, target);
-        }
-
-        /**
-         * Constructs a new transfer result
-         *
-         * @param dateTime The date and time of the transfer (or the current date/time if null)
-         * @param source The resulting source account
-         * @param target The resulting target account
-         */
-        public TransferResult(LocalDateTime dateTime, Account source, Account target) {
-            this.dateTime = (dateTime == null) ? LocalDateTime.now() : dateTime;
+            this.dateTime = LocalDateTime.now();
             this.source = Objects.requireNonNull(source, "Source account is required");
             this.target = Objects.requireNonNull(target, "Target account is required");
         }
@@ -138,7 +127,8 @@ public interface TransferService {
 
         @Override
         public String toString() {
-            return String.format("%s [dateTime=%s, source=%s, target=%s]", getClass().getSimpleName(), dateTime, source, target);
+            return String.format("%s [dateTime=%s, source=%s, target=%s]",
+                                 getClass().getSimpleName(), dateTime, source, target);
         }
     }
 }
