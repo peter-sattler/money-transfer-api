@@ -33,10 +33,12 @@ public final class Image implements Serializable {
         this.altText = altText;
     }
 
+    @JsonProperty("src")
     public URI getSource() {
         return source;
     }
 
+    @JsonProperty("alt")
     public String getAltText() {
         return altText;
     }
