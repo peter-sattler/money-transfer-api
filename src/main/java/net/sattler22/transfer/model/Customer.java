@@ -13,6 +13,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -34,6 +35,8 @@ public final class Customer implements Serializable {
 
     private static final long serialVersionUID = -2303189692652134564L;
     private final int id;
+    @JsonManagedReference
+    private final Bank bank;
     private final String firstName;
     private final String lastName;
     private final Gender gender;
@@ -55,6 +58,7 @@ public final class Customer implements Serializable {
      */
     @JsonCreator(mode=Mode.PROPERTIES)
     public Customer(@JsonProperty("id") int id,
+                    @JsonProperty("bank") Bank bank,
                     @JsonProperty("firstName") String firstName,
                     @JsonProperty("lastName") String lastName,
                     @JsonProperty("gender") Gender gender,
@@ -64,6 +68,7 @@ public final class Customer implements Serializable {
                     @JsonProperty("images") List<Image> images,
                     @JsonProperty("birthDate") LocalDate birthDate) {
         this.id = id;
+        this.bank = bank;
         this.firstName = Objects.requireNonNull(firstName, "First name is required");
         this.lastName = Objects.requireNonNull(lastName, "Last name is required");
         this.gender = Objects.requireNonNull(gender, "Gender is required");
@@ -77,6 +82,10 @@ public final class Customer implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public Bank getBank() {
+        return bank;
     }
 
     public String getFirstName() {
@@ -151,7 +160,7 @@ public final class Customer implements Serializable {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(id);
+        return Objects.hash(bank, id);
     }
 
     @Override
@@ -163,7 +172,7 @@ public final class Customer implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final Customer that = (Customer) other;
-        return this.id == that.id;
+        return Objects.equals(this.bank, that.bank) && this.id == that.id;
     }
 
     @Override

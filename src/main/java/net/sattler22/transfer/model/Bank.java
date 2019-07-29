@@ -7,9 +7,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
@@ -21,12 +21,12 @@ import net.jcip.annotations.Immutable;
  * @version July 2019
  */
 @Immutable
-@JsonIgnoreProperties({ "customers" })
 public final class Bank implements Serializable {
 
     private static final long serialVersionUID = -7306722910569018912L;
     private final int id;
     private final String name;
+    @JsonBackReference
     private final Set<Customer> customers = Collections.synchronizedSet(new HashSet<>());
 
     /**
@@ -107,6 +107,7 @@ public final class Bank implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [id=%s, name=%s, customers=%s]", getClass().getSimpleName(), id, name, customers);
+        return String.format("%s [id=%s, name=%s, nbrCustomers=%s]",
+                             getClass().getSimpleName(), id, name, customers.size());
     }
 }

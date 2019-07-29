@@ -1,5 +1,7 @@
 package net.sattler22.transfer.api;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.ZERO;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static net.sattler22.transfer.model.AccountType.CHECKING;
@@ -42,15 +44,17 @@ import net.sattler22.transfer.util.TestDataFactory;
 public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTest {
 
     private static final String API_BASE_PATH = "/api/money-transfer";
+    private TestDataFactory testDataFactory;
 
     @Override
     protected Application configure() {
+        final Bank bank = initBank();
+        this.testDataFactory = new TestDataFactory(bank);
         this.set(CONTAINER_PORT, "0");  //Use a free port
         final ResourceConfig config = new ResourceConfig();
         config.register(new AbstractBinder() {
             @Override
             protected void configure() {
-                final Bank bank = initBank();
                 final TransferServiceInMemoryImpl transferService = new TransferServiceInMemoryImpl(bank);
                 this.bind(transferService).to(TransferService.class);
             }
@@ -75,8 +79,8 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void fetchAllCustomersHappyPathTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
-        final Customer burt = TestDataFactory.getBurt(2);
+        final Customer bob = testDataFactory.getBob(1);
+        final Customer burt = testDataFactory.getBurt(2);
         addCustomerImpl(bob);
         addCustomerImpl(burt);
         final Response response = target(API_BASE_PATH).path("customers").request().get();
@@ -91,7 +95,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void fetchOneCustomerHappyPathTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final Response response = target(API_BASE_PATH).path("customer").path(String.valueOf(bob.getId())).request().get();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
@@ -109,14 +113,14 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void addCustomerHappyPathTestCase() {
-        final Response response = addCustomerImpl(TestDataFactory.getBob(1));
+        final Response response = addCustomerImpl(testDataFactory.getBob(1));
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
         assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
     }
 
     @Test
     public void addCustomerAlreadyExistsTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final Response response = addCustomerImpl(bob);
         assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
@@ -125,7 +129,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void deleteCustomerHappyPathTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final Response response = deleteCustomerImpl(bob);
         assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
@@ -133,15 +137,15 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void deleteCustomerNotFoundTestCase() {
-        final Response response = deleteCustomerImpl(TestDataFactory.getBob(1));
+        final Response response = deleteCustomerImpl(testDataFactory.getBob(1));
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void addAccountHappyPathTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
-        final Response response = addAccountImpl(new Account(1, CHECKING, bob, BigDecimal.ONE));
+        final Response response = addAccountImpl(new Account(1, CHECKING, bob, ONE));
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
         assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
     }
@@ -149,26 +153,26 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
     @Test
     public void addAccountOwnerNotFoundTestCase() {
         final Response response =
-            addAccountImpl(new Account(1, SAVINGS, TestDataFactory.getBob(1), BigDecimal.ZERO));
+            addAccountImpl(new Account(1, SAVINGS, testDataFactory.getBob(1), ZERO));
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
 
     @Test
     public void addAccountAlreadyExistsTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
-        addAccountImpl(new Account(1, CHECKING, bob, BigDecimal.ZERO));
-        final Response response = addAccountImpl(new Account(1, CHECKING, bob, BigDecimal.ZERO));
+        addAccountImpl(new Account(1, CHECKING, bob, ZERO));
+        final Response response = addAccountImpl(new Account(1, CHECKING, bob, ZERO));
         assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
 
     @Test
     public void deleteAccountHappyPathTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
-        addAccountImpl(new Account(1, SAVINGS, bob, BigDecimal.ONE));
+        addAccountImpl(new Account(1, SAVINGS, bob, ONE));
         final Response response = deleteAccountImpl(bob, 1);
         assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
@@ -176,7 +180,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void deleteAccountNotFoundTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final Response response = deleteAccountImpl(bob, 1);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
@@ -185,14 +189,14 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void deleteAccountCustomerNotFoundTestCase() {
-        final Response response = deleteAccountImpl(TestDataFactory.getBob(1), 1);
+        final Response response = deleteAccountImpl(testDataFactory.getBob(1), 1);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
 
     @Test
     public void accountTransferHappyPathTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final BigDecimal sourceAccountInitialBalance = new BigDecimal("100");
         final BigDecimal targetAccountInitialBalance = new BigDecimal("200");
@@ -214,7 +218,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void accountTransferCustomerNotFoundTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         final Account sourceAccount = new Account(1, CHECKING, bob, new BigDecimal("100"));
         final Account targetAccount = new Account(2, CHECKING, bob, new BigDecimal("200"));
         addAccountImpl(sourceAccount);
@@ -228,7 +232,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void accountTransferSourceAccountNotFoundTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final Account targetAccount = new Account(2, CHECKING, bob, new BigDecimal("200"));
         addAccountImpl(targetAccount);
@@ -240,7 +244,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void accountTransferTargetAccountNotFoundTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final Account sourceAccount = new Account(1, SAVINGS, bob, new BigDecimal("100"));
         addAccountImpl(sourceAccount);
@@ -252,7 +256,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void accountTransferAmountZeroTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final BigDecimal sourceAccountInitialBalance = new BigDecimal("100");
         final BigDecimal targetAccountInitialBalance = new BigDecimal("200");
@@ -260,7 +264,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
         final Account targetAccount = new Account(2, SAVINGS, bob, targetAccountInitialBalance);
         addAccountImpl(sourceAccount);
         addAccountImpl(targetAccount);
-        final BigDecimal transferAmount = BigDecimal.ZERO;
+        final BigDecimal transferAmount = ZERO;
         final Response response =
             accountTransferImpl(bob, sourceAccount.getNumber(), targetAccount.getNumber(), transferAmount);
         assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
@@ -269,7 +273,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
 
     @Test
     public void accountTransferInsufficentFundsTestCase() {
-        final Customer bob = TestDataFactory.getBob(1);
+        final Customer bob = testDataFactory.getBob(1);
         addCustomerImpl(bob);
         final BigDecimal sourceAccountInitialBalance = new BigDecimal("100");
         final BigDecimal targetAccountInitialBalance = new BigDecimal("200");
@@ -303,7 +307,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
      */
     private Response addAccountImpl(Account account) {
         final AccountDTO accountDTO =
-            new AccountDTO(account.getNumber(), account.getType().getTypeId(), account.getOwner().getId(), account.getBalance());
+            new AccountDTO(account.getNumber(), account.getType(), account.getOwner().getId(), account.getBalance());
         return target(API_BASE_PATH).path("account").request().post(Entity.json(accountDTO));
     }
 

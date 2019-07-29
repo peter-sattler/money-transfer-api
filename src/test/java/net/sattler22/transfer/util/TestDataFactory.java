@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.sattler22.transfer.model.Address;
+import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.model.Image;
 
@@ -21,10 +22,19 @@ import net.sattler22.transfer.model.Image;
  */
 public final class TestDataFactory {
 
+    private final Bank bank;
+
+    /**
+     * Constructs a new test data factory
+     */
+    public TestDataFactory(Bank bank) {
+        this.bank = bank;
+    }
+
     /**
      * Bob Wire - to keep the cows from getting out
      */
-    public static Customer getBob(int customerId) {
+    public Customer getBob(int customerId) {
         try {
             final Address address =
                 new Address("22 Main Street", "West City", "NJ", "56789");
@@ -32,7 +42,7 @@ public final class TestDataFactory {
             final List<Image> images =
                 Collections.singletonList(new Image(uri, "Bob Wire Image"));
             final LocalDate birthDate = LocalDate.of(1964, 2, 27);
-            return new Customer(customerId, "Bob", "Wire", MALE, address,
+            return new Customer(customerId, bank, "Bob", "Wire", MALE, address,
                                 "(111) 111-1111", "bob.wire@yahoo.com", images,
                                 birthDate);
         }
@@ -44,7 +54,7 @@ public final class TestDataFactory {
     /**
      * Eileen Dover - she's always falling over
      */
-    public static Customer getEileen(int customerId) {
+    public Customer getEileen(int customerId) {
         try {
             final Address address =
                 new Address("3 Fence Street", "Redtown", "NY", "12345");
@@ -52,7 +62,7 @@ public final class TestDataFactory {
             final List<Image> images =
                 Collections.singletonList(new Image(uri, "Eileen Dover Image"));
             final LocalDate birthDate = LocalDate.of(1965, 1, 15);
-            return new Customer(customerId, "Eileen", "Dover", FEMALE, address,
+            return new Customer(customerId, bank, "Eileen", "Dover", FEMALE, address,
                                 "(222) 222-2222", "edover@gmail.com", images,
                                 birthDate);
         }
@@ -64,7 +74,7 @@ public final class TestDataFactory {
     /**
      * The fabulous Burt Rentals
      */
-    public static Customer getBurt(int customerId) {
+    public Customer getBurt(int customerId) {
         try {
             final Address address =
                 new Address("5 Broken Down Lane", "Los Angeles", "CA", "90214");
@@ -72,7 +82,7 @@ public final class TestDataFactory {
             final List<Image> images =
                 Collections.singletonList(new Image(uri, "Burt Renals Image"));
             final LocalDate birthDate = LocalDate.of(1953, 9, 23);
-            return new Customer(customerId, "Burt", "Rentals", MALE, address,
+            return new Customer(customerId, bank, "Burt", "Rentals", MALE, address,
                                 "(333) 333-3333", "burt.rentalsr@hotmail.com", images,
                                 birthDate);
         }
