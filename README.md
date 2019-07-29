@@ -1,11 +1,11 @@
-# Money Transfer REST API 2019
+# Money Transfer REST API
 ![Money Stack](https://github.com/peter-sattler/money-transfer/blob/master/img/money-stack.gif)
 
 Design and implement a RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
 ## Simplifications
 
-:moneybag: There is only one bank; _Pete's World Banking Empire_. Since there's only one, might as well strive for world domination.  
+:moneybag: There is only one bank; _Pete's World Banking Empire_.  
 :moneybag: Customers are allowed to open a new account with a zero balance.  
 :moneybag: Transfers can only happen between accounts owned by the same customer.  
 :moneybag: Transactions always clear immediately.  
@@ -13,7 +13,7 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 ## Getting Started
 
-These instructions will get you a copy of this project up and running on your local machine. Once the REST service is running, see the [API section](#the-world-domination-api) for the available options.
+These instructions will get you a copy of this project up and running on your local machine. Once the REST service is running, see the [API section](#money-transfer-api) for the available options.
 
 ```text
 git clone https://github.com/peter-sattler/money-transfer
@@ -26,7 +26,7 @@ gradlew run
 :moneybag: Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)  
 :moneybag: Made use of Jersey's HK2 dependency injection framework  
 
-## The World Domination API
+## Money Transfer API
 
 Action              | Verb   | Resource Locator (URL)                                    | JSON Payload                    | Status Codes
 :-----------------  |:------ | :-------------------------------------------------------- | :------------------------------ | :-------
@@ -35,7 +35,7 @@ Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customer
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 200 (Success)<br>404 (Customer not found)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": 1,<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": 1,<br>"number": 123,<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": 1,<br>"number": 123,<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)
 Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": 1,<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}.     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
 
@@ -71,5 +71,5 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added checking and savings account types  
 
 Pete Sattler  
-27 July 2019  
+28 July 2019  
 _peter@sattler22.net_  
