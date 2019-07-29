@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import net.sattler22.transfer.dto.AccountDTO;
 import net.sattler22.transfer.dto.AccountTransferDTO;
 import net.sattler22.transfer.model.Account;
-import net.sattler22.transfer.model.AccountType;
 import net.sattler22.transfer.model.Bank;
 import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService;
@@ -125,8 +124,7 @@ public final class MoneyTransferResource {
     public Response addAccount(@Context UriInfo uriInfo, AccountDTO accountDTO) {
         try {
             final Customer owner = findCustomerImpl(accountDTO.getCustomerId());
-            final AccountType accountType = AccountType.findAccountType(accountDTO.getTypeId());
-            final Account account = new Account(accountDTO.getNumber(), accountType, owner, accountDTO.getBalance());
+            final Account account = new Account(accountDTO.getNumber(), accountDTO.getType(), owner, accountDTO.getBalance());
             if (!transferService.addAccount(account)) {
                 final String alreadyExistsMessage = String.format("Account #[%d] already exists", account.getNumber());
                 LOGGER.warn(alreadyExistsMessage);
@@ -151,7 +149,7 @@ public final class MoneyTransferResource {
             final Customer owner = findCustomerImpl(customerId);
             final Account account = findAccountImpl(owner, number);
             if (!owner.deleteAccount(account))
-                throw new NotFoundException(String.format("Account #%d does not exist", number));
+                throw new NotFoundException(String.format("Account #[%d] does not exist", number));
             LOGGER.info("Deleted {}", account);
             return Response.noContent().build();
         }
@@ -189,7 +187,8 @@ public final class MoneyTransferResource {
     }
 
     private static Account findAccountImpl(Customer owner, int number) throws NotFoundException {
-        return Account.find(owner, number).orElseThrow(() -> new NotFoundException(String.format("Account #%d not found", number)));
+        return Account.find(owner, number)
+                      .orElseThrow(() -> new NotFoundException(String.format("Account #[%d] not found", number)));
     }
 
     @Override

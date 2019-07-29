@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
+import net.sattler22.transfer.model.AccountType;
 
 /**
  * Account Data Transfer Object (DTO)
@@ -20,7 +21,7 @@ public final class AccountDTO implements Serializable {
 
     private static final long serialVersionUID = 8064618198189338330L;
     private final int number;
-    private final int typeId;
+    private final AccountType type;
     private final int customerId;
     private final BigDecimal balance;
 
@@ -29,11 +30,11 @@ public final class AccountDTO implements Serializable {
      */
     @JsonCreator(mode=Mode.PROPERTIES)
     public AccountDTO(@JsonProperty("number") int number,
-                      @JsonProperty("typeId") int typeId,
+                      @JsonProperty("type") AccountType type,
                       @JsonProperty("customerId") int customerId,
                       @JsonProperty("balance") BigDecimal balance) {
         this.number = number;
-        this.typeId = typeId;
+        this.type = type;
         this.customerId = customerId;
         this.balance = balance;
     }
@@ -42,8 +43,8 @@ public final class AccountDTO implements Serializable {
         return number;
     }
 
-    public int getTypeId() {
-        return typeId;
+    public AccountType getType() {
+        return type;
     }
 
     public int getCustomerId() {
@@ -73,7 +74,7 @@ public final class AccountDTO implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [number=%s, typeId, customerId=%s, balance=%s]",
-                             getClass().getSimpleName(), number, typeId, customerId, balance);
+        return String.format("%s [number=%s, type, customerId=%s, balance=%s]",
+                             getClass().getSimpleName(), number, type, customerId, balance);
     }
 }
