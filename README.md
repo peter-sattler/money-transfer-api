@@ -68,8 +68,8 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Remove restricted class usage from the bootstrap utility  
 :moneybag: Inject transfer service implementation using Jersey's HK2 dependency injection (DI) framework  
 :moneybag: Added gender, address, phone, email, birth date, and joined date fields to Customer  
-:moneybag: Added checking and savings account types 
-:moneybag: Bootstrap utility now automatically loads customer and account data. 
+:moneybag: Added checking and savings account types  
+:moneybag: Bootstrap utility now automatically loads customer and account data  
 
 Pete Sattler  
 28 July 2019  
