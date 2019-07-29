@@ -1,5 +1,7 @@
 package net.sattler22.transfer.model;
 
+import static java.math.BigDecimal.ZERO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -32,13 +34,6 @@ public final class Account implements Serializable {
     private final Object lock = new Object();
 
     /**
-     * Constructs a new account with a ZERO balance
-     */
-    public Account(int number, AccountType type, Customer owner) {
-        this(number, type, owner, null);
-    }
-
-    /**
      * Constructs a new account
      */
     @JsonCreator(mode=Mode.PROPERTIES)
@@ -49,14 +44,14 @@ public final class Account implements Serializable {
         this.number = number;
         this.type = Objects.requireNonNull(type, "Account type is required");
         this.owner = Objects.requireNonNull(owner, "Account owner is required");
-        this.balance = (balance == null) ? BigDecimal.ZERO : balance;
+        this.balance = (balance == null) ? ZERO : balance;
     }
 
     /**
      * Credit funds to the account
      */
     public Account credit(BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0)
+        if (amount.compareTo(ZERO) <= 0)
             throw new IllegalArgumentException("Amount must be greater than zero");
         synchronized (lock) {
             return new Account(number, type, owner, balance.add(amount));
@@ -69,7 +64,7 @@ public final class Account implements Serializable {
     public Account debit(BigDecimal amount) {
         synchronized (lock) {
             final BigDecimal newBalance = balance.subtract(amount);
-            if (newBalance.compareTo(BigDecimal.ZERO) < 0)
+            if (newBalance.compareTo(ZERO) < 0)
                 throw new IllegalStateException("Transaction would lead to an overdrawn account");
             return new Account(number, type, owner, newBalance);
         }

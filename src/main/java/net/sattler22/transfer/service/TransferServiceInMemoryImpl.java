@@ -1,5 +1,7 @@
 package net.sattler22.transfer.service;
 
+import static java.math.BigDecimal.ZERO;
+
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
@@ -72,7 +74,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
+        if (amount == null || amount.compareTo(ZERO) <= 0)
             throw new IllegalArgumentException("Transfer amount must be greater than zero");
         if (amount.compareTo(source.getBalance()) > 0)
             throw new IllegalArgumentException("Transfer amount exceeds the amount of available funds");
