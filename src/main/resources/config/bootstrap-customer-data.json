@@ -1,0 +1,306 @@
+[
+  {
+    "id": 1,
+    "firstName": "Daffy",
+    "lastName": "Duck",
+    "gender": "MALE",
+    "address": {
+      "street": "899 Doughty Street",
+      "city": "Kilbourne",
+      "state": "MP",
+      "zip": 79636
+    },
+    "phone": "(996) 577-2634",
+    "email": "daffy.duck@toontown.com",
+    "images": [
+      {
+        "src": "/images/daffy-duck-1.png",
+        "alt": "Daffy Duck Image #1"
+      },
+      {
+        "src": "/images/daffy-duck-2.png",
+        "alt": "Daffy Duck Image #2"
+      },
+      {
+        "src": "/images/daffy-duck-3.png",
+        "alt": "Daffy Duck Image #3"
+      }
+    ],
+    "birthDate": "2000-11-01",
+    "joinedDate": "2004-02-13T05:59:34"
+  },
+  {
+    "id": 2,
+    "firstName": "Foghorn",
+    "lastName": "Leghorn",
+    "gender": "MALE",
+    "address": {
+      "street": "155 Coles Street",
+      "city": "Inkerman",
+      "state": "PA",
+      "zip": 74945
+    },
+    "phone": "(807) 559-3340",
+    "email": "foghorn.leghorn@toontown.com",
+    "images": [
+      {
+        "src": "/images/foghorn-leghorn-1.png",
+        "alt": "Foghorn Leghorn Image #1"
+      },
+      {
+        "src": "/images/foghorn-leghorn-2.png",
+        "alt": "Foghorn Leghorn Image #2"
+      },
+      {
+        "src": "/images/foghorn-leghorn-3.png",
+        "alt": "Foghorn Leghorn Image #3"
+      }
+    ],
+    "birthDate": "1958-05-06",
+    "joinedDate": "2006-03-15T16:16:55"
+  },
+  {
+    "id": 3,
+    "firstName": "Marvin",
+    "lastName": "Martian",
+    "gender": "MALE",
+    "address": {
+      "street": "358 Malta Street",
+      "city": "Volta",
+      "state": "MA",
+      "zip": 92136
+    },
+    "phone": "(958) 475-2762",
+    "email": "marvin.martian@toontown.com",
+    "images": [
+      {
+        "src": "/images/marvin-the-martian-1.png",
+        "alt": "Marvin the Martian Image #1"
+      },
+      {
+        "src": "/images/marvin-the-martian-2.png",
+        "alt": "Marvin the Martian Image #2"
+      },
+      {
+        "src": "/images/marvin-the-martian-3.png",
+        "alt": "Marvin the Martian Image #3"
+      }
+    ],
+    "birthDate": "1948-01-02",
+    "joinedDate": "2013-01-15T06:54:00"
+  },
+  {
+    "id": 4,
+    "firstName": "Road",
+    "lastName": "Runner",
+    "gender": "MALE",
+    "address": {
+      "street": "503 Calder Place",
+      "city": "Bowie",
+      "state": "AR",
+      "zip": 97119
+    },
+    "phone": "(998) 563-2513",
+    "email": "road.runner@toontown.com",
+    "images": [
+      {
+        "src": "/images/road-runner-1.png",
+        "alt": "Road Runner Image #1"
+      },
+      {
+        "src": "/images/road-runner-2.png",
+        "alt": "Road Runner Image #2"
+      },
+      {
+        "src": "/images/road-runner-3.png",
+        "alt": "Road Runner Image #3"
+      }
+    ],
+    "birthDate": "1964-05-03",
+    "joinedDate": "2003-12-14T14:36:44"
+  },
+  {
+    "id": 5,
+    "firstName": "Speedy",
+    "lastName": "Gonzales",
+    "gender": "MALE",
+    "address": {
+      "street": "98 Garden Place",
+      "city": "Kennedyville",
+      "state": "DE",
+      "zip": 58488
+    },
+    "phone": "(821) 437-3085",
+    "email": "speedy.gonzales@toontown.com",
+    "images": [
+      {
+        "src": "/images/speedy-gonzales-1.png",
+        "alt": "Speedy Gonzales Image #1"
+      },
+      {
+        "src": "/images/speedy-gonzales-2.png",
+        "alt": "Speedy Gonzales Image #2"
+      },
+      {
+        "src": "/images/speedy-gonzales-3.png",
+        "alt": "Speedy Gonzales Image #3"
+      }
+    ],
+    "birthDate": "1994-04-01",
+    "joinedDate": "2004-07-05T18:01:43"
+  },
+  {
+    "id": 6,
+    "firstName": "Sylvester",
+    "lastName": "Cat",
+    "gender": "MALE",
+    "address": {
+      "street": "735 Lloyd Court",
+      "city": "Grandview",
+      "state": "KS",
+      "zip": 64178
+    },
+    "phone": "(926) 534-2713",
+    "email": "sylvester@toontown.com",
+    "images": [
+      {
+        "src": "/images/sylvester-1.png",
+        "alt": "Sylvester Image #1"
+      },
+      {
+        "src": "/images/sylvester-2.png",
+        "alt": "Sylvester Image #2"
+      },
+      {
+        "src": "/images/sylvester-3.png",
+        "alt": "Sylvester Image #3"
+      },
+      {
+        "src": "/images/sylvester-4.png",
+        "alt": "Sylvester Image #4"
+      }
+    ],
+    "birthDate": "1983-05-01",
+    "joinedDate": "2010-04-17T16:57:33"
+  },
+  {
+    "id": 7,
+    "firstName": "Tasmanian",
+    "lastName": "Devil",
+    "gender": "MALE",
+    "address": {
+      "street": "51 Richards Street",
+      "city": "Chapin",
+      "state": "ND",
+      "zip": 87620
+    },
+    "phone": "(950) 501-2998",
+    "email": "tasmanian.devil@toontown.com",
+    "images": [
+      {
+        "src": "/images/tasmanian-devil-1.png",
+        "alt": "Tasmanian Devil Image #1"
+      },
+      {
+        "src": "/images/tasmanian-devil-2.png",
+        "alt": "Tasmanian Devil Image #2"
+      },
+      {
+        "src": "/images/tasmanian-devil-3.png",
+        "alt": "Tasmanian Devil Image #3"
+      }
+    ],
+    "birthDate": "1941-10-11",
+    "joinedDate": "2015-10-11T05:53:00"
+  },
+  {
+    "id": 8,
+    "firstName": "Tweety",
+    "lastName": "Bird",
+    "gender": "FEMALE",
+    "address": {
+      "street": "42 Hunterfly Place",
+      "city": "Crisman",
+      "state": "AS",
+      "zip": 79000
+    },
+    "phone": "(940) 419-2302",
+    "email": "tweety@toontown.com",
+    "images": [
+      {
+        "src": "/images/tweety-1.png",
+        "alt": "Tweety Image #1"
+      },
+      {
+        "src": "/images/tweety-2.png",
+        "alt": "Tweety Image #2"
+      },
+      {
+        "src": "/images/tweety-3.png",
+        "alt": "Tweety Image #3"
+      }
+    ],
+    "birthDate": "1928-04-04",
+    "joinedDate": "2010-07-05T22:32:50"
+  },
+  {
+    "id": 9,
+    "firstName": "Wile E.",
+    "lastName": "Coyote",
+    "gender": "MALE",
+    "address": {
+      "street": "976 Plymouth Street",
+      "city": "Calpine",
+      "state": "MA",
+      "zip": 65712
+    },
+    "phone": "(815) 546-2052",
+    "email": "wile-e.coyote@toontown.com",
+    "images": [
+      {
+        "src": "/images/wile-e-coyote-1.png",
+        "alt": "Wile E. Coyote Image #1"
+      },
+      {
+        "src": "/images/wile-e-coyote-2.png",
+        "alt": "Wile E. Coyote Image #2"
+      },
+      {
+        "src": "/images/wile-e-coyote-3.png",
+        "alt": "Wile E. Coyote Image #3"
+      }
+    ],
+    "birthDate": "1985-01-10",
+    "joinedDate": "2015-10-27T01:04:34"
+  },
+  {
+    "id": 10,
+    "firstName": "Yosemite",
+    "lastName": "Sam",
+    "gender": "MALE",
+    "address": {
+      "street": "840 Noble Street",
+      "city": "Dundee",
+      "state": "LA",
+      "zip": 28014
+    },
+    "phone": "(843) 594-2475",
+    "email": "yosemite.sam@toontown.com",
+    "images": [
+      {
+        "src": "/images/yosemite-sam-1.png",
+        "alt": "Yosemite Sam Image #1"
+      },
+      {
+        "src": "/images/yosemite-sam-2.png",
+        "alt": "Yosemite Sam Image #2"
+      },
+      {
+        "src": "/images/yosemite-sam-3.png",
+        "alt": "Yosemite Sam Image #3"
+      }
+    ],
+    "birthDate": "1996-11-02",
+    "joinedDate": "2005-10-27T22:26:43"
+  }
+]

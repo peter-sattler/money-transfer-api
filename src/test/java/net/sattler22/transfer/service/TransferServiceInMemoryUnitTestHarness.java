@@ -29,10 +29,9 @@ public class TransferServiceInMemoryUnitTestHarness {
     @Before
     public void setUp() throws Exception {
         final Bank bank = new Bank(1, "Transfer Service In-Memory Unit Test Harness Bank");
-        final TestDataFactory testDataFactory = new TestDataFactory(bank);
-        bank.addCustomer(testDataFactory.getBob(1));
-        bank.addCustomer(testDataFactory.getEileen(2));
-        bank.addCustomer(testDataFactory.getBurt(3));
+        bank.addCustomer(TestDataFactory.getBob(1));
+        bank.addCustomer(TestDataFactory.getEileen(2));
+        bank.addCustomer(TestDataFactory.getBurt(3));
         this.transferService = new TransferServiceInMemoryImpl(bank);
     }
 

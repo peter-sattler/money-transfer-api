@@ -17,18 +17,16 @@ import net.sattler22.transfer.util.TestDataFactory;
 public class BankUnitTestHarness {
 
     private Bank bank;
-    private TestDataFactory testDataFactory;
 
     @Before
     public void setUp() throws Exception {
         this.bank = new Bank(1, "Bank Unit Test Harness");
-        this.testDataFactory = new TestDataFactory(bank);
     }
 
     @Test
     public void testAddCustomer() {
         final int customerId = 10;
-        final Customer expected = testDataFactory.getBob(customerId);
+        final Customer expected = TestDataFactory.getBob(customerId);
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));
         assertEquals(bank.getCustomers().size(), 1);
@@ -38,7 +36,7 @@ public class BankUnitTestHarness {
     @Test
     public void testDeleteCustomer() {
         final int customerId = 20;
-        final Customer expected = testDataFactory.getEileen(customerId);
+        final Customer expected = TestDataFactory.getEileen(customerId);
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));
         assertEquals(bank.getCustomers().size(), 1);

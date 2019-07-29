@@ -107,7 +107,6 @@ public final class Bank implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [id=%s, name=%s, nbrCustomers=%s]",
-                             getClass().getSimpleName(), id, name, customers.size());
+        return String.format("%s [id=%s, name=%s]", getClass().getSimpleName(), id, name);
     }
 }
