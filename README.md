@@ -70,7 +70,8 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added gender, address, phone, email, birth date, and joined date fields to Customer  
 :moneybag: Added checking and savings account types  
 :moneybag: Bootstrap utility now automatically loads customer and account data  
+:moneybag: Renamed project from money-transfer to money-transfer-api  
 
 Pete Sattler  
-28 July 2019  
+30 July 2019  
 _peter@sattler22.net_  
