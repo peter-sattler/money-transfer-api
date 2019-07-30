@@ -16,7 +16,7 @@ Design and implement a RESTful API (including data model and the backing impleme
 These instructions will get you a copy of this project up and running on your local machine. Once the REST service is running, see the [API section](#money-transfer-api) for the available options.
 
 ```text
-git clone https://github.com/peter-sattler/money-transfer
+git clone https://github.com/peter-sattler/money-transfer-api
 cd money-transfer
 gradlew run
 ```
