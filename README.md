@@ -17,7 +17,7 @@ These instructions will get you a copy of this project up and running on your lo
 
 ```text
 git clone https://github.com/peter-sattler/money-transfer-api
-cd money-transfer
+cd money-transfer-api
 gradlew run
 ```
 
