@@ -5,10 +5,10 @@
     "lastName": "Duck",
     "gender": "MALE",
     "address": {
-      "street": "899 Doughty Street",
-      "city": "Kilbourne",
-      "state": "MP",
-      "zip": 79636
+      "street": "7 East 12th Street",
+      "city": "New York",
+      "state": "NY",
+      "zip": 10003
     },
     "phone": "(996) 577-2634",
     "email": "daffy.duck@toontown.com",
