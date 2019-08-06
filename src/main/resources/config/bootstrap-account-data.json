@@ -2,103 +2,103 @@
     {
         "number": 11,
         "type": "CHECKING",
-        "customerId": 1,
+        "customerId": "128-44-0604",
         "balance": "2808.11"
     },
     {
         "number": 12,
         "type": "SAVINGS",
-        "customerId": 1,
+        "customerId": "128-44-0604",
         "balance": "34321.23"
     },
     {
         "number": 21,
         "type": "CHECKING",
-        "customerId": 2,
+        "customerId": "160-22-9506",
         "balance": "2274.53"
     },
     {
         "number": 22,
         "type": "SAVINGS",
-        "customerId": 2,
+        "customerId": "160-22-9506",
         "balance": "8327.24"
     },
     {
         "number": 31,
         "type": "CHECKING",
-        "customerId": 3,
+        "customerId": "020-74-7700",
         "balance": "4798.45"
     },
     {
         "number": 32,
         "type": "SAVINGS",
-        "customerId": 3,
+        "customerId": "020-74-7700",
         "balance": "32985.11"
     },
     {
         "number": 41,
         "type": "CHECKING",
-        "customerId": 4,
+        "customerId": "676-20-8127",
         "balance": "1236.75"
     },
     {
         "number": 42,
         "type": "SAVINGS",
-        "customerId": 4,
+        "customerId": "676-20-8127",
         "balance": "18552.04"
     },
     {
         "number": 51,
         "type": "CHECKING",
-        "customerId": 5,
+        "customerId": "222-94-2648",
         "balance": "3721.91"
     },
     {
         "number": 52,
         "type": "SAVINGS",
-        "customerId": 5,
+        "customerId": "222-94-2648",
         "balance": "6480.08"
     },
     {
         "number": 61,
         "type": "CHECKING",
-        "customerId": 6,
+        "customerId": "510-82-8692",
         "balance": "4351.07"
     },
     {
         "number": 62,
         "type": "SAVINGS",
-        "customerId": 6,
+        "customerId": "510-82-8692",
         "balance": "36740.98"
     },
     {
         "number": 71,
         "type": "CHECKING",
-        "customerId": 7,
+        "customerId": "501-44-1496",
         "balance": "1672.73"
     },
     {
         "number": 72,
         "type": "SAVINGS",
-        "customerId": 7,
+        "customerId": "501-44-1496",
         "balance": "19766.62"
     },
     {
         "number": 260,
         "type": "CHECKING",
-        "customerId": 8,
+        "customerId": "600-53-8803",
         "balance": "3175.14"
     },
     {
         "number": 270,
         "type": "SAVINGS",
-        "customerId": 9,
+        "customerId": "019-38-9534",
         "balance": "4894.15"
     },
     {
         "number": 280,
         "type": "CHECKING",
-        "customerId": 10,
+        "customerId": "435-52-4432",
         "balance": "2160.44"
     }
 ]
