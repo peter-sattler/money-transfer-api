@@ -24,7 +24,7 @@ import net.sattler22.transfer.model.Customer;
  * Money Transfer Service Interface
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 public interface TransferService {
 
@@ -43,7 +43,7 @@ public interface TransferService {
      *
      * @param id The customer identifier
      */
-    Optional<Customer> findCustomer(int id);
+    Optional<Customer> findCustomer(String id);
 
     /**
      * Add a new customer
@@ -73,7 +73,7 @@ public interface TransferService {
      * @param number The account number
      * @return True if the account was deleted. Otherwise, returns false.
      */
-    boolean deleteAccount(int customerId, int number);
+    boolean deleteAccount(String customerId, int number);
 
     /**
      * Transfer money between accounts of the same owner

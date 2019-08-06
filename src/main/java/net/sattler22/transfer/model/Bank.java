@@ -18,7 +18,7 @@ import net.jcip.annotations.Immutable;
  * Banking Institution Business Object
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 @Immutable
 public final class Bank implements Serializable {
@@ -84,8 +84,8 @@ public final class Bank implements Serializable {
      *
      * @param id The customer identifier
      */
-    public Optional<Customer> findCustomer(int id) {
-        return customers.stream().filter(customer -> customer.getId() == id).findFirst();
+    public Optional<Customer> findCustomer(String id) {
+        return customers.stream().filter(customer -> customer.getId().equals(id)).findFirst();
     }
 
     @Override

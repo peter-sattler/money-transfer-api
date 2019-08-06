@@ -14,13 +14,13 @@ import net.jcip.annotations.Immutable;
  * Account Transfer Data Transfer Object (DTO)
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 @Immutable
 public final class AccountTransferDTO implements Serializable {
 
     private static final long serialVersionUID = 1961253095079262545L;
-    private final int customerId;
+    private final String customerId;
     private final int sourceNumber;
     private final int targetNumber;
     private final BigDecimal amount;
@@ -29,7 +29,7 @@ public final class AccountTransferDTO implements Serializable {
      * Constructs a new account transfer DTO
      */
     @JsonCreator(mode = Mode.PROPERTIES)
-    public AccountTransferDTO(@JsonProperty("customerId") int customerId,
+    public AccountTransferDTO(@JsonProperty("customerId") String customerId,
                               @JsonProperty("sourceNumber") int sourceNumber,
                               @JsonProperty("targetNumber") int targetNumber,
                               @JsonProperty("amount") BigDecimal amount) {
@@ -39,7 +39,7 @@ public final class AccountTransferDTO implements Serializable {
         this.amount = amount;
     }
 
-    public int getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
@@ -57,7 +57,7 @@ public final class AccountTransferDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(new Integer[] { customerId, sourceNumber, targetNumber }, amount);
+        return Objects.hash(customerId, sourceNumber, targetNumber, amount);
     }
 
     @Override
@@ -69,7 +69,9 @@ public final class AccountTransferDTO implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final AccountTransferDTO that = (AccountTransferDTO) other;
-        if (this.customerId != that.customerId)
+        if (this.customerId == null || that.customerId == null)
+            return false;
+        if (!this.customerId.equals(that.customerId))
             return false;
         if (this.sourceNumber != that.sourceNumber)
             return false;

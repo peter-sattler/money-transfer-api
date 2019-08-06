@@ -14,7 +14,7 @@ import net.sattler22.transfer.model.AccountType;
  * Account Data Transfer Object (DTO)
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 @Immutable
 public final class AccountDTO implements Serializable {
@@ -22,7 +22,7 @@ public final class AccountDTO implements Serializable {
     private static final long serialVersionUID = 8064618198189338330L;
     private final int number;
     private final AccountType type;
-    private final int customerId;
+    private final String customerId;
     private final BigDecimal balance;
 
     /**
@@ -31,7 +31,7 @@ public final class AccountDTO implements Serializable {
     @JsonCreator(mode=Mode.PROPERTIES)
     public AccountDTO(@JsonProperty("number") int number,
                       @JsonProperty("type") AccountType type,
-                      @JsonProperty("customerId") int customerId,
+                      @JsonProperty("customerId") String customerId,
                       @JsonProperty("balance") BigDecimal balance) {
         this.number = number;
         this.type = type;
@@ -47,7 +47,7 @@ public final class AccountDTO implements Serializable {
         return type;
     }
 
-    public int getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 

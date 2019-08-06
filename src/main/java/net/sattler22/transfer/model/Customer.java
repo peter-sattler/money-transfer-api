@@ -27,13 +27,13 @@ import net.jcip.annotations.Immutable;
  * Customer Business Object
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 @Immutable
 public final class Customer implements Serializable {
 
     private static final long serialVersionUID = -2303189692652134564L;
-    private final int id;
+    private final String id;
     private final String firstName;
     private final String lastName;
     private final Gender gender;
@@ -54,7 +54,7 @@ public final class Customer implements Serializable {
      * Constructs a new customer
      */
     @JsonCreator(mode=Mode.PROPERTIES)
-    public Customer(@JsonProperty("id") int id,
+    public Customer(@JsonProperty("id") String id,
                     @JsonProperty("firstName") String firstName,
                     @JsonProperty("lastName") String lastName,
                     @JsonProperty("gender") Gender gender,
@@ -63,7 +63,7 @@ public final class Customer implements Serializable {
                     @JsonProperty("email") String email,
                     @JsonProperty("images") List<Image> images,
                     @JsonProperty("birthDate") LocalDate birthDate) {
-        this.id = id;
+        this.id = Objects.requireNonNull(id, "Customer ID is required");
         this.firstName = Objects.requireNonNull(firstName, "First name is required");
         this.lastName = Objects.requireNonNull(lastName, "Last name is required");
         this.gender = Objects.requireNonNull(gender, "Gender is required");
@@ -75,7 +75,7 @@ public final class Customer implements Serializable {
         this.joinedDate = LocalDateTime.now();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -151,7 +151,7 @@ public final class Customer implements Serializable {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(id);
+        return Objects.hash(id);
     }
 
     @Override
@@ -163,7 +163,7 @@ public final class Customer implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final Customer that = (Customer) other;
-        return this.id == that.id;
+        return this.id.equals(that.id);
     }
 
     @Override

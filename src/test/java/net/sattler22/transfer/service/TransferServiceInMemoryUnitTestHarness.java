@@ -20,7 +20,7 @@ import net.sattler22.transfer.util.TestDataFactory;
  * Money Transfer Service In-Memory Implementation Unit Test Harness
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 public class TransferServiceInMemoryUnitTestHarness {
 
@@ -29,9 +29,9 @@ public class TransferServiceInMemoryUnitTestHarness {
     @Before
     public void setUp() throws Exception {
         final Bank bank = new Bank(1, "Transfer Service In-Memory Unit Test Harness Bank");
-        bank.addCustomer(TestDataFactory.getBob(1));
-        bank.addCustomer(TestDataFactory.getEileen(2));
-        bank.addCustomer(TestDataFactory.getBurt(3));
+        bank.addCustomer(TestDataFactory.getBob("111"));
+        bank.addCustomer(TestDataFactory.getEileen("222"));
+        bank.addCustomer(TestDataFactory.getBurt("333"));
         this.transferService = new TransferServiceInMemoryImpl(bank);
     }
 

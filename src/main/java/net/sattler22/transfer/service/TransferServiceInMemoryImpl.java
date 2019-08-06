@@ -19,7 +19,7 @@ import net.sattler22.transfer.model.Customer;
  * Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 public final class TransferServiceInMemoryImpl implements TransferService {
 
@@ -54,7 +54,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public Optional<Customer> findCustomer(int id) {
+    public Optional<Customer> findCustomer(String id) {
         return bank.findCustomer(id);
     }
 
@@ -64,7 +64,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public boolean deleteAccount(int customerId, int number) {
+    public boolean deleteAccount(String customerId, int number) {
         final Customer owner =
             findCustomer(customerId).orElseThrow(() -> new NotFoundException(String.format("Customer ID #%d not found", customerId)));
         final Account account =

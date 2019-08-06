@@ -17,14 +17,14 @@ import net.sattler22.transfer.model.Image;
  * Money Transfer Test Data Factory
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 public final class TestDataFactory {
 
     /**
      * Bob Wire - to keep the cows from getting out
      */
-    public static Customer getBob(int customerId) {
+    public static Customer getBob(String customerId) {
         try {
             final Address address =
                 new Address("22 Main Street", "West City", "NJ", "56789");
@@ -43,7 +43,7 @@ public final class TestDataFactory {
     /**
      * Eileen Dover - she's always falling over
      */
-    public static Customer getEileen(int customerId) {
+    public static Customer getEileen(String customerId) {
         try {
             final Address address =
                 new Address("3 Fence Street", "Redtown", "NY", "12345");
@@ -62,7 +62,7 @@ public final class TestDataFactory {
     /**
      * The fabulous Burt Rentals
      */
-    public static Customer getBurt(int customerId) {
+    public static Customer getBurt(String customerId) {
         try {
             final Address address =
                 new Address("5 Broken Down Lane", "Los Angeles", "CA", "90214");

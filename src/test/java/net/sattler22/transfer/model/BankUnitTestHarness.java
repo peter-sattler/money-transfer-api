@@ -12,7 +12,7 @@ import net.sattler22.transfer.util.TestDataFactory;
  * Money Transfer Bank Business Object Unit Test Harness
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 public class BankUnitTestHarness {
 
@@ -25,7 +25,7 @@ public class BankUnitTestHarness {
 
     @Test
     public void testAddCustomer() {
-        final int customerId = 10;
+        final String customerId = "AAA-10";
         final Customer expected = TestDataFactory.getBob(customerId);
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));
@@ -35,7 +35,7 @@ public class BankUnitTestHarness {
 
     @Test
     public void testDeleteCustomer() {
-        final int customerId = 20;
+        final String customerId = "BBB-20";
         final Customer expected = TestDataFactory.getEileen(customerId);
         bank.addCustomer(expected);
         assertTrue(bank.isCustomer(expected));

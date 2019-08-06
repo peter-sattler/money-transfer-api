@@ -38,7 +38,7 @@ import net.sattler22.transfer.service.TransferService.TransferResult;
  * Money Transfer REST Resource
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 @Singleton
 @Path("/api/money-transfer")
@@ -75,7 +75,7 @@ public final class MoneyTransferResource {
 
     @GET
     @Path("/customer/{id}")
-    public Response findCustomer(@PathParam("id") int id) {
+    public Response findCustomer(@PathParam("id") String id) {
         try {
             final Customer customer = findCustomerImpl(id);
             LOGGER.info("Retrieved {}", customer);
@@ -99,13 +99,13 @@ public final class MoneyTransferResource {
         LOGGER.info("{} created successfully", customer);
         final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResource.class)
                                                         .path("customer")
-                                                        .path(Integer.toString(customer.getId())).build();
+                                                        .path(customer.getId()).build();
         return Response.created(location).entity(customer).build();
     }
 
     @DELETE
     @Path("/customer/{id}")
-    public Response deleteCustomer(@PathParam("id") int id) {
+    public Response deleteCustomer(@PathParam("id") String id) {
         try {
             final Customer customer = findCustomerImpl(id);
             transferService.deleteCustomer(customer);
@@ -133,7 +133,7 @@ public final class MoneyTransferResource {
             LOGGER.info("{} created successfully", account);
             final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResource.class)
                                                             .path("customer")
-                                                            .path(Integer.toString(owner.getId())).build();
+                                                            .path(owner.getId()).build();
             return Response.created(location).entity(owner).build();
         }
         catch(NotFoundException e) {
@@ -144,7 +144,7 @@ public final class MoneyTransferResource {
 
     @DELETE
     @Path("/account/{customerId}/{number}")
-    public Response deleteAccount(@PathParam("customerId") int customerId, @PathParam("number") int number) {
+    public Response deleteAccount(@PathParam("customerId") String customerId, @PathParam("number") int number) {
         try {
             final Customer owner = findCustomerImpl(customerId);
             final Account account = findAccountImpl(owner, number);
@@ -181,9 +181,9 @@ public final class MoneyTransferResource {
         return Response.ok().entity(transferResult).build();
     }
 
-    private Customer findCustomerImpl(int id) throws NotFoundException {
+    private Customer findCustomerImpl(String id) throws NotFoundException {
         return transferService.findCustomer(id)
-                              .orElseThrow(() -> new NotFoundException(String.format("Customer ID [%d] not found", id)));
+                              .orElseThrow(() -> new NotFoundException(String.format("Customer ID [%s] not found", id)));
     }
 
     private static Account findAccountImpl(Customer owner, int number) throws NotFoundException {
