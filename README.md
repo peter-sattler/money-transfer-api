@@ -33,11 +33,11 @@ Action              | Verb   | Resource Locator (URL)                           
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                                 | 200 (Success)
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                                 | 200 (Success)
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 200 (Success)<br>404 (Customer not found)
-Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": 1,<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
+Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": 1,<br>"number": 123,<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"number": 123,<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": 1,<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}.     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}.     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
 
 ## Given Requirements
 
@@ -63,7 +63,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Use JCIP (Java Concurrency In Practice) annotations  
 :moneybag: Fix CRLF  
 
-## [Version 0.0.3] July 2019 Enhancements
+## [Version 0.0.3] July/August 2019 Enhancements
 :moneybag: Add integration test harness so API is fully covered  
 :moneybag: Remove restricted class usage from the bootstrap utility  
 :moneybag: Inject transfer service implementation using Jersey's HK2 dependency injection (DI) framework  
@@ -71,7 +71,8 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added checking and savings account types  
 :moneybag: Bootstrap utility now automatically loads customer and account data  
 :moneybag: Renamed project from money-transfer to money-transfer-api  
+:moneybag: Change customer ID from integer (primitive) to String to support social security number (SSN)   
 
 Pete Sattler  
-30 July 2019  
+5 August 2019  
 _peter@sattler22.net_  
