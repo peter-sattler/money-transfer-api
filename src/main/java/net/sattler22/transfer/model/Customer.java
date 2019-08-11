@@ -70,7 +70,7 @@ public final class Customer implements Serializable {
         this.address = Objects.requireNonNull(address, "Address is required");
         this.phone = Objects.requireNonNull(phone, "Phone is required");
         this.email = email;
-        this.images = images;
+        this.images = (images == null) ? Collections.emptyList() : images;
         this.birthDate = Objects.requireNonNull(birthDate, "Date of birth is required");
         this.joinedDate = LocalDateTime.now();
     }

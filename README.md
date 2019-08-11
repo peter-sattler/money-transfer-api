@@ -74,5 +74,5 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Change customer ID from integer (primitive) to String to support social security number (SSN)   
 
 Pete Sattler  
-5 August 2019  
+11 August 2019  
 _peter@sattler22.net_  
