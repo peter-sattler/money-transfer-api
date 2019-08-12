@@ -72,7 +72,8 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Bootstrap utility now automatically loads customer and account data  
 :moneybag: Renamed project from money-transfer to money-transfer-api  
 :moneybag: Change customer ID from integer (primitive) to String to support social security number (SSN)   
+:moneybag: Added Cross-Origin Resource Sharing (CORS) filter  
 
 Pete Sattler  
-11 August 2019  
+12 August 2019  
 _peter@sattler22.net_  

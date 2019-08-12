@@ -20,7 +20,7 @@ import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
  * Money Transfer REST Resource Bootstrap
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 public final class MoneyTransferResourceBootstrap {
 
@@ -44,6 +44,7 @@ public final class MoneyTransferResourceBootstrap {
                 this.bind(transferService).to(TransferService.class);
             }
         });
+        config.register(CORSFilter.class);
         config.register(MoneyTransferResource.class);
         final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI, config);
         try {
