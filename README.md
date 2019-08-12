@@ -35,6 +35,7 @@ Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customer
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 200 (Success)<br>404 (Customer not found)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)
+Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts/{customerId} |                                 | 200 (Success)<br>404 (Customer not found)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"number": 123,<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)
 Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}.     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
@@ -73,6 +74,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Renamed project from money-transfer to money-transfer-api  
 :moneybag: Change customer ID from integer (primitive) to String to support social security number (SSN)   
 :moneybag: Added Cross-Origin Resource Sharing (CORS) filter  
+:moneybag: Added REST call to get all accounts for a customer id  
 
 Pete Sattler  
 12 August 2019  
