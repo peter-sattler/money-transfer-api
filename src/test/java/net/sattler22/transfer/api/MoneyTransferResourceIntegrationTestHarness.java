@@ -141,6 +141,44 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
     }
 
     @Test
+    public void fetchAccountsForCustomerHappyPathTestCase() {
+        final Customer burt = TestDataFactory.getBurt("234");
+        final Account checking = new Account(1, CHECKING, burt, ZERO);
+        final Account savings = new Account(1, SAVINGS, burt, ZERO);
+        addCustomerImpl(burt);
+        addAccountImpl(checking);
+        addAccountImpl(savings);
+        final Response response = target(API_BASE_PATH).path("accounts").path(burt.getId()).request().get();
+        assertEquals(Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
+        final Set<Account> actual = response.readEntity(new GenericType<Set<Account>>() {});
+        final Set<Account> expected = new HashSet<>();
+        expected.add(checking);
+        expected.add(savings);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void fetchAccountsForCustomerNoAccountsTestCase() {
+        final Customer burt = TestDataFactory.getBurt("234");
+        addCustomerImpl(burt);
+        final Response response = target(API_BASE_PATH).path("accounts").path(burt.getId()).request().get();
+        assertEquals(Status.OK.getStatusCode(), response.getStatus());
+        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
+        final Set<Account> actual = response.readEntity(new GenericType<Set<Account>>() {});
+        final Set<Account> expected = new HashSet<>();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void fetchAccountsForCustomerNotFoundTestCase() {
+        final Customer burt = TestDataFactory.getBurt("234");
+        final Response response = target(API_BASE_PATH).path("accounts").path(burt.getId()).request().get();
+        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString(CONTENT_TYPE));
+    }
+
+    @Test
     public void addAccountHappyPathTestCase() {
         final Customer bob = TestDataFactory.getBob("123");
         addCustomerImpl(bob);

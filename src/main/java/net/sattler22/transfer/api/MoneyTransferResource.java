@@ -118,6 +118,21 @@ public final class MoneyTransferResource {
         }
     }
 
+    @GET
+    @Path("/accounts/{customerId}")
+    public Response getAccounts(@PathParam("customerId") String customerId) {
+        try {
+            final Customer owner = findCustomerImpl(customerId);
+            final Set<Account> accounts = owner.getAccounts();
+            LOGGER.info("Retrieved [{}] {} for {}", accounts.size(), accounts.size() == 1 ? "account" : "accounts", owner);
+            return Response.ok().entity(new GenericEntity<Set<Account>>(accounts) {}).build();
+        }
+        catch(NotFoundException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+        }
+    }
+
     @POST
     @Path("/account")
     @Consumes(APPLICATION_JSON)
@@ -141,6 +156,7 @@ public final class MoneyTransferResource {
             throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
         }
     }
+
 
     @DELETE
     @Path("/account/{customerId}/{number}")
