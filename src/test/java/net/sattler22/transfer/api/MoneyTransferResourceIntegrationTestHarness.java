@@ -114,7 +114,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
     public void addCustomerHappyPathTestCase() {
         final Response response = addCustomerImpl(TestDataFactory.getBob("123"));
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
+        assertNull(response.getHeaderString(CONTENT_TYPE));
     }
 
     @Test
@@ -146,7 +146,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
         addCustomerImpl(bob);
         final Response response = addAccountImpl(new Account(1, CHECKING, bob, ONE));
         assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
+        assertNull(response.getHeaderString(CONTENT_TYPE));
     }
 
     @Test
