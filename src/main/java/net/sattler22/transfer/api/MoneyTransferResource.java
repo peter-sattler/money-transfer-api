@@ -100,7 +100,7 @@ public final class MoneyTransferResource {
         final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResource.class)
                                                         .path("customer")
                                                         .path(customer.getId()).build();
-        return Response.created(location).entity(customer).build();
+        return Response.created(location).build();
     }
 
     @DELETE
@@ -134,7 +134,7 @@ public final class MoneyTransferResource {
             final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResource.class)
                                                             .path("customer")
                                                             .path(owner.getId()).build();
-            return Response.created(location).entity(owner).build();
+            return Response.created(location).build();
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
