@@ -38,7 +38,7 @@ Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer
 Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts/{customerId} |                                 | 200 (Success)<br>404 (Customer not found)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"number": 123,<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}.     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
 
 ## Given Requirements
 
