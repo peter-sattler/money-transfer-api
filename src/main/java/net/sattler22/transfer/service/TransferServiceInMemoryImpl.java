@@ -83,11 +83,11 @@ public final class TransferServiceInMemoryImpl implements TransferService {
         final Object lock2 = source.getNumber() < target.getNumber() ? target.getLock() : source.getLock();
         synchronized (lock1) {
             synchronized (lock2) {
-                final Account newSource = source.debit(amount);
-                final Account newTarget = target.credit(amount);
+                source.debit(amount);
+                target.credit(amount);
                 LOGGER.info("{} transferred ${} from account #{} to account #{}",
                             source.getOwner(), amount, source.getNumber(), target.getNumber());
-                return new TransferResult(newSource, newTarget);
+                return new TransferResult(source, target);
             }
         }
     }

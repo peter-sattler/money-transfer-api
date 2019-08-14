@@ -13,15 +13,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import net.jcip.annotations.Immutable;
-
 /**
  * Account Business Object
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
-@Immutable
 @JsonIgnoreProperties({ "lock" })
 public final class Account implements Serializable {
 
@@ -30,7 +27,7 @@ public final class Account implements Serializable {
     private final AccountType type;
     @JsonManagedReference
     private final Customer owner;
-    private final BigDecimal balance;
+    private volatile BigDecimal balance;
     private final Object lock = new Object();
 
     /**
@@ -50,23 +47,23 @@ public final class Account implements Serializable {
     /**
      * Credit funds to the account
      */
-    public Account credit(BigDecimal amount) {
+    public void credit(BigDecimal amount) {
         if (amount.compareTo(ZERO) <= 0)
             throw new IllegalArgumentException("Amount must be greater than zero");
         synchronized (lock) {
-            return new Account(number, type, owner, balance.add(amount));
+            balance = balance.add(amount);
         }
     }
 
     /**
      * Debit funds from the account
      */
-    public Account debit(BigDecimal amount) {
+    public void debit(BigDecimal amount) {
         synchronized (lock) {
             final BigDecimal newBalance = balance.subtract(amount);
             if (newBalance.compareTo(ZERO) < 0)
                 throw new IllegalStateException("Transaction would lead to an overdrawn account");
-            return new Account(number, type, owner, newBalance);
+            this.balance = newBalance;
         }
     }
 
