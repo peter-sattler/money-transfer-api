@@ -18,11 +18,11 @@ import net.sattler22.transfer.service.TransferService;
  * Bootstrap Account Data Loader
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version August 2019
  */
 final class AccountDataLoader extends BaseDataLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDataLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountDataLoader.class);
     private final TransferService transferService;
 
     /**
