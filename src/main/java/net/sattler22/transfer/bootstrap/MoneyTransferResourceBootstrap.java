@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sattler22.transfer.api.MoneyTransferResource;
-import net.sattler22.transfer.model.Bank;
+import net.sattler22.transfer.domain.Bank;
 import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
 
@@ -20,7 +20,7 @@ import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
  * Money Transfer REST Resource Bootstrap
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 public final class MoneyTransferResourceBootstrap {
 

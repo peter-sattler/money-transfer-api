@@ -4,8 +4,8 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static net.sattler22.transfer.model.AccountType.CHECKING;
-import static net.sattler22.transfer.model.AccountType.SAVINGS;
+import static net.sattler22.transfer.domain.AccountType.CHECKING;
+import static net.sattler22.transfer.domain.AccountType.SAVINGS;
 import static org.glassfish.jersey.test.TestProperties.CONTAINER_PORT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -25,11 +25,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
 import net.sattler22.transfer.dto.AccountDTO;
 import net.sattler22.transfer.dto.AccountTransferDTO;
-import net.sattler22.transfer.model.Account;
-import net.sattler22.transfer.model.Bank;
-import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferService.TransferResult;
 import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
@@ -39,7 +39,7 @@ import net.sattler22.transfer.util.TestDataFactory;
  * Money Transfer REST Resource Integration Test Harness
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTest {
 

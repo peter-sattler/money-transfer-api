@@ -1,8 +1,8 @@
 package net.sattler22.transfer.service;
 
 import static java.math.BigDecimal.ZERO;
-import static net.sattler22.transfer.model.AccountType.CHECKING;
-import static net.sattler22.transfer.model.AccountType.SAVINGS;
+import static net.sattler22.transfer.domain.AccountType.CHECKING;
+import static net.sattler22.transfer.domain.AccountType.SAVINGS;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 
-import net.sattler22.transfer.model.Account;
-import net.sattler22.transfer.model.Bank;
-import net.sattler22.transfer.model.Customer;
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
 import net.sattler22.transfer.service.TransferService.TransferResult;
 import net.sattler22.transfer.util.TestDataFactory;
 
@@ -20,7 +20,7 @@ import net.sattler22.transfer.util.TestDataFactory;
  * Money Transfer Service In-Memory Implementation Unit Test Harness
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 public class TransferServiceInMemoryUnitTestHarness {
 

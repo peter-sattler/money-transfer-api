@@ -1,7 +1,7 @@
 package net.sattler22.transfer.util;
 
-import static net.sattler22.transfer.model.Gender.FEMALE;
-import static net.sattler22.transfer.model.Gender.MALE;
+import static net.sattler22.transfer.domain.Gender.FEMALE;
+import static net.sattler22.transfer.domain.Gender.MALE;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,15 +9,15 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import net.sattler22.transfer.model.Address;
-import net.sattler22.transfer.model.Customer;
-import net.sattler22.transfer.model.Image;
+import net.sattler22.transfer.domain.Address;
+import net.sattler22.transfer.domain.Customer;
+import net.sattler22.transfer.domain.Image;
 
 /**
  * Money Transfer Test Data Factory
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 public final class TestDataFactory {
 

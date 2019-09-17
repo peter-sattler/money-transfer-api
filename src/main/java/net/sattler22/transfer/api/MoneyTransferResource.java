@@ -26,11 +26,11 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
 import net.sattler22.transfer.dto.AccountDTO;
 import net.sattler22.transfer.dto.AccountTransferDTO;
-import net.sattler22.transfer.model.Account;
-import net.sattler22.transfer.model.Bank;
-import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferService.TransferResult;
 
@@ -38,7 +38,7 @@ import net.sattler22.transfer.service.TransferService.TransferResult;
  * Money Transfer REST Resource
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 @Singleton
 @Path("/api/money-transfer")

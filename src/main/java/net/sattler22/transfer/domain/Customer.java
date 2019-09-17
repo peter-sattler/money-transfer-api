@@ -1,4 +1,4 @@
-package net.sattler22.transfer.model;
+package net.sattler22.transfer.domain;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ import net.jcip.annotations.Immutable;
  * Customer Business Object
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 @Immutable
 public final class Customer implements Serializable {

@@ -6,13 +6,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
 import net.sattler22.transfer.util.TestDataFactory;
 
 /**
  * Money Transfer Bank Business Object Unit Test Harness
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 public class BankUnitTestHarness {
 

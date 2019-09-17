@@ -1,10 +1,10 @@
-package net.sattler22.transfer.model;
+package net.sattler22.transfer.domain;
 
 /**
  * Account Type Business Object
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version September 2019
  */
 public enum AccountType {
     CHECKING,

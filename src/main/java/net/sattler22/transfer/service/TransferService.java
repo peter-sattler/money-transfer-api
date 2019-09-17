@@ -16,15 +16,15 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import net.jcip.annotations.Immutable;
-import net.sattler22.transfer.model.Account;
-import net.sattler22.transfer.model.Bank;
-import net.sattler22.transfer.model.Customer;
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
 
 /**
  * Money Transfer Service Interface
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 public interface TransferService {
 

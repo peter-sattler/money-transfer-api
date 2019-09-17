@@ -11,15 +11,15 @@ import javax.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sattler22.transfer.model.Account;
-import net.sattler22.transfer.model.Bank;
-import net.sattler22.transfer.model.Customer;
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
 
 /**
  * Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 public final class TransferServiceInMemoryImpl implements TransferService {
 

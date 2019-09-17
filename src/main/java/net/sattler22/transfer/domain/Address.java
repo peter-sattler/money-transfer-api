@@ -1,4 +1,4 @@
-package net.sattler22.transfer.model;
+package net.sattler22.transfer.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,7 +13,7 @@ import net.jcip.annotations.Immutable;
  * Address Business Object
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version September 2019
  */
 @Immutable
 public final class Address implements Serializable {

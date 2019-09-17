@@ -76,6 +76,11 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added Cross-Origin Resource Sharing (CORS) filter  
 :moneybag: Added REST call to get all accounts for a customer id  
 
+
+## [Version 0.0.4] September/October 2019 Enhancements
+:moneybag: Renamed package _net.sattler22.transfer.model_ to _net.sattler22.transfer.domain_  
+:moneybag: xxx
+
 Pete Sattler  
-13 August 2019  
+16 September 2019  
 _peter@sattler22.net_  

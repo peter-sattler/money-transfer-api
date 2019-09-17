@@ -1,12 +1,12 @@
-package net.sattler22.transfer.model;
+package net.sattler22.transfer.domain;
 
 /**
  * Gender Business Object
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version September 2019
  */
 public enum Gender {
-    MALE, 
+    MALE,
     FEMALE;
 }

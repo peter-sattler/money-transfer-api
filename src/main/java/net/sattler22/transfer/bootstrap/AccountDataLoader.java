@@ -9,16 +9,16 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Customer;
 import net.sattler22.transfer.dto.AccountDTO;
-import net.sattler22.transfer.model.Account;
-import net.sattler22.transfer.model.Customer;
 import net.sattler22.transfer.service.TransferService;
 
 /**
  * Bootstrap Account Data Loader
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 final class AccountDataLoader extends BaseDataLoader {
 

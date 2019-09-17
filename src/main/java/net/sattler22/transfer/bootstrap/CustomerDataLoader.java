@@ -9,14 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import net.sattler22.transfer.model.Bank;
-import net.sattler22.transfer.model.Customer;
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
 
 /**
  * Bootstrap Customer Data Loader
  *
  * @author Pete Sattler
- * @version July 2019
+ * @version September 2019
  */
 final class CustomerDataLoader extends BaseDataLoader {
 

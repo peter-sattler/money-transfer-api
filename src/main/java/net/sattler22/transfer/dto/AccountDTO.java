@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
-import net.sattler22.transfer.model.AccountType;
+import net.sattler22.transfer.domain.AccountType;
 
 /**
  * Account Data Transfer Object (DTO)
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 @Immutable
 public final class AccountDTO implements Serializable {

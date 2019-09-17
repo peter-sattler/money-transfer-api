@@ -1,4 +1,4 @@
-package net.sattler22.transfer.model;
+package net.sattler22.transfer.domain;
 
 import static java.math.BigDecimal.ZERO;
 
@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Account Business Object
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version September 2019
  */
 @JsonIgnoreProperties({ "lock" })
 public final class Account implements Serializable {
