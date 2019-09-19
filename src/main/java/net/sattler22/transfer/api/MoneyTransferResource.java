@@ -149,24 +149,6 @@ public final class MoneyTransferResource {
         }
     }
 
-    /**
-     * Parse account number
-     *
-     * @param locationHeader The location header of the newly created account
-     * @return The new account number
-     */
-    public static int parseAccountNumber(String locationHeader) {
-        Objects.requireNonNull(locationHeader, "Location header value is required");
-        final String path;
-        try {
-            path = new URI(locationHeader).getPath();
-        }
-        catch(URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
-        return Integer.parseInt(path.substring(path.lastIndexOf('/') + 1));
-    }
-
     @POST
     @Path("/account")
     @Consumes(APPLICATION_JSON)
@@ -192,6 +174,23 @@ public final class MoneyTransferResource {
         }
     }
 
+    /**
+     * Parse account number
+     *
+     * @param locationHeader The location header of the newly created account
+     * @return The new account number
+     */
+    public static int parseAccountNumber(String locationHeader) {
+        Objects.requireNonNull(locationHeader, "Location header value is required");
+        final String path;
+        try {
+            path = new URI(locationHeader).getPath();
+        }
+        catch(URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+        return Integer.parseInt(path.substring(path.lastIndexOf('/') + 1));
+    }
 
     @DELETE
     @Path("/account/{customerId}/{number}")
