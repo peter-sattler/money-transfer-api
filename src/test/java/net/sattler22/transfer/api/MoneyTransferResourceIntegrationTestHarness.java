@@ -60,7 +60,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
                 this.bind(transferServiceImpl).to(TransferService.class);
             }
         });
-        config.register(MoneyTransferResource.class);
+        config.register(MoneyTransferResourceImpl.class);
         return config;
     }
 

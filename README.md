@@ -83,7 +83,8 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Automatically generate account numbers for new accounts  
 :moneybag: Added REST call to find a single account for a customer id  
 :moneybag: BUG FIX - Add account location header should refer to the new account, not just its owner  
+:moneybag: Create money transfer REST resource interface and moved annotations there  
 
 Pete Sattler  
-18 September 2019  
+19 September 2019  
 _peter@sattler22.net_  

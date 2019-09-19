@@ -11,7 +11,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sattler22.transfer.api.MoneyTransferResource;
+import net.sattler22.transfer.api.MoneyTransferResourceImpl;
 import net.sattler22.transfer.domain.Bank;
 import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
@@ -45,7 +45,7 @@ public final class MoneyTransferResourceBootstrap {
             }
         });
         config.register(CORSFilter.class);
-        config.register(MoneyTransferResource.class);
+        config.register(MoneyTransferResourceImpl.class);
         final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI, config);
         try {
             LOGGER.info("Money Transfer REST API started at [{}]", BASE_URI);
