@@ -38,8 +38,8 @@ public class TransferServiceInMemoryUnitTestHarness {
     @Test(expected = IllegalArgumentException.class)
     public void testTransferZeroAmount() {
         final Customer owner = transferService.getCustomers().iterator().next();
-        final Account sourceAccount = new Account(1, CHECKING, owner, BigDecimal.TEN);
-        final Account targetAccount = new Account(2, CHECKING, owner, BigDecimal.TEN);
+        final Account sourceAccount = new Account(CHECKING, owner, BigDecimal.TEN);
+        final Account targetAccount = new Account(CHECKING, owner, BigDecimal.TEN);
         owner.addAccount(sourceAccount);
         owner.addAccount(targetAccount);
         transferService.transfer(owner, sourceAccount, targetAccount, ZERO);
@@ -51,8 +51,8 @@ public class TransferServiceInMemoryUnitTestHarness {
         final Customer owner = transferService.getCustomers().iterator().next();
         final BigDecimal initialSourceAccountBalance = new BigDecimal(100);
         final BigDecimal initialTargetAccountBalance = new BigDecimal(50);
-        final Account sourceAccount = new Account(1, SAVINGS, owner, initialSourceAccountBalance);
-        final Account targetAccount = new Account(2, CHECKING, owner, initialTargetAccountBalance);
+        final Account sourceAccount = new Account(SAVINGS, owner, initialSourceAccountBalance);
+        final Account targetAccount = new Account(CHECKING, owner, initialTargetAccountBalance);
 
         // Do the transfer:
         final BigDecimal transferAmount = BigDecimal.TEN;

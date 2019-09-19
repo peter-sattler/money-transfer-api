@@ -6,10 +6,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,25 +20,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Pete Sattler
  * @version September 2019
  */
-@JsonIgnoreProperties({ "lock" })
 public final class Account implements Serializable {
 
-    private static final long serialVersionUID = -5230064948832981890L;
+    private static final long serialVersionUID = -677777052039793136L;
+    private static final AtomicInteger NUMBER_COUNTER = new AtomicInteger();
     private final int number;
     private final AccountType type;
     @JsonManagedReference
     private final Customer owner;
     private volatile BigDecimal balance;
+    @JsonIgnore
     private final Object lock = new Object();
 
     /**
      * Constructs a new account
      */
+    public Account(AccountType type, Customer owner, BigDecimal balance) {
+        this(NUMBER_COUNTER.incrementAndGet(), type, owner, balance);
+    }
+
+    /**
+     * Reconstructs an existing account
+     */
     @JsonCreator(mode=Mode.PROPERTIES)
-    public Account(@JsonProperty("number") int number,
-                   @JsonProperty("type") AccountType type,
-                   @JsonProperty("owner") Customer owner,
-                   @JsonProperty("balance") BigDecimal balance) {
+    private Account(@JsonProperty("number") int number,
+                    @JsonProperty("type") AccountType type,
+                    @JsonProperty("owner") Customer owner,
+                    @JsonProperty("balance") BigDecimal balance) {
         this.number = number;
         this.type = Objects.requireNonNull(type, "Account type is required");
         this.owner = Objects.requireNonNull(owner, "Account owner is required");
@@ -110,6 +119,7 @@ public final class Account implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [number=%s, type=%s, owner=%s, balance=%s]", getClass().getSimpleName(), number, type, owner, balance);
+        return String.format("%s [number=%s, type=%s, owner=%s, balance=%s]",
+                             getClass().getSimpleName(), number, type, owner, balance);
     }
 }

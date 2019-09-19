@@ -3,6 +3,7 @@ package net.sattler22.transfer.api;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -120,7 +121,7 @@ public final class MoneyTransferResource {
 
     @GET
     @Path("/accounts/{customerId}")
-    public Response getAccounts(@PathParam("customerId") String customerId) {
+    public Response getAllAccounts(@PathParam("customerId") String customerId) {
         try {
             final Customer owner = findCustomerImpl(customerId);
             final Set<Account> accounts = owner.getAccounts();
@@ -133,22 +134,56 @@ public final class MoneyTransferResource {
         }
     }
 
+    @GET
+    @Path("/account/{customerId}/{number}")
+    public Response findAccount(@PathParam("customerId") String customerId, @PathParam("number") int number) {
+        try {
+            final Customer owner = findCustomerImpl(customerId);
+            final Account account = findAccountImpl(owner, number);
+            LOGGER.info("Retrieved {}", account);
+            return Response.ok().entity(account).build();
+        }
+        catch(NotFoundException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+        }
+    }
+
+    /**
+     * Parse account number
+     *
+     * @param locationHeader The location header of the newly created account
+     * @return The new account number
+     */
+    public static int parseAccountNumber(String locationHeader) {
+        Objects.requireNonNull(locationHeader, "Location header value is required");
+        final String path;
+        try {
+            path = new URI(locationHeader).getPath();
+        }
+        catch(URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+        return Integer.parseInt(path.substring(path.lastIndexOf('/') + 1));
+    }
+
     @POST
     @Path("/account")
     @Consumes(APPLICATION_JSON)
     public Response addAccount(@Context UriInfo uriInfo, AccountDTO accountDTO) {
         try {
             final Customer owner = findCustomerImpl(accountDTO.getCustomerId());
-            final Account account = new Account(accountDTO.getNumber(), accountDTO.getType(), owner, accountDTO.getBalance());
+            final Account account = new Account(accountDTO.getType(), owner, accountDTO.getBalance());
             if (!transferService.addAccount(account)) {
-                final String alreadyExistsMessage = String.format("Account #[%d] already exists", account.getNumber());
-                LOGGER.warn(alreadyExistsMessage);
-                throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
+                final String errorMessage = String.format("Unable to add account #[%d]", account.getNumber());
+                LOGGER.warn(errorMessage);
+                throw new WebApplicationException(errorMessage, Response.Status.CONFLICT);
             }
             LOGGER.info("{} created successfully", account);
             final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResource.class)
-                                                            .path("customer")
-                                                            .path(owner.getId()).build();
+                                                            .path("account")
+                                                            .path(owner.getId())
+                                                            .path(Integer.toString(account.getNumber())).build();
             return Response.created(location).build();
         }
         catch(NotFoundException e) {
@@ -204,7 +239,7 @@ public final class MoneyTransferResource {
 
     private static Account findAccountImpl(Customer owner, int number) throws NotFoundException {
         return Account.find(owner, number)
-                      .orElseThrow(() -> new NotFoundException(String.format("Account #[%d] not found", number)));
+                      .orElseThrow(() -> new NotFoundException(String.format("Customer ID [%s], account #[%d] not found", owner, number)));
     }
 
     @Override

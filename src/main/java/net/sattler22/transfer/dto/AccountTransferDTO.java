@@ -83,6 +83,6 @@ public final class AccountTransferDTO implements Serializable {
     @Override
     public String toString() {
         return String.format("%s [customerId=%s, sourceNumber=%s, targetNumber=%s, amount=%s]",
-        		getClass().getSimpleName(), customerId, sourceNumber, targetNumber, amount);
+                             getClass().getSimpleName(), customerId, sourceNumber, targetNumber, amount);
     }
 }

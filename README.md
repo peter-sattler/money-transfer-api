@@ -35,8 +35,9 @@ Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customer
 Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 200 (Success)<br>404 (Customer not found)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)
-Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts/{customerId} |                                 | 200 (Success)<br>404 (Customer not found)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"number": 123,<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Account exists)
+Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts/{customerId} |                            | 200 (Success)<br>404 (Customer not found)
+Fetch one account   | GET    | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
+Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)
 Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
 
@@ -46,7 +47,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
  
 :moneybag: Keep it simple and to the point (e.g. no need to implement any authentication).  
 :moneybag: Assume the API is invoked by multiple systems and services on the behalf of end users.  
-:moneybag: You can use frameworks/libraries if you like (except for Spring), but don't forget about requirement #2 - keep it simple and avoid heavy frameworks.  
+:moneybag: You can use frameworks/libraries if you like (except for Spring), but don't forget to keep it simple and avoid heavy frameworks.  
 :moneybag: The data store should run in-memory for the sake of this test.  
 :moneybag: The final result should be executable as a stand-alone program (should not require a pre-installed container/server).  
 :moneybag: Demonstrate with tests that the API works as expected.
@@ -78,9 +79,11 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 
 
 ## [Version 0.0.4] September/October 2019 Enhancements
-:moneybag: Renamed package _net.sattler22.transfer.model_ to _net.sattler22.transfer.domain_  
-:moneybag: xxx
+:moneybag: Renamed _net.sattler22.transfer.model_ package to _net.sattler22.transfer.domain_  
+:moneybag: Automatically generate account numbers for new accounts  
+:moneybag: Added REST call to find a single account for a customer id  
+:moneybag: BUG FIX - Add account location header should refer to the new account, not just its owner  
 
 Pete Sattler  
-16 September 2019  
+18 September 2019  
 _peter@sattler22.net_  

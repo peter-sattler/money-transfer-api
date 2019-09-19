@@ -2,6 +2,7 @@ package net.sattler22.transfer.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
@@ -19,8 +20,7 @@ import net.sattler22.transfer.domain.AccountType;
 @Immutable
 public final class AccountDTO implements Serializable {
 
-    private static final long serialVersionUID = 8064618198189338330L;
-    private final int number;
+    private static final long serialVersionUID = 7714325712052656413L;
     private final AccountType type;
     private final String customerId;
     private final BigDecimal balance;
@@ -29,18 +29,12 @@ public final class AccountDTO implements Serializable {
      * Constructs a new account DTO
      */
     @JsonCreator(mode=Mode.PROPERTIES)
-    public AccountDTO(@JsonProperty("number") int number,
-                      @JsonProperty("type") AccountType type,
+    public AccountDTO(@JsonProperty("type") AccountType type,
                       @JsonProperty("customerId") String customerId,
                       @JsonProperty("balance") BigDecimal balance) {
-        this.number = number;
         this.type = type;
         this.customerId = customerId;
         this.balance = balance;
-    }
-
-    public int getNumber() {
-        return number;
     }
 
     public AccountType getType() {
@@ -57,7 +51,7 @@ public final class AccountDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(number);
+        return Objects.hash(type, customerId, balance);
     }
 
     @Override
@@ -69,12 +63,16 @@ public final class AccountDTO implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final AccountDTO that = (AccountDTO) other;
-        return this.number == that.number;
+        if(!Objects.equals(type, that.type))
+            return false;
+        if(!Objects.equals(customerId, that.customerId))
+            return false;
+        return Objects.equals(balance, that.balance);
     }
 
     @Override
     public String toString() {
-        return String.format("%s [number=%s, type, customerId=%s, balance=%s]",
-                             getClass().getSimpleName(), number, type, customerId, balance);
+        return String.format("%s [type=%s, customerId=%s, balance=%s]",
+                             getClass().getSimpleName(), type, customerId, balance);
     }
 }

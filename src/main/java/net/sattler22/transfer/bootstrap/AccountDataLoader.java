@@ -41,8 +41,7 @@ final class AccountDataLoader extends BaseDataLoader {
         final List<AccountDTO> accounts = objectMapper.readValue(inputFile, typeRef);
         for(AccountDTO accountDTO : accounts) {
             final Customer owner = transferService.findCustomer(accountDTO.getCustomerId()).get();
-            final Account account =
-                new Account(accountDTO.getNumber(), accountDTO.getType(), owner, accountDTO.getBalance());
+            final Account account = new Account(accountDTO.getType(), owner, accountDTO.getBalance());
             owner.addAccount(account);
             LOGGER.info("Added {}", account);
         }
