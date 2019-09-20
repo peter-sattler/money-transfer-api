@@ -30,40 +30,79 @@ import net.sattler22.transfer.dto.AccountTransferDTO;
  */
 public interface MoneyTransferResource {
 
+    /**
+     * Fetch bank details
+     */
     @GET
     @Path("/bank")
     @Produces(APPLICATION_JSON)
     Response getBank();
 
+    /**
+     * Fetch all customers
+     */
     @GET
     @Path("/customers")
     @Produces(APPLICATION_JSON)
     Response getAllCustomers();
 
+    /**
+     * Fetch a single customer
+     *
+     * @param id The customer identifier
+     */
     @GET
     @Path("/customer/{id}")
     @Produces(APPLICATION_JSON)
     Response findCustomer(@PathParam("id") String id);
 
+    /**
+     * Add a customer
+     *
+     * @param uriInfo The URI information
+     * @param customer The customer to add
+     */
     @POST
     @Path("/customer")
     @Consumes(APPLICATION_JSON)
     Response addCustomer(@Context UriInfo uriInfo, Customer customer);
 
+    /**
+     * Delete a customer
+     *
+     * @param id The customer identifier
+     */
     @DELETE
     @Path("/customer/{id}")
     Response deleteCustomer(@PathParam("id") String id);
 
+    /**
+     * Fetch all accounts
+     *
+     * @param customerId The customer identifier
+     */
     @GET
     @Path("/accounts/{customerId}")
     @Produces(APPLICATION_JSON)
     Response getAllAccounts(@PathParam("customerId") String customerId);
 
+    /**
+     * Fetch a single account
+     *
+     * @param customerId The customer identifier
+     * @param number The account number
+     */
     @GET
     @Path("/account/{customerId}/{number}")
     @Produces(APPLICATION_JSON)
     Response findAccount(@PathParam("customerId") String customerId, @PathParam("number") int number);
 
+    /**
+     * Add an account
+     *
+     * @param uriInfo The URI information
+     * @param accountDTO  The account data transfer object (DTO)
+     */
     @POST
     @Path("/account")
     @Consumes(APPLICATION_JSON)
@@ -87,10 +126,21 @@ public interface MoneyTransferResource {
         return Integer.parseInt(path.substring(path.lastIndexOf('/') + 1));
     }
 
+    /**
+     * Delete an account
+     *
+     * @param customerId The customer identifier
+     * @param number The account number
+     */
     @DELETE
     @Path("/account/{customerId}/{number}")
     Response deleteAccount(@PathParam("customerId") String customerId, @PathParam("number") int number);
 
+    /**
+     * Account transfer
+     *
+     * @param accountTransferDTO The account transfer data transfer object
+     */
     @PUT
     @Path("/account/transfer")
     @Consumes(APPLICATION_JSON)

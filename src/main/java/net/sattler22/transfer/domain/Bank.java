@@ -57,7 +57,7 @@ public final class Bank implements Serializable {
     /**
      * Add a new customer
      *
-     * @return True if the customer was added. Otherwise, returns false.
+     * @return True if the customer was added. Otherwise, returns false if customer was already added.
      */
     public boolean addCustomer(Customer customer) {
         return customers.add(customer);

@@ -1,5 +1,7 @@
 package net.sattler22.transfer.service;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static java.math.BigDecimal.ZERO;
 import static net.sattler22.transfer.domain.AccountType.CHECKING;
 import static net.sattler22.transfer.domain.AccountType.SAVINGS;
@@ -30,33 +32,47 @@ public class TransferServiceInMemoryUnitTestHarness {
     public void setUp() throws Exception {
         final Bank bank = new Bank(1, "Transfer Service In-Memory Unit Test Harness Bank");
         bank.addCustomer(TestDataFactory.getBob("111"));
-        bank.addCustomer(TestDataFactory.getEileen("222"));
-        bank.addCustomer(TestDataFactory.getBurt("333"));
         this.transferService = new TransferServiceInMemoryImpl(bank);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void deleteCustomerWithAccountsTestCase() {
+        final Customer bob = transferService.getCustomers().iterator().next();
+        final Account account = new Account(CHECKING, bob, ONE);
+        bob.addAccount(account);
+        transferService.deleteCustomer(bob);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void deleteAccountWithNonZeroBalanceTestCase() {
+        final Customer bob = transferService.getCustomers().iterator().next();
+        final Account account = new Account(CHECKING, bob, ONE);
+        bob.addAccount(account);
+        transferService.deleteAccount(account);
+    }
+
     @Test(expected = IllegalArgumentException.class)
-    public void testTransferZeroAmount() {
-        final Customer owner = transferService.getCustomers().iterator().next();
-        final Account sourceAccount = new Account(CHECKING, owner, BigDecimal.TEN);
-        final Account targetAccount = new Account(CHECKING, owner, BigDecimal.TEN);
-        owner.addAccount(sourceAccount);
-        owner.addAccount(targetAccount);
-        transferService.transfer(owner, sourceAccount, targetAccount, ZERO);
+    public void transferZeroAmountTestCase() {
+        final Customer bob = transferService.getCustomers().iterator().next();
+        final Account sourceAccount = new Account(CHECKING, bob, TEN);
+        final Account targetAccount = new Account(CHECKING, bob, TEN);
+        bob.addAccount(sourceAccount);
+        bob.addAccount(targetAccount);
+        transferService.transfer(bob, sourceAccount, targetAccount, ZERO);
     }
 
     @Test
-    public void testTransferHappyPath() {
+    public void transferHappyPathTestCase() {
         // Set-up accounts:
-        final Customer owner = transferService.getCustomers().iterator().next();
+        final Customer bob = transferService.getCustomers().iterator().next();
         final BigDecimal initialSourceAccountBalance = new BigDecimal(100);
         final BigDecimal initialTargetAccountBalance = new BigDecimal(50);
-        final Account sourceAccount = new Account(SAVINGS, owner, initialSourceAccountBalance);
-        final Account targetAccount = new Account(CHECKING, owner, initialTargetAccountBalance);
+        final Account sourceAccount = new Account(SAVINGS, bob, initialSourceAccountBalance);
+        final Account targetAccount = new Account(CHECKING, bob, initialTargetAccountBalance);
 
         // Do the transfer:
-        final BigDecimal transferAmount = BigDecimal.TEN;
-        final TransferResult transferResult = transferService.transfer(owner, sourceAccount, targetAccount, transferAmount);
+        final BigDecimal transferAmount = TEN;
+        final TransferResult transferResult = transferService.transfer(bob, sourceAccount, targetAccount, transferAmount);
 
         // Check source account:
         final BigDecimal expectedSourceAccountBalance = initialSourceAccountBalance.subtract(transferAmount);

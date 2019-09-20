@@ -143,14 +143,25 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
     }
 
     @Test
+    public void deleteCustomerHasAccountsTestCase() {
+        final Customer burt = TestDataFactory.getBurt("234");
+        addCustomerImpl(burt);
+        final AccountDTO accountDTO = new AccountDTO(CHECKING, burt.getId(), ONE);
+        addAccountImpl(accountDTO);
+        final Response response = deleteCustomerImpl(burt);
+        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString(CONTENT_TYPE));
+    }
+
+    @Test
     public void fetchAccountsForCustomerHappyPathTestCase() {
         final Customer burt = TestDataFactory.getBurt("234");
         addCustomerImpl(burt);
         final int expectedAccountSize = 2;
-        final AccountDTO checking = new AccountDTO(CHECKING, burt.getId(), ONE);
-        final AccountDTO savings = new AccountDTO(SAVINGS, burt.getId(), ZERO);
-        addAccountImpl(checking);
-        addAccountImpl(savings);
+        final AccountDTO checkingAccountDTO = new AccountDTO(CHECKING, burt.getId(), ONE);
+        final AccountDTO savingsAccountDTO = new AccountDTO(SAVINGS, burt.getId(), ZERO);
+        addAccountImpl(checkingAccountDTO);
+        addAccountImpl(savingsAccountDTO);
         final Response response = target(API_BASE_PATH).path("accounts").path(burt.getId()).request().get();
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
         assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
@@ -158,7 +169,8 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
         assertEquals(expectedAccountSize, actual.size());
         for(Account actualAccount : actual) {
             assertEquals(burt, actualAccount.getOwner());
-            final BigDecimal expectedBalance = actualAccount.getType() == CHECKING ? checking.getBalance() : savings.getBalance();
+            final BigDecimal expectedBalance =
+                actualAccount.getType() == CHECKING ? checkingAccountDTO.getBalance() : savingsAccountDTO.getBalance();
             assertEquals(expectedBalance, actualAccount.getBalance());
         }
     }
@@ -204,7 +216,7 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
     public void deleteAccountHappyPathTestCase() {
         final Customer bob = TestDataFactory.getBob("123");
         addCustomerImpl(bob);
-        final AccountDTO accountDTO = new AccountDTO(SAVINGS, bob.getId(), ONE);
+        final AccountDTO accountDTO = new AccountDTO(SAVINGS, bob.getId(), ZERO);
         final int accountNumber = addAccountNumberImpl(accountDTO);
         final Response response = deleteAccountImpl(bob, accountNumber);
         assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
@@ -217,6 +229,17 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
         addCustomerImpl(bob);
         final Response response = deleteAccountImpl(bob, 0);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString(CONTENT_TYPE));
+    }
+
+    @Test
+    public void deleteAccountNonZeroBalanceTestCase() {
+        final Customer burt = TestDataFactory.getBurt("234");
+        addCustomerImpl(burt);
+        final AccountDTO accountDTO = new AccountDTO(CHECKING, burt.getId(), ONE);
+        final int accountNumber = addAccountNumberImpl(accountDTO);
+        final Response response = deleteAccountImpl(burt, accountNumber);
+        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
 

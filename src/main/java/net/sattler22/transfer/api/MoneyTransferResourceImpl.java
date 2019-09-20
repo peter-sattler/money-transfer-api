@@ -95,6 +95,10 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             LOGGER.info("Deleted {}", customer);
             return Response.noContent().build();
         }
+        catch(IllegalStateException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
+        }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
             throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
@@ -157,10 +161,14 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         try {
             final Customer owner = findCustomerImpl(customerId);
             final Account account = findAccountImpl(owner, number);
-            if (!owner.deleteAccount(account))
+            if (!transferService.deleteAccount(account))
                 throw new NotFoundException(String.format("Account #[%d] does not exist", number));
             LOGGER.info("Deleted {}", account);
             return Response.noContent().build();
+        }
+        catch(IllegalStateException e) {
+            LOGGER.warn("{}", e.getMessage());
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());

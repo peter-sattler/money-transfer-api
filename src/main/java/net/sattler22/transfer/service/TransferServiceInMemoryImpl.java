@@ -6,8 +6,6 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.ws.rs.NotFoundException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +47,12 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public boolean deleteCustomer(Customer customer) {
+    public boolean deleteCustomer(Customer customer) throws IllegalStateException {
+        final int nbrAccounts = customer.getAccounts().size();
+        if(nbrAccounts > 0) {
+            final String nbrAccountsWord = nbrAccounts == 1 ? "account" : "accounts";
+            throw new IllegalStateException(String.format("%s cannot be deleted because it has %d %s assigned to it", customer, nbrAccounts, nbrAccountsWord));
+        }
         return bank.deleteCustomer(customer);
     }
 
@@ -64,11 +67,10 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public boolean deleteAccount(String customerId, int number) {
-        final Customer owner =
-            findCustomer(customerId).orElseThrow(() -> new NotFoundException(String.format("Customer ID #%d not found", customerId)));
-        final Account account =
-            Account.find(owner, number).orElseThrow(() -> new NotFoundException(String.format("Account #%d not found", number)));
+    public boolean deleteAccount(Account account) throws IllegalStateException {
+        if(account.getBalance().compareTo(ZERO) > 0)
+            throw new IllegalStateException(String.format("Account #%d cannot be deleted because it contains a non-zero balance", account.getNumber()));
+        final Customer owner = account.getOwner();
         return owner.deleteAccount(account);
     }
 

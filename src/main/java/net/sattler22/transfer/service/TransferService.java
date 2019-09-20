@@ -56,8 +56,9 @@ public interface TransferService {
      * Delete an existing customer
      *
      * @return True if the customer was deleted. Otherwise, returns false.
+     * @throws IllegalStateException If it has accounts assigned to it
      */
-    boolean deleteCustomer(Customer customer);
+    boolean deleteCustomer(Customer customer) throws IllegalStateException;
 
     /**
      * Add a new account
@@ -69,11 +70,10 @@ public interface TransferService {
     /**
      * Delete an existing account
      *
-     * @param customerId The customer identifier
-     * @param number The account number
      * @return True if the account was deleted. Otherwise, returns false.
+     * @throws IllegalStateException If it contains a non-zero balance
      */
-    boolean deleteAccount(String customerId, int number);
+    boolean deleteAccount(Account account) throws IllegalStateException;
 
     /**
      * Transfer money between accounts of the same owner
@@ -82,7 +82,7 @@ public interface TransferService {
      * @param source The source account
      * @param target The target account
      * @param amount The transfer amount
-     * @throws IllegalArgumentException If the transaction amount is not greater than zero or is more than the amount available
+     * @throws IllegalArgumentException If the transaction amount is not greater than zero or is more than the available amount
      */
     TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException;
 

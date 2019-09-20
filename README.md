@@ -32,13 +32,13 @@ Action              | Verb   | Resource Locator (URL)                           
 :-----------------  |:------ | :-------------------------------------------------------- | :------------------------------ | :-------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                                 | 200 (Success)
 Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                                 | 200 (Success)
-Fetch one customer  | GET    | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 200 (Success)<br>404 (Customer not found)
+Fetch a single customer | GET | http://localhost:8080/api/money-transfer/customer/{id}  |                                 | 200 (Success)<br>404 (Customer not found)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)
+Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)<br>409 (One or more accounts exist)
 Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts/{customerId} |                            | 200 (Success)<br>404 (Customer not found)
-Fetch one account   | GET    | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
+Fetch a single account | GET | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)
+Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
 Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
 
 ## Given Requirements
@@ -85,6 +85,8 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: BUG FIX - Add account location header should refer to the new account, not just its owner  
 :moneybag: Create money transfer REST resource interface and moved annotations there  
 :moneybag: Moved bootstrap data loaders to separate package  
+:moneybag: Customers can only be deleted if they don't have any accounts  
+:moneybag: Accounts can only be deleted it they have a zero balance  
 
 Pete Sattler  
 20 September 2019  
