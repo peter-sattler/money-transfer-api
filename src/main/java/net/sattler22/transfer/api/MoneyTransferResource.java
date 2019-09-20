@@ -93,7 +93,7 @@ public interface MoneyTransferResource {
      * @param number The account number
      */
     @GET
-    @Path("/account/{customerId}/{number}")
+    @Path("/account/{customerId}/{number : \\d+}")
     @Produces(APPLICATION_JSON)
     Response findAccount(@PathParam("customerId") String customerId, @PathParam("number") int number);
 
@@ -133,7 +133,7 @@ public interface MoneyTransferResource {
      * @param number The account number
      */
     @DELETE
-    @Path("/account/{customerId}/{number}")
+    @Path("/account/{customerId}/{number : \\d+}")
     Response deleteAccount(@PathParam("customerId") String customerId, @PathParam("number") int number);
 
     /**

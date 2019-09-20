@@ -87,6 +87,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Moved bootstrap data loaders to separate package  
 :moneybag: Customers can only be deleted if they don't have any accounts  
 :moneybag: Accounts can only be deleted it they have a zero balance  
+:moneybag: Check that account number path parameter is numeric  
 
 Pete Sattler  
 20 September 2019  
