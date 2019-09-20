@@ -1,4 +1,4 @@
-package net.sattler22.transfer.bootstrap;
+package net.sattler22.transfer.bootstrap.loader;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import net.sattler22.transfer.service.TransferService;
  * @author Pete Sattler
  * @version September 2019
  */
-final class AccountDataLoader extends BaseDataLoader {
+public final class AccountDataLoader extends BaseDataLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountDataLoader.class);
     private final TransferService transferService;
@@ -28,13 +28,13 @@ final class AccountDataLoader extends BaseDataLoader {
     /**
      * Constructs a new account data loader
      */
-    AccountDataLoader(TransferService transferService, String resourceName) {
+    public AccountDataLoader(TransferService transferService, String resourceName) {
         super(resourceName);
         this.transferService = transferService;
     }
 
     @Override
-    int load() throws IOException {
+    public int load() throws IOException {
         final File inputFile = new File(resource.getFile());
         final TypeReference<List<AccountDTO>> typeRef =
             new TypeReference<List<AccountDTO>>() {};

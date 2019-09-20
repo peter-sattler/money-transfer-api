@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sattler22.transfer.api.MoneyTransferResourceImpl;
+import net.sattler22.transfer.bootstrap.loader.AccountDataLoader;
+import net.sattler22.transfer.bootstrap.loader.CustomerDataLoader;
 import net.sattler22.transfer.domain.Bank;
 import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferServiceInMemoryImpl;

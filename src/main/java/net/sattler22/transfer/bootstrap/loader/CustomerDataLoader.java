@@ -1,4 +1,4 @@
-package net.sattler22.transfer.bootstrap;
+package net.sattler22.transfer.bootstrap.loader;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import net.sattler22.transfer.domain.Customer;
  * @author Pete Sattler
  * @version September 2019
  */
-final class CustomerDataLoader extends BaseDataLoader {
+public final class CustomerDataLoader extends BaseDataLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDataLoader.class);
     private final Bank bank;
@@ -26,13 +26,13 @@ final class CustomerDataLoader extends BaseDataLoader {
     /**
      * Constructs a new customer data loader
      */
-    CustomerDataLoader(Bank bank, String resourceName) {
+    public CustomerDataLoader(Bank bank, String resourceName) {
         super(resourceName);
         this.bank = bank;
     }
 
     @Override
-    int load() throws IOException {
+    public int load() throws IOException {
         final File inputFile = new File(resource.getFile());
         final TypeReference<List<Customer>> typeRef =
             new TypeReference<List<Customer>>() {};
