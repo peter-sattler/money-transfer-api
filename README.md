@@ -84,7 +84,8 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added REST call to find a single account for a customer id  
 :moneybag: BUG FIX - Add account location header should refer to the new account, not just its owner  
 :moneybag: Create money transfer REST resource interface and moved annotations there  
+:moneybag: Moved bootstrap data loaders to separate package  
 
 Pete Sattler  
-19 September 2019  
+20 September 2019  
 _peter@sattler22.net_  
