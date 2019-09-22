@@ -41,19 +41,14 @@ Add an account      | POST   | http://localhost:8080/api/money-transfer/account 
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
 Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)
 
-## Given Requirements
-
-### Explicit Requirements
+## Requirements
  
 :moneybag: Keep it simple and to the point (e.g. no need to implement any authentication).  
 :moneybag: Assume the API is invoked by multiple systems and services on the behalf of end users.  
 :moneybag: You can use frameworks/libraries if you like (except for Spring), but don't forget to keep it simple and avoid heavy frameworks.  
 :moneybag: The data store should run in-memory for the sake of this test.  
 :moneybag: The final result should be executable as a stand-alone program (should not require a pre-installed container/server).  
-:moneybag: Demonstrate with tests that the API works as expected.
-
-### Implicit Requirements
-
+:moneybag: Demonstrate with tests that the API works as expected.  
 :moneybag: The code produced by you is expected to be of high quality.  
 :moneybag: There are no detailed requirements, use common sense.  
 
@@ -78,7 +73,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added REST call to get all accounts for a customer id  
 
 
-## [Version 0.0.4] September/October 2019 Enhancements
+## [Version 1.0.0] September 2019 Enhancements
 :moneybag: Renamed _net.sattler22.transfer.model_ package to _net.sattler22.transfer.domain_  
 :moneybag: Automatically generate the account number for new accounts  
 :moneybag: Added REST call to find a single account for a customer id  

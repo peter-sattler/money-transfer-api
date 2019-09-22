@@ -19,14 +19,14 @@ import net.sattler22.transfer.service.TransferService;
 import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
 
 /**
- * Money Transfer REST Resource Bootstrap
+ * Money Transfer REST Bootstrap
  *
  * @author Pete Sattler
  * @version September 2019
  */
-public final class MoneyTransferResourceBootstrap {
+public final class MoneyTransferBootstrap {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferResourceBootstrap.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferBootstrap.class);
     private static final String ACCOUNT_DATA_JSON = "config/bootstrap-account-data.json";
     private static final URI BASE_URI = URI.create("http://localhost:8080/");
     private static final String CUSTOMER_DATA_JSON = "config/bootstrap-customer-data.json";

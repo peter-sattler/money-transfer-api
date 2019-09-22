@@ -11,12 +11,12 @@ buildscript {
 }
 
 apply plugin: 'application'
-mainClassName = 'net.sattler22.transfer.bootstrap.MoneyTransferResourceBootstrap'
+mainClassName = 'net.sattler22.transfer.bootstrap.MoneyTransferBootstrap'
 
 apply plugin: 'eclipse'
 
 group = 'net.sattler22'
-version = '0.0.4'
+version = '1.0.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
