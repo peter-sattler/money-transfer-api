@@ -39,7 +39,7 @@ Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts
 Fetch a single account | GET | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Invalid amount)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)
 
 ## Given Requirements
 
@@ -80,15 +80,16 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 
 ## [Version 0.0.4] September/October 2019 Enhancements
 :moneybag: Renamed _net.sattler22.transfer.model_ package to _net.sattler22.transfer.domain_  
-:moneybag: Automatically generate account numbers for new accounts  
+:moneybag: Automatically generate the account number for new accounts  
 :moneybag: Added REST call to find a single account for a customer id  
 :moneybag: BUG FIX - Add account location header should refer to the new account, not just its owner  
-:moneybag: Create money transfer REST resource interface and moved annotations there  
-:moneybag: Moved bootstrap data loaders to separate package  
+:moneybag: Created money transfer REST resource interface and moved annotations there  
+:moneybag: Moved bootstrap data loaders to a separate package  
 :moneybag: Customers can only be deleted if they don't have any accounts  
 :moneybag: Accounts can only be deleted it they have a zero balance  
-:moneybag: Check that account number path parameter is numeric  
+:moneybag: Using regular expressions, check that the account number path parameter is numeric  
+:moneybag: Check if source and target accounts are different before making a transfer  
 
 Pete Sattler  
-20 September 2019  
+21 September 2019  
 _peter@sattler22.net_  

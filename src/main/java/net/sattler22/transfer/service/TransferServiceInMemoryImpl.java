@@ -76,6 +76,8 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException {
+        if(source.getNumber() == target.getNumber())
+            throw new IllegalArgumentException("Source and target accounts must be different");
         if (amount == null || amount.compareTo(ZERO) <= 0)
             throw new IllegalArgumentException("Transfer amount must be greater than zero");
         if (amount.compareTo(source.getBalance()) > 0)
