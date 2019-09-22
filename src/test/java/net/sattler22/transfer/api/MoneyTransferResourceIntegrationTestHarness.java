@@ -279,9 +279,8 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
         final String customerId = "0";
         final int sourceAccountNumber = -1;
         final int targetAccountNumber = -2;
-        final BigDecimal transferAmount = new BigDecimal("50");
         final AccountTransferDTO accountTransferDTO =
-            new AccountTransferDTO(customerId, sourceAccountNumber, targetAccountNumber, transferAmount);
+            new AccountTransferDTO(customerId, sourceAccountNumber, targetAccountNumber, new BigDecimal("50"));
         final Response response = accountTransferImpl(accountTransferDTO);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
@@ -295,9 +294,8 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
         final int sourceAccountNumber = -1;
         final AccountDTO targetAccountDTO = new AccountDTO(CHECKING, customerId, new BigDecimal("200"));
         final int targetAccountNumber = addAccountNumberImpl(targetAccountDTO);
-        final BigDecimal transferAmount = new BigDecimal("50");
         final AccountTransferDTO accountTransferDTO =
-            new AccountTransferDTO(customerId, sourceAccountNumber, targetAccountNumber, transferAmount);
+            new AccountTransferDTO(customerId, sourceAccountNumber, targetAccountNumber, new BigDecimal("50"));
         final Response response = accountTransferImpl(accountTransferDTO);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
@@ -311,11 +309,24 @@ public final class MoneyTransferResourceIntegrationTestHarness extends JerseyTes
         final AccountDTO sourceAccountDTO = new AccountDTO(SAVINGS, customerId, new BigDecimal("100"));
         final int sourceAccountNumber = addAccountNumberImpl(sourceAccountDTO);
         final int targetAccountNumber = -2;
-        final BigDecimal transferAmount = new BigDecimal("50");
         final AccountTransferDTO accountTransferDTO =
-            new AccountTransferDTO(customerId, sourceAccountNumber, targetAccountNumber, transferAmount);
+            new AccountTransferDTO(customerId, sourceAccountNumber, targetAccountNumber, new BigDecimal("50"));
         final Response response = accountTransferImpl(accountTransferDTO);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        assertNull(response.getHeaderString(CONTENT_TYPE));
+    }
+
+    @Test
+    public void accountTransferSameSourceAndTargetAccountsTestCase() {
+        final String customerId = "123";
+        final Customer bob = TestDataFactory.getBob(customerId);
+        addCustomerImpl(bob);
+        final AccountDTO accountDTO = new AccountDTO(CHECKING, customerId, new BigDecimal("500"));
+        final int accountNumber = addAccountNumberImpl(accountDTO);
+        final AccountTransferDTO accountTransferDTO =
+            new AccountTransferDTO(customerId, accountNumber, accountNumber, new BigDecimal("100"));
+        final Response response = accountTransferImpl(accountTransferDTO);
+        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
 
