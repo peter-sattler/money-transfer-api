@@ -3,7 +3,18 @@
 
 Design and implement a RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
-## Simplifications
+# Requirements
+ 
+:moneybag: Keep it simple and to the point (e.g. no need to implement any authentication).  
+:moneybag: Assume the API is invoked by multiple systems and services on the behalf of end users.  
+:moneybag: You can use frameworks/libraries if you like (except for Spring), but don't forget to keep it simple and avoid heavy frameworks.  
+:moneybag: The data store should run in-memory for the sake of this test.  
+:moneybag: The final result should be executable as a stand-alone program (should not require a pre-installed container/server).  
+:moneybag: Demonstrate with tests that the API works as expected.  
+:moneybag: The code produced by you is expected to be of high quality.  
+:moneybag: There are no detailed requirements, use common sense.  
+
+# Simplifications
 
 :moneybag: There is only one bank; _Pete's World Banking Empire_.  
 :moneybag: Customers are allowed to open a new account with a zero balance.  
@@ -11,7 +22,7 @@ Design and implement a RESTful API (including data model and the backing impleme
 :moneybag: Transactions always clear immediately.  
 :moneybag: All currency is in US Dollars (USD). 
 
-## Getting Started
+# Getting Started
 
 These instructions will get you a copy of this project up and running on your local machine. Once the REST service is running, see the [API section](#money-transfer-api) for the available options.
 
@@ -21,12 +32,12 @@ cd money-transfer-api
 gradlew run
 ```
 
-## Implementation Details
+# Implementation Details
 
 :moneybag: Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)  
 :moneybag: Made use of Jersey's HK2 dependency injection framework  
 
-## Money Transfer API
+# Money Transfer API
 
 Action              | Verb   | Resource Locator (URL)                                    | JSON Payload                    | Status Codes
 :-----------------  |:------ | :-------------------------------------------------------- | :------------------------------ | :-------
@@ -41,18 +52,9 @@ Add an account      | POST   | http://localhost:8080/api/money-transfer/account 
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
 Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)
 
-## Requirements
- 
-:moneybag: Keep it simple and to the point (e.g. no need to implement any authentication).  
-:moneybag: Assume the API is invoked by multiple systems and services on the behalf of end users.  
-:moneybag: You can use frameworks/libraries if you like (except for Spring), but don't forget to keep it simple and avoid heavy frameworks.  
-:moneybag: The data store should run in-memory for the sake of this test.  
-:moneybag: The final result should be executable as a stand-alone program (should not require a pre-installed container/server).  
-:moneybag: Demonstrate with tests that the API works as expected.  
-:moneybag: The code produced by you is expected to be of high quality.  
-:moneybag: There are no detailed requirements, use common sense.  
+# Enhancement History
 
-## [Version 0.0.2] May 2019 Enhancements
+## [Version 0.0.2] May 2019
 :moneybag: Send JSON payload instead of using query parameters  
 :moneybag: Use account level locking  
 :moneybag: Clarify behavior on account creation (JavaDoc only)  
@@ -60,7 +62,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Use JCIP (Java Concurrency In Practice) annotations  
 :moneybag: Fix CRLF  
 
-## [Version 0.0.3] July/August 2019 Enhancements
+## [Version 0.0.3] July/August 2019
 :moneybag: Add integration test harness so API is fully covered  
 :moneybag: Remove restricted class usage from the bootstrap utility  
 :moneybag: Inject transfer service implementation using Jersey's HK2 dependency injection (DI) framework  
@@ -73,7 +75,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added REST call to get all accounts for a customer id  
 
 
-## [Version 1.0.0] September 2019 Enhancements
+## [Version 1.0.0] September 2019
 :moneybag: Renamed _net.sattler22.transfer.model_ package to _net.sattler22.transfer.domain_  
 :moneybag: Automatically generate the account number for new accounts  
 :moneybag: Added REST call to find a single account for a customer id  
@@ -86,5 +88,5 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Check if source and target accounts are different before making a transfer  
 
 Pete Sattler  
-22 September 2019  
+21 January 2019  
 _peter@sattler22.net_  
