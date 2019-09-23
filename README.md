@@ -50,7 +50,7 @@ Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts
 Fetch a single account | GET | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
 Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)
 Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)
+Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)<br>412 (Concurrent update detected)
 
 # Enhancement History
 
@@ -87,6 +87,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Using regular expressions, check that the account number path parameter is numeric  
 :moneybag: Check if source and target accounts are different before making a transfer  
 :moneybag: Added HTTP 1.1 cache controls  
+:moneybag: Check for concurrent updates during transfers  
 
 Pete Sattler  
 21 January 2019  

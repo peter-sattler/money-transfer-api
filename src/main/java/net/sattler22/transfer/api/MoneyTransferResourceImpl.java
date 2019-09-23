@@ -11,7 +11,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
@@ -53,7 +55,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
     private static CacheControl initCacheControl() {
         final CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(CACHE_MAX_AGE_SECONDS);
-        cacheControl.setPrivate(true);  //Client cache only
+        cacheControl.setPrivate(true);  //Client cache only; no intermediaries
         cacheControl.setNoStore(true);  //Do not store to disk
         return cacheControl;
     }
@@ -189,12 +191,25 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
     }
 
     @Override
-    public Response transfer(AccountTransferDTO accountTransferDTO) {
+    public Response transfer(Request request, AccountTransferDTO accountTransferDTO) {
         final TransferResult transferResult;
         try {
             final Customer owner = findCustomerImpl(accountTransferDTO.getCustomerId());
+            //Check for concurrent updates:
             final Account sourceAccount = findAccountImpl(owner, accountTransferDTO.getSourceNumber());
+            final ResponseBuilder sourceAccountBuilder =
+                request.evaluatePreconditions(sourceAccount.getLastModified(), sourceAccount.getEntityTag());
+            if(sourceAccountBuilder != null) {
+                LOGGER.warn("Concurrent modification detected for source {}", sourceAccount);
+                return sourceAccountBuilder.build();
+            }
             final Account targetAccount = findAccountImpl(owner, accountTransferDTO.getTargetNumber());
+            final ResponseBuilder targetAccountBuilder =
+                request.evaluatePreconditions(targetAccount.getLastModified(), targetAccount.getEntityTag());
+            if(targetAccountBuilder != null) {
+                LOGGER.warn("Concurrent modification detected for target {}", targetAccount);
+                return targetAccountBuilder.build();
+            }
             transferResult = transferService.transfer(owner, sourceAccount, targetAccount, accountTransferDTO.getAmount());
         }
         catch(NotFoundException e) {

@@ -4,9 +4,12 @@ import static java.math.BigDecimal.ZERO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.ws.rs.core.EntityTag;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
@@ -29,6 +32,7 @@ public final class Account implements Serializable {
     @JsonManagedReference
     private final Customer owner;
     private volatile BigDecimal balance;
+    private volatile long lastModified;
     @JsonIgnore
     private final Object lock = new Object();
 
@@ -36,7 +40,7 @@ public final class Account implements Serializable {
      * Constructs a new account
      */
     public Account(AccountType type, Customer owner, BigDecimal balance) {
-        this(NUMBER_COUNTER.incrementAndGet(), type, owner, balance);
+        this(NUMBER_COUNTER.incrementAndGet(), type, owner, balance, System.currentTimeMillis());
     }
 
     /**
@@ -46,11 +50,13 @@ public final class Account implements Serializable {
     private Account(@JsonProperty("number") int number,
                     @JsonProperty("type") AccountType type,
                     @JsonProperty("owner") Customer owner,
-                    @JsonProperty("balance") BigDecimal balance) {
+                    @JsonProperty("balance") BigDecimal balance,
+                    @JsonProperty("lastModified") long lastModified) {
         this.number = number;
         this.type = Objects.requireNonNull(type, "Account type is required");
         this.owner = Objects.requireNonNull(owner, "Account owner is required");
         this.balance = (balance == null) ? ZERO : balance;
+        this.lastModified = lastModified;
     }
 
     /**
@@ -60,7 +66,8 @@ public final class Account implements Serializable {
         if (amount.compareTo(ZERO) <= 0)
             throw new IllegalArgumentException("Amount must be greater than zero");
         synchronized (lock) {
-            balance = balance.add(amount);
+            this.balance = balance.add(amount);
+            this.lastModified = System.currentTimeMillis();
         }
     }
 
@@ -73,6 +80,7 @@ public final class Account implements Serializable {
             if (newBalance.compareTo(ZERO) < 0)
                 throw new IllegalStateException("Transaction would lead to an overdrawn account");
             this.balance = newBalance;
+            this.lastModified = System.currentTimeMillis();
         }
     }
 
@@ -90,6 +98,16 @@ public final class Account implements Serializable {
 
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    public Date getLastModified() {
+        return new Date(lastModified);
+    }
+
+    @JsonIgnore
+    public EntityTag getEntityTag() {
+        final int uniqueHash = Objects.hash(number, type, owner, balance, lastModified);
+        return new EntityTag(Integer.toString(uniqueHash));
     }
 
     public Object getLock() {
@@ -119,7 +137,7 @@ public final class Account implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [number=%s, type=%s, owner=%s, balance=%s]",
-                             getClass().getSimpleName(), number, type, owner, balance);
+        return String.format("%s [number=%s, type=%s, owner=%s, balance=%s, lastModified=%s]",
+                             getClass().getSimpleName(), number, type, owner, balance, lastModified);
     }
 }
