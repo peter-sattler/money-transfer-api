@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -35,29 +36,40 @@ import net.sattler22.transfer.service.TransferService.TransferResult;
 public final class MoneyTransferResourceImpl implements MoneyTransferResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferResourceImpl.class);
+    private static final int CACHE_MAX_AGE_SECONDS = 5 * 60;
     private final TransferService transferService;
+    private final CacheControl cacheControl;
 
     /**
-     * Constructs a new money transfer REST resource
+     * Constructs a new money transfer REST resource implementation
      */
     @Inject
     public MoneyTransferResourceImpl(TransferService transferService) {
         this.transferService = Objects.requireNonNull(transferService, "Transfer service implementation is required");
+        this.cacheControl = initCacheControl();
         LOGGER.info("Initialized {}", this);
+    }
+
+    private static CacheControl initCacheControl() {
+        final CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(CACHE_MAX_AGE_SECONDS);
+        cacheControl.setPrivate(true);  //Client cache only
+        cacheControl.setNoStore(true);  //Do not store to disk
+        return cacheControl;
     }
 
     @Override
     public Response getBank() {
         final Bank bank = transferService.getBank();
         LOGGER.info("Retrieved {}", bank);
-        return Response.ok().entity(bank).build();
+        return Response.ok().cacheControl(cacheControl).entity(bank).build();
     }
 
     @Override
     public Response getAllCustomers() {
         final Set<Customer> customers = transferService.getCustomers();
         LOGGER.info("Retrieved [{}] {}", customers.size(), customers.size() == 1 ? "customer" : "customers");
-        return Response.ok().entity(new GenericEntity<Set<Customer>>(customers) {}).build();
+        return Response.ok().cacheControl(cacheControl).entity(new GenericEntity<Set<Customer>>(customers) {}).build();
     }
 
     @Override
@@ -65,7 +77,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         try {
             final Customer customer = findCustomerImpl(id);
             LOGGER.info("Retrieved {}", customer);
-            return Response.ok().entity(customer).build();
+            return Response.ok().cacheControl(cacheControl).entity(customer).build();
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
@@ -84,7 +96,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResourceImpl.class)
                                                         .path("customer")
                                                         .path(customer.getId()).build();
-        return Response.created(location).build();
+        return Response.created(location).cacheControl(cacheControl).build();
     }
 
     @Override
@@ -93,7 +105,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             final Customer customer = findCustomerImpl(id);
             transferService.deleteCustomer(customer);
             LOGGER.info("Deleted {}", customer);
-            return Response.noContent().build();
+            return Response.noContent().cacheControl(cacheControl).build();
         }
         catch(IllegalStateException e) {
             LOGGER.warn("{}", e.getMessage());
@@ -111,7 +123,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             final Customer owner = findCustomerImpl(customerId);
             final Set<Account> accounts = owner.getAccounts();
             LOGGER.info("Retrieved [{}] {} for {}", accounts.size(), accounts.size() == 1 ? "account" : "accounts", owner);
-            return Response.ok().entity(new GenericEntity<Set<Account>>(accounts) {}).build();
+            return Response.ok().cacheControl(cacheControl).entity(new GenericEntity<Set<Account>>(accounts) {}).build();
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
@@ -125,7 +137,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             final Customer owner = findCustomerImpl(customerId);
             final Account account = findAccountImpl(owner, number);
             LOGGER.info("Retrieved {}", account);
-            return Response.ok().entity(account).build();
+            return Response.ok().cacheControl(cacheControl).entity(account).build();
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
@@ -148,7 +160,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
                                                             .path("account")
                                                             .path(owner.getId())
                                                             .path(Integer.toString(account.getNumber())).build();
-            return Response.created(location).build();
+            return Response.created(location).cacheControl(cacheControl).build();
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
@@ -164,7 +176,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             if (!transferService.deleteAccount(account))
                 throw new NotFoundException(String.format("Account #[%d] does not exist", number));
             LOGGER.info("Deleted {}", account);
-            return Response.noContent().build();
+            return Response.noContent().cacheControl(cacheControl).build();
         }
         catch(IllegalStateException e) {
             LOGGER.warn("{}", e.getMessage());
@@ -193,7 +205,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             LOGGER.warn("{}", e.getMessage());
             throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
         }
-        return Response.ok().entity(transferResult).build();
+        return Response.ok().cacheControl(cacheControl).entity(transferResult).build();
     }
 
     private Customer findCustomerImpl(String id) throws NotFoundException {

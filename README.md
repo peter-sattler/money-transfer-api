@@ -86,6 +86,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Accounts can only be deleted it they have a zero balance  
 :moneybag: Using regular expressions, check that the account number path parameter is numeric  
 :moneybag: Check if source and target accounts are different before making a transfer  
+:moneybag: Added HTTP 1.1 cache controls  
 
 Pete Sattler  
 21 January 2019  
