@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.ws.rs.core.EntityTag;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -78,7 +76,7 @@ public final class Account implements Serializable {
         synchronized (lock) {
             final BigDecimal newBalance = balance.subtract(amount);
             if (newBalance.compareTo(ZERO) < 0)
-                throw new IllegalStateException("Transaction would lead to an overdrawn account");
+                throw new IllegalStateException("Transfer would lead to an overdrawn account");
             this.balance = newBalance;
             this.lastModified = System.currentTimeMillis();
         }
@@ -102,12 +100,6 @@ public final class Account implements Serializable {
 
     public Date getLastModified() {
         return new Date(lastModified);
-    }
-
-    @JsonIgnore
-    public EntityTag getEntityTag() {
-        final int uniqueHash = Objects.hash(number, type, owner, balance, lastModified);
-        return new EntityTag(Integer.toString(uniqueHash));
     }
 
     public Object getLock() {
