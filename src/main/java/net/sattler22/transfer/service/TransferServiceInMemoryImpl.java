@@ -85,15 +85,18 @@ public final class TransferServiceInMemoryImpl implements TransferService {
         //Lock both accounts before making the transfer, but always in the SAME order to avoid deadlocking:
         final Object lock1 = source.getNumber() < target.getNumber() ? source.getLock() : target.getLock();
         final Object lock2 = source.getNumber() < target.getNumber() ? target.getLock() : source.getLock();
+        final TransferResult transferResult;
         synchronized (lock1) {
             synchronized (lock2) {
+                LOGGER.info("Source before transfer: {}", source);
+                LOGGER.info("Target before transfer {}", target);
                 source.debit(amount);
                 target.credit(amount);
-                LOGGER.info("{} transferred ${} from account #{} to account #{}",
-                            source.getOwner(), amount, source.getNumber(), target.getNumber());
-                return new TransferResult(source, target);
+                transferResult = new TransferResult(source, target);
+                LOGGER.info("After transfer of ${}, {}", amount, transferResult);
             }
         }
+        return transferResult;
     }
 
     @Override
