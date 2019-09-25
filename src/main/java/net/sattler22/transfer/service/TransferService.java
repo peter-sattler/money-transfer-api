@@ -82,8 +82,8 @@ public interface TransferService {
      * @param source The source account
      * @param target The target account
      * @param amount The transfer amount
-     * @throws IllegalArgumentException If the source and target accounts are the same, the transaction amount is not greater
-     *                                  than zero or is more than the available amount
+     * @throws IllegalArgumentException If the source and target accounts are the same, the transaction
+     *                                  amount is zero or is more than the available amount
      */
     TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException;
 
