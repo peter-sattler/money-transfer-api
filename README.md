@@ -87,8 +87,9 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Using regular expressions, check that the account number path parameter is numeric  
 :moneybag: Check if source and target accounts are different before making a transfer  
 :moneybag: Added HTTP 1.1 cache controls  
-:moneybag: Created separate integration test harnesses for Bank, Customer and Account  
+:moneybag: Created separate a integration test harness for Bank, Customer and Account  
 :moneybag: Check for concurrent updates during transfers  
+:moneybag: Added concurrency test harness  
 
 Pete Sattler  
 21 January 2019  

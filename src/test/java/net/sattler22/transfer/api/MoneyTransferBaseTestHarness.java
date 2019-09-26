@@ -1,6 +1,6 @@
 package net.sattler22.transfer.api;
 
-import static javax.ws.rs.core.HttpHeaders.IF_UNMODIFIED_SINCE;
+import static javax.ws.rs.core.HttpHeaders.IF_MATCH;
 import static javax.ws.rs.core.HttpHeaders.LOCATION;
 import static net.sattler22.transfer.api.MoneyTransferConstants.API_BASE_PATH;
 import static org.glassfish.jersey.test.TestProperties.CONTAINER_PORT;
@@ -36,7 +36,7 @@ public abstract class MoneyTransferBaseTestHarness extends JerseyTest {
 
     @Override
     protected Application configure() {
-        this.set(CONTAINER_PORT, "0");  // Use a free port
+        this.set(CONTAINER_PORT, "0");  //Use a free port
         final ResourceConfig config = new ResourceConfig();
         config.register(new AbstractBinder() {
             @Override
@@ -113,9 +113,9 @@ public abstract class MoneyTransferBaseTestHarness extends JerseyTest {
     /**
      * Transfer funds between accounts
      */
-    protected Response accountTransferImpl(AccountTransferDTO accountTransferDTO) {
+    protected Response accountTransferImpl(String transferVersion, AccountTransferDTO accountTransferDTO) {
         return target(API_BASE_PATH).path("/account/transfer").request()
-                                    .header(IF_UNMODIFIED_SINCE, accountTransferDTO.getLastModified())
+                                    .header(IF_MATCH, String.format("\"%s\"", transferVersion))
                                     .put(Entity.json(accountTransferDTO));
     }
 }

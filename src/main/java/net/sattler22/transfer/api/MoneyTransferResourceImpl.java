@@ -1,5 +1,7 @@
 package net.sattler22.transfer.api;
 
+import static net.sattler22.transfer.api.MoneyTransferConstants.API_BASE_PATH;
+
 import java.net.URI;
 import java.util.Objects;
 import java.util.Set;
@@ -10,6 +12,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -34,13 +37,13 @@ import net.sattler22.transfer.service.TransferService.TransferResult;
  * @version September 2019
  */
 @Singleton
-@Path("/api/money-transfer")
+@Path(API_BASE_PATH)
 public final class MoneyTransferResourceImpl implements MoneyTransferResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferResourceImpl.class);
     private static final int CACHE_MAX_AGE_SECONDS = 5 * 60;
-    private final TransferService transferService;
     private final CacheControl cacheControl;
+    private final TransferService transferService;
 
     /**
      * Constructs a new money transfer REST resource implementation
@@ -94,7 +97,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             LOGGER.warn(alreadyExistsMessage);
             throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
         }
-        LOGGER.info("{} created successfully", customer);
+        LOGGER.info("Created {}", customer);
         final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResourceImpl.class)
                                                         .path("customer")
                                                         .path(customer.getId()).build();
@@ -157,7 +160,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
                 LOGGER.warn(errorMessage);
                 throw new WebApplicationException(errorMessage, Response.Status.CONFLICT);
             }
-            LOGGER.info("{} created successfully", account);
+            LOGGER.info("Created {}", account);
             final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResourceImpl.class)
                                                             .path("account")
                                                             .path(owner.getId())
@@ -192,25 +195,20 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
 
     @Override
     public Response transfer(Request request, AccountTransferDTO accountTransferDTO) {
-        final TransferResult transferResult;
         try {
             final Customer owner = findCustomerImpl(accountTransferDTO.getCustomerId());
-            //Check for concurrent updates:
             final Account sourceAccount = findAccountImpl(owner, accountTransferDTO.getSourceNumber());
-            final ResponseBuilder sourceAccountBuilder =
-                request.evaluatePreconditions(sourceAccount.getLastModified(), sourceAccount.getEntityTag());
-            if(sourceAccountBuilder != null) {
-                LOGGER.warn("Concurrent modification detected for source {}", sourceAccount);
-                return sourceAccountBuilder.build();
-            }
             final Account targetAccount = findAccountImpl(owner, accountTransferDTO.getTargetNumber());
-            final ResponseBuilder targetAccountBuilder =
-                request.evaluatePreconditions(targetAccount.getLastModified(), targetAccount.getEntityTag());
-            if(targetAccountBuilder != null) {
-                LOGGER.warn("Concurrent modification detected for target {}", targetAccount);
-                return targetAccountBuilder.build();
+            final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+            final EntityTag entityTag = new EntityTag(transferVersion);
+            final ResponseBuilder responseBuilder = request.evaluatePreconditions(entityTag);
+            if (responseBuilder != null) {
+                LOGGER.warn("Client transfer version is older than current transfer version [{}]", transferVersion);
+                return responseBuilder.build();
             }
-            transferResult = transferService.transfer(owner, sourceAccount, targetAccount, accountTransferDTO.getAmount());
+            final TransferResult transferResult =
+                transferService.transfer(owner, sourceAccount, targetAccount, accountTransferDTO.getAmount());
+            return Response.ok().cacheControl(cacheControl).tag(entityTag).entity(transferResult).build();
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
@@ -220,7 +218,6 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             LOGGER.warn("{}", e.getMessage());
             throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
         }
-        return Response.ok().cacheControl(cacheControl).entity(transferResult).build();
     }
 
     private Customer findCustomerImpl(String id) throws NotFoundException {
@@ -235,6 +232,6 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
 
     @Override
     public String toString() {
-        return String.format("%s [transferService=%s]", getClass().getSimpleName(), transferService);
+        return String.format("%s [cacheControl=[%s], transferService=%s]", getClass().getSimpleName(), cacheControl, transferService);
     }
 }

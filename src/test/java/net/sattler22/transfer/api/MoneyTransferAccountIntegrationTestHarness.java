@@ -177,7 +177,8 @@ public final class MoneyTransferAccountIntegrationTestHarness extends MoneyTrans
         final BigDecimal transferAmount = new BigDecimal("50");
         final AccountTransferDTO accountTransferDTO =
             new AccountTransferDTO(bob.getId(), sourceAccount, targetAccount, transferAmount);
-        final Response response = accountTransferImpl(accountTransferDTO);
+        final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+        final Response response = accountTransferImpl(transferVersion, accountTransferDTO);
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
         assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
         final TransferResult transferResult = response.readEntity(TransferResult.class);
@@ -194,7 +195,8 @@ public final class MoneyTransferAccountIntegrationTestHarness extends MoneyTrans
         final Account sourceAccount = addAccountImpl(CHECKING, bob.getId(), ONE);
         final Account targetAccount = addAccountImpl(SAVINGS, bob.getId(), ZERO);
         final AccountTransferDTO accountTransferDTO = new AccountTransferDTO("0", sourceAccount, targetAccount, ONE);
-        final Response response = accountTransferImpl(accountTransferDTO);
+        final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+        final Response response = accountTransferImpl(transferVersion, accountTransferDTO);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
@@ -207,7 +209,8 @@ public final class MoneyTransferAccountIntegrationTestHarness extends MoneyTrans
         final Account targetAccount = addAccountImpl(SAVINGS, bob.getId(), ZERO);
         final AccountTransferDTO accountTransferDTO =
             new AccountTransferDTO(bob.getId(), sourceAccount, targetAccount, new BigDecimal("50"));
-        final Response response = accountTransferImpl(accountTransferDTO);
+        final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+        final Response response = accountTransferImpl(transferVersion, accountTransferDTO);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
@@ -220,7 +223,8 @@ public final class MoneyTransferAccountIntegrationTestHarness extends MoneyTrans
         final Account targetAccount = new Account(CHECKING, bob, ZERO);
         final AccountTransferDTO accountTransferDTO =
             new AccountTransferDTO(bob.getId(), sourceAccount, targetAccount, new BigDecimal("50"));
-        final Response response = accountTransferImpl(accountTransferDTO);
+        final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+        final Response response = accountTransferImpl(transferVersion, accountTransferDTO);
         assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
@@ -231,7 +235,8 @@ public final class MoneyTransferAccountIntegrationTestHarness extends MoneyTrans
         addCustomerImpl(bob);
         final Account account = addAccountImpl(CHECKING, bob.getId(), new BigDecimal("500"));
         final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(bob.getId(), account, account, new BigDecimal("100"));
-        final Response response = accountTransferImpl(accountTransferDTO);
+        final String transferVersion = AccountTransferDTO.createVersion(account, account);
+        final Response response = accountTransferImpl(transferVersion, accountTransferDTO);
         assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
@@ -243,7 +248,8 @@ public final class MoneyTransferAccountIntegrationTestHarness extends MoneyTrans
         final Account sourceAccount = addAccountImpl(CHECKING, bob.getId(), new BigDecimal("100"));
         final Account targetAccount = addAccountImpl(SAVINGS, bob.getId(), new BigDecimal("200"));
         final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(bob.getId(), sourceAccount, targetAccount, ZERO);
-        final Response response = accountTransferImpl(accountTransferDTO);
+        final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+        final Response response = accountTransferImpl(transferVersion, accountTransferDTO);
         assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }
@@ -257,7 +263,8 @@ public final class MoneyTransferAccountIntegrationTestHarness extends MoneyTrans
         final BigDecimal transferAmount = sourceAccount.getBalance().add(new BigDecimal("1"));
         final AccountTransferDTO accountTransferDTO =
             new AccountTransferDTO(bob.getId(), sourceAccount, targetAccount, transferAmount);
-        final Response response = accountTransferImpl(accountTransferDTO);
+        final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+        final Response response = accountTransferImpl(transferVersion, accountTransferDTO);
         assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
         assertNull(response.getHeaderString(CONTENT_TYPE));
     }

@@ -2,7 +2,6 @@ package net.sattler22.transfer.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -21,28 +20,17 @@ import net.sattler22.transfer.domain.Account;
 @Immutable
 public final class AccountTransferDTO implements Serializable {
 
-    private static final long serialVersionUID = 3578568675589785635L;
+    private static final long serialVersionUID = -2226466401398216991L;
     private final String customerId;
     private final int sourceNumber;
     private final int targetNumber;
     private final BigDecimal amount;
-    private final long lastModified;
 
     /**
      * Constructs a new account transfer DTO
      */
     public AccountTransferDTO(String customerId, Account sourceAccount, Account targetAccount, BigDecimal amount) {
-        this(customerId, sourceAccount.getNumber(), targetAccount.getNumber(), amount,
-             initLastModified(sourceAccount, targetAccount).getTime());
-    }
-
-    /**
-     * Find the most recent modification date
-     */
-    private static Date initLastModified(Account sourceAccount, Account targetAccount) {
-        if(sourceAccount.getLastModified().after(targetAccount.getLastModified()))
-            return sourceAccount.getLastModified();
-        return targetAccount.getLastModified();
+        this(customerId, sourceAccount.getNumber(), targetAccount.getNumber(), amount);
     }
 
     /**
@@ -52,13 +40,13 @@ public final class AccountTransferDTO implements Serializable {
     private AccountTransferDTO(@JsonProperty("customerId") String customerId,
                                @JsonProperty("sourceNumber") int sourceNumber,
                                @JsonProperty("targetNumber") int targetNumber,
-                               @JsonProperty("amount") BigDecimal amount,
-                               @JsonProperty("lastModified") long lastModified) {
-        this.customerId = customerId;
+                               @JsonProperty("amount") BigDecimal amount) {
+        if (customerId == null || customerId.trim().isEmpty())
+            throw new IllegalArgumentException("Customer ID is required");
+        this.customerId = customerId.trim();
         this.sourceNumber = sourceNumber;
         this.targetNumber = targetNumber;
-        this.amount = amount;
-        this.lastModified = lastModified;
+        this.amount = Objects.requireNonNull(amount, "Transfer amount is required");
     }
 
     public String getCustomerId() {
@@ -77,13 +65,23 @@ public final class AccountTransferDTO implements Serializable {
         return amount;
     }
 
-    public Date getLastModified() {
-        return new Date(lastModified);
+    /**
+     * Create a unique account transfer version
+     *
+     * @param sourceAccount The underlying source account
+     * @param targetAccount The underlying target account
+     *
+     * @return An account transfer version string in the format:
+     *        {sourceAccount#-sourceAccountVersion#-targetAccount#-targetAccountVersion#}
+     */
+    public static String createVersion(Account sourceAccount, Account targetAccount) {
+        return String.format("%d-%d-%d-%d", sourceAccount.getNumber(), sourceAccount.getVersion(),
+                                            targetAccount.getNumber(), targetAccount.getVersion());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerId, sourceNumber, targetNumber, amount, lastModified);
+        return Objects.hash(customerId, sourceNumber, targetNumber, amount);
     }
 
     @Override
@@ -95,22 +93,18 @@ public final class AccountTransferDTO implements Serializable {
         if (this.getClass() != other.getClass())
             return false;
         final AccountTransferDTO that = (AccountTransferDTO) other;
-        if (this.customerId == null || that.customerId == null)
-            return false;
         if (!this.customerId.equals(that.customerId))
             return false;
         if (this.sourceNumber != that.sourceNumber)
             return false;
         if (this.targetNumber != that.targetNumber)
             return false;
-        if (this.amount.compareTo(that.amount) != 0)
-            return false;
-        return this.lastModified == that.lastModified;
+        return this.amount.compareTo(that.amount) == 0;
     }
 
     @Override
     public String toString() {
-        return String.format("%s [customerId=%s, sourceNumber=%s, targetNumber=%s, amount=%s, lastModified=%s]",
-                             getClass().getSimpleName(), customerId, sourceNumber, targetNumber, amount, lastModified);
+        return String.format("%s [customerId=%s, sourceNumber=%s, targetNumber=%s, amount=%s]",
+                             getClass().getSimpleName(), customerId, sourceNumber, targetNumber, amount);
     }
 }
