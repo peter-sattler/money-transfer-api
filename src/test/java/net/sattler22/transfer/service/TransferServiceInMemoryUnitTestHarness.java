@@ -63,23 +63,23 @@ public class TransferServiceInMemoryUnitTestHarness {
 
     @Test
     public void transferHappyPathTestCase() {
-        // Set-up accounts:
+        //Set-up accounts:
         final Customer bob = transferService.getCustomers().iterator().next();
         final BigDecimal initialSourceAccountBalance = new BigDecimal(100);
         final BigDecimal initialTargetAccountBalance = new BigDecimal(50);
         final Account sourceAccount = new Account(SAVINGS, bob, initialSourceAccountBalance);
         final Account targetAccount = new Account(CHECKING, bob, initialTargetAccountBalance);
 
-        // Do the transfer:
+        //Do the transfer:
         final BigDecimal transferAmount = TEN;
         final TransferResult transferResult = transferService.transfer(bob, sourceAccount, targetAccount, transferAmount);
 
-        // Check source account:
+        //Check source account:
         final BigDecimal expectedSourceAccountBalance = initialSourceAccountBalance.subtract(transferAmount);
         final BigDecimal actualSourceAccountBalance = transferResult.getSource().getBalance();
         assertEquals(expectedSourceAccountBalance.compareTo(actualSourceAccountBalance), 0);
 
-        // Check target account:
+        //sCheck target account:
         final BigDecimal expectedTargetAccountBalance = initialTargetAccountBalance.add(transferAmount);
         final BigDecimal actualTargetAccountBalance = transferResult.getTarget().getBalance();
         assertEquals(expectedTargetAccountBalance.compareTo(actualTargetAccountBalance), 0);
