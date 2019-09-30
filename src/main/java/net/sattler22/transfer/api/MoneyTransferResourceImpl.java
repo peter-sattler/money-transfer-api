@@ -41,7 +41,6 @@ import net.sattler22.transfer.service.TransferService.TransferResult;
 public final class MoneyTransferResourceImpl implements MoneyTransferResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferResourceImpl.class);
-    private static final int CACHE_MAX_AGE_SECONDS = 5 * 60;
     private final CacheControl cacheControl;
     private final TransferService transferService;
 
@@ -57,9 +56,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
 
     private static CacheControl initCacheControl() {
         final CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(CACHE_MAX_AGE_SECONDS);
-        cacheControl.setPrivate(true);  //Client cache only; no intermediaries
-        cacheControl.setNoStore(true);  //Do not store to disk
+        cacheControl.setNoCache(true);
         return cacheControl;
     }
 

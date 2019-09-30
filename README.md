@@ -86,7 +86,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Accounts can only be deleted it they have a zero balance  
 :moneybag: Using regular expressions, check that the account number path parameter is numeric  
 :moneybag: Check if source and target accounts are different before making a transfer  
-:moneybag: Added HTTP 1.1 cache controls  
+:moneybag: Added HTTP 1.1 cache controls (no caching)  
 :moneybag: Created separate a integration test harness for Bank, Customer and Account  
 :moneybag: Check for concurrent updates during transfers  
 :moneybag: Added concurrency test harness  
