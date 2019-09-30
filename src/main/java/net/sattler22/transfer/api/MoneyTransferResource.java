@@ -15,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -140,6 +141,7 @@ public interface MoneyTransferResource {
     /**
      * Account transfer
      *
+     * @param headers The HTTP headers
      * @param request The HTTP request
      * @param accountTransferDTO The account transfer data transfer object
      */
@@ -147,5 +149,5 @@ public interface MoneyTransferResource {
     @Path("/account/transfer")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Response transfer(@Context Request request, AccountTransferDTO accountTransferDTO);
+    Response transfer(@Context HttpHeaders headers, @Context Request request, AccountTransferDTO accountTransferDTO);
 }

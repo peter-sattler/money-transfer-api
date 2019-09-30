@@ -1,5 +1,6 @@
 package net.sattler22.transfer.api;
 
+import static javax.ws.rs.core.HttpHeaders.IF_MATCH;
 import static net.sattler22.transfer.api.MoneyTransferConstants.API_BASE_PATH;
 
 import java.net.URI;
@@ -14,6 +15,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -191,16 +193,18 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
     }
 
     @Override
-    public Response transfer(Request request, AccountTransferDTO accountTransferDTO) {
+    public Response transfer(HttpHeaders headers, Request request, AccountTransferDTO accountTransferDTO) {
         try {
             final Customer owner = findCustomerImpl(accountTransferDTO.getCustomerId());
             final Account sourceAccount = findAccountImpl(owner, accountTransferDTO.getSourceNumber());
             final Account targetAccount = findAccountImpl(owner, accountTransferDTO.getTargetNumber());
-            final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
-            final EntityTag entityTag = new EntityTag(transferVersion);
+            final String serverTransferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
+            final EntityTag entityTag = new EntityTag(serverTransferVersion);
             final ResponseBuilder responseBuilder = request.evaluatePreconditions(entityTag);
             if (responseBuilder != null) {
-                LOGGER.warn("Client transfer version is older than current transfer version [{}]", transferVersion);
+                final String clientTransferVersion = headers.getHeaderString(IF_MATCH);
+                LOGGER.warn("Client transfer version [{}] is older than server transfer version [{}]",
+                    clientTransferVersion == null ? "UNKNOWN" : clientTransferVersion.replace("\"", ""), serverTransferVersion);
                 return responseBuilder.build();
             }
             final TransferResult transferResult =
