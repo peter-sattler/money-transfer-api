@@ -34,7 +34,7 @@ public final class MoneyTransferConcurrencyTestHarness extends MoneyTransferBase
         final Account sourceAccount = addAccountImpl(CHECKING, bob.getId(), new BigDecimal("500"));
         final Account targetAccount = addAccountImpl(SAVINGS, bob.getId(), new BigDecimal("100"));
         final AccountTransferDTO accountTransferDTO =
-            new AccountTransferDTO(bob.getId(), sourceAccount, targetAccount, new BigDecimal("10"));
+            new AccountTransferDTO(bob.getId(), sourceAccount.getNumber(), targetAccount.getNumber(), new BigDecimal("10"));
         //Normal transfer::
         final String transferVersion = AccountTransferDTO.createVersion(sourceAccount, targetAccount);
         final Response response1 = accountTransferImpl(transferVersion, accountTransferDTO);

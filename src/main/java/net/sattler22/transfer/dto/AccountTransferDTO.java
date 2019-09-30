@@ -29,18 +29,11 @@ public final class AccountTransferDTO implements Serializable {
     /**
      * Constructs a new account transfer DTO
      */
-    public AccountTransferDTO(String customerId, Account sourceAccount, Account targetAccount, BigDecimal amount) {
-        this(customerId, sourceAccount.getNumber(), targetAccount.getNumber(), amount);
-    }
-
-    /**
-     * Reconstructs an existing account transfer DTO
-     */
     @JsonCreator(mode = Mode.PROPERTIES)
-    private AccountTransferDTO(@JsonProperty("customerId") String customerId,
-                               @JsonProperty("sourceNumber") int sourceNumber,
-                               @JsonProperty("targetNumber") int targetNumber,
-                               @JsonProperty("amount") BigDecimal amount) {
+    public AccountTransferDTO(@JsonProperty("customerId") String customerId,
+                              @JsonProperty("sourceNumber") int sourceNumber,
+                              @JsonProperty("targetNumber") int targetNumber,
+                              @JsonProperty("amount") BigDecimal amount) {
         if (customerId == null || customerId.trim().isEmpty())
             throw new IllegalArgumentException("Customer ID is required");
         this.customerId = customerId.trim();
