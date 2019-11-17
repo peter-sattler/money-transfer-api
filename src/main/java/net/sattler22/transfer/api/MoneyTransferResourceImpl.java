@@ -19,6 +19,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import net.sattler22.transfer.service.TransferService.TransferResult;
  * Money Transfer REST Resource Implementation
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version November 2019
  */
 @Singleton
 @Path(API_BASE_PATH)
@@ -72,6 +73,11 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
     @Override
     public Response getAllCustomers() {
         final Set<Customer> customers = transferService.getCustomers();
+        if(customers.isEmpty()) {
+            final String errorMessage = "No customers found";
+            LOGGER.warn(errorMessage);
+            throw new WebApplicationException(errorMessage, Status.NOT_FOUND);
+        }
         LOGGER.info("Retrieved [{}] {}", customers.size(), customers.size() == 1 ? "customer" : "customers");
         return Response.ok().cacheControl(cacheControl).entity(new GenericEntity<Set<Customer>>(customers) {}).build();
     }
@@ -85,7 +91,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.NOT_FOUND);
         }
     }
 
@@ -94,7 +100,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         if (!transferService.addCustomer(customer)) {
             final String alreadyExistsMessage = String.format("Customer ID [%s] already exists", customer.getId());
             LOGGER.warn(alreadyExistsMessage);
-            throw new WebApplicationException(alreadyExistsMessage, Response.Status.CONFLICT);
+            throw new WebApplicationException(alreadyExistsMessage, Status.CONFLICT);
         }
         LOGGER.info("Created {}", customer);
         final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResourceImpl.class)
@@ -113,11 +119,11 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         }
         catch(IllegalStateException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.CONFLICT);
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.NOT_FOUND);
         }
     }
 
@@ -131,7 +137,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.NOT_FOUND);
         }
     }
 
@@ -145,7 +151,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.NOT_FOUND);
         }
     }
 
@@ -157,7 +163,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
             if (!transferService.addAccount(account)) {
                 final String errorMessage = String.format("Unable to add account #[%d]", account.getNumber());
                 LOGGER.warn(errorMessage);
-                throw new WebApplicationException(errorMessage, Response.Status.CONFLICT);
+                throw new WebApplicationException(errorMessage, Status.CONFLICT);
             }
             LOGGER.info("Created {}", account);
             final URI location = uriInfo.getBaseUriBuilder().path(MoneyTransferResourceImpl.class)
@@ -168,7 +174,7 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.NOT_FOUND);
         }
     }
 
@@ -184,11 +190,11 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         }
         catch(IllegalStateException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.CONFLICT);
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.NOT_FOUND);
         }
     }
 
@@ -213,11 +219,11 @@ public final class MoneyTransferResourceImpl implements MoneyTransferResource {
         }
         catch(NotFoundException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.NOT_FOUND);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.NOT_FOUND);
         }
         catch(IllegalArgumentException e) {
             LOGGER.warn("{}", e.getMessage());
-            throw new WebApplicationException(e.getMessage(), e.getCause(), Response.Status.CONFLICT);
+            throw new WebApplicationException(e.getMessage(), e.getCause(), Status.CONFLICT);
         }
     }
 

@@ -42,7 +42,7 @@ gradlew run
 Action              | Verb   | Resource Locator (URL)                                    | JSON Payload                    | Status Codes
 :-----------------  |:------ | :-------------------------------------------------------- | :------------------------------ | :-------
 Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                                 | 200 (Success)
-Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                                 | 200 (Success)
+Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                                 | 200 (Success)<br>404 (No customers found)
 Fetch a single customer | GET | http://localhost:8080/api/money-transfer/customer/{id}  |                                 | 200 (Success)<br>404 (Customer not found)
 Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
 Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)<br>409 (One or more accounts exist)
@@ -76,7 +76,6 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 
 
 ## [Version 1.0.0] September 2019
-:moneybag: Renamed _net.sattler22.transfer.model_ package to _net.sattler22.transfer.domain_  
 :moneybag: Automatically generate the account number for new accounts  
 :moneybag: Added REST call to find a single account for a customer id  
 :moneybag: BUG FIX - Add account location header should refer to the new account, not just its owner  
@@ -90,6 +89,9 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Created separate a integration test harness for Bank, Customer and Account  
 :moneybag: Check for concurrent updates during transfers  
 :moneybag: Added concurrency test harness  
+
+## [Version 1.0.1] November 2019
+:moneybag: Return HTTP 404 when no customers are found  
 
 Pete Sattler  
 21 January 2019  
