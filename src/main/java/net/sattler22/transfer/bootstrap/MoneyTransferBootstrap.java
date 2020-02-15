@@ -1,5 +1,7 @@
 package net.sattler22.transfer.bootstrap;
 
+import static net.sattler22.transfer.api.MoneyTransferConstants.API_BASE_PATH;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -22,13 +24,13 @@ import net.sattler22.transfer.service.TransferServiceInMemoryImpl;
  * Money Transfer REST Bootstrap
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version February 2020
  */
 public final class MoneyTransferBootstrap {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTransferBootstrap.class);
     private static final String ACCOUNT_DATA_JSON = "config/bootstrap-account-data.json";
-    private static final URI BASE_URI = URI.create("http://localhost:8080/");
+    private static final URI BASE_URI = URI.create("http://localhost:8080");
     private static final String CUSTOMER_DATA_JSON = "config/bootstrap-customer-data.json";
     private static final int SHUTDOWN_DELAY_SECONDS = 3;
 
@@ -50,7 +52,7 @@ public final class MoneyTransferBootstrap {
         config.register(MoneyTransferResourceImpl.class);
         final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI, config);
         try {
-            LOGGER.info("Money Transfer REST API started at [{}]", BASE_URI);
+            LOGGER.info("Money Transfer REST API started at [{}{}]", BASE_URI, API_BASE_PATH);
             httpServer.start();
             loadCustomers(bank, CUSTOMER_DATA_JSON);
             loadAccounts(transferService, ACCOUNT_DATA_JSON);

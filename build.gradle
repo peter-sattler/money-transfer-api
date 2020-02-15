@@ -1,9 +1,10 @@
 buildscript {
     ext {
         jcipVersion = '1.0'
-        jerseyVersion = '2.27'
-        jacksonJSR310Version = '2.9.9'
-        slf4jVersion = '1.7.26'
+        jerseyVersion = '2.30'
+        jacksonJSR310Version = '2.10.2'
+        jaxbVersion = '2.3.2'
+        slf4jVersion = '1.7.30'
     }
     repositories {
         mavenCentral()
@@ -16,10 +17,10 @@ mainClassName = 'net.sattler22.transfer.bootstrap.MoneyTransferBootstrap'
 apply plugin: 'eclipse'
 
 group = 'net.sattler22'
-version = '1.0.1'
+version = '1.0.2'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.13
+targetCompatibility = 1.13
 
 repositories {
     mavenCentral()
@@ -35,6 +36,11 @@ dependencies {
     implementation("org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonJSR310Version}")
     implementation("org.glassfish.jersey.containers:jersey-container-grizzly2-http:${jerseyVersion}")
+    
+    //JAX-B dependencies for JDK 9+
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:${jaxbVersion}")
+    implementation("org.glassfish.jaxb:jaxb-runtime:${jaxbVersion}")
+    
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
     implementation("org.slf4j:slf4j-simple:${slf4jVersion}")
 }

@@ -95,6 +95,7 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 
 ## [Version 1.0.2] February 2020
 :moneybag: Upgraded to Gradle 6.1.1  
+:moneybag: Compiled using Java 13  
 
 Pete Sattler  
 21 January 2019  
