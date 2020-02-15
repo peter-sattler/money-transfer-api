@@ -93,6 +93,9 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 ## [Version 1.0.1] November 2019
 :moneybag: Return HTTP 404 when no customers are found  
 
+## [Version 1.0.2] February 2020
+:moneybag: Upgraded to Gradle 6.1.1  
+
 Pete Sattler  
 21 January 2019  
 _peter@sattler22.net_  
