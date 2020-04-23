@@ -24,7 +24,7 @@ import net.sattler22.transfer.domain.Customer;
  * Money Transfer Service Interface
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
 public interface TransferService {
 
@@ -58,7 +58,7 @@ public interface TransferService {
      * @return True if the customer was deleted. Otherwise, returns false.
      * @throws IllegalStateException If it has accounts assigned to it
      */
-    boolean deleteCustomer(Customer customer) throws IllegalStateException;
+    boolean deleteCustomer(Customer customer);
 
     /**
      * Add a new account
@@ -73,7 +73,7 @@ public interface TransferService {
      * @return True if the account was deleted. Otherwise, returns false.
      * @throws IllegalStateException If it contains a non-zero balance
      */
-    boolean deleteAccount(Account account) throws IllegalStateException;
+    boolean deleteAccount(Account account);
 
     /**
      * Transfer money between accounts of the same owner
@@ -85,7 +85,7 @@ public interface TransferService {
      * @throws IllegalArgumentException If the source and target accounts are the same, the transaction
      *                                  amount is zero or is more than the available amount
      */
-    TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException;
+    TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount);
 
     /**
      * Money transfer result

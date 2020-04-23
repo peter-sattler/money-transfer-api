@@ -17,7 +17,7 @@ import net.sattler22.transfer.domain.Customer;
  * Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
 public final class TransferServiceInMemoryImpl implements TransferService {
 
@@ -47,7 +47,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public boolean deleteCustomer(Customer customer) throws IllegalStateException {
+    public boolean deleteCustomer(Customer customer) {
         final int nbrAccounts = customer.getAccounts().size();
         if(nbrAccounts > 0) {
             final String nbrAccountsWord = nbrAccounts == 1 ? "account" : "accounts";
@@ -67,7 +67,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public boolean deleteAccount(Account account) throws IllegalStateException {
+    public boolean deleteAccount(Account account) {
         if(account.getBalance().compareTo(ZERO) > 0)
             throw new IllegalStateException(String.format("Account #%d cannot be deleted because it contains a non-zero balance", account.getNumber()));
         final Customer owner = account.getOwner();
@@ -75,7 +75,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
     }
 
     @Override
-    public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) throws IllegalArgumentException {
+    public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) {
         if(source.getNumber() == target.getNumber())
             throw new IllegalArgumentException("Source and target accounts must be different");
         if (amount == null || amount.compareTo(ZERO) <= 0)
