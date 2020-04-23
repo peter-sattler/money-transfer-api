@@ -1,6 +1,5 @@
 package net.sattler22.transfer.domain;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Objects;
 
@@ -12,12 +11,11 @@ import net.jcip.annotations.Immutable;
  * Image Business Object
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
 @Immutable
-public final class Image implements Serializable {
+public final class Image {
 
-    private static final long serialVersionUID = -2240792763050541980L;
     private final URI source;
     private final String altText;
 

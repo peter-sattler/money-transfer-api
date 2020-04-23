@@ -1,6 +1,5 @@
 package net.sattler22.transfer.service;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -91,9 +90,8 @@ public interface TransferService {
      * Money transfer result
      */
     @Immutable
-    final class TransferResult implements Serializable {
+    final class TransferResult {
 
-        private static final long serialVersionUID = 6774168590117225325L;
         @JsonSerialize(using = LocalDateTimeSerializer.class)
         @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         private final LocalDateTime dateTime;

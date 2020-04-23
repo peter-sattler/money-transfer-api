@@ -1,6 +1,5 @@
 package net.sattler22.transfer.domain;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,12 +17,11 @@ import net.jcip.annotations.Immutable;
  * Banking Institution Business Object
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
 @Immutable
-public final class Bank implements Serializable {
+public final class Bank {
 
-    private static final long serialVersionUID = -7306722910569018912L;
     private final int id;
     private final String name;
     @JsonBackReference

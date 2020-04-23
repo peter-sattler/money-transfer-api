@@ -1,6 +1,5 @@
 package net.sattler22.transfer.dto;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -15,12 +14,11 @@ import net.sattler22.transfer.domain.AccountType;
  * Account Data Transfer Object (DTO)
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
 @Immutable
-public final class AccountDTO implements Serializable {
+public final class AccountDTO {
 
-    private static final long serialVersionUID = 7714325712052656413L;
     private final AccountType type;
     private final String customerId;
     private final BigDecimal balance;

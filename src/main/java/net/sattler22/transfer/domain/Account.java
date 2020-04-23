@@ -2,7 +2,6 @@ package net.sattler22.transfer.domain;
 
 import static java.math.BigDecimal.ZERO;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,11 +18,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Account Business Object
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
-public final class Account implements Serializable {
+public final class Account {
 
-    private static final long serialVersionUID = -9104547899479277703L;
     private static final AtomicInteger NUMBER_COUNTER = new AtomicInteger();
     private final int number;
     private final AccountType type;

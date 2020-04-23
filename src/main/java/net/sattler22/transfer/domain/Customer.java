@@ -1,6 +1,5 @@
 package net.sattler22.transfer.domain;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -27,12 +26,11 @@ import net.jcip.annotations.Immutable;
  * Customer Business Object
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
 @Immutable
-public final class Customer implements Serializable {
+public final class Customer {
 
-    private static final long serialVersionUID = -2303189692652134564L;
     private final String id;
     private final String firstName;
     private final String lastName;

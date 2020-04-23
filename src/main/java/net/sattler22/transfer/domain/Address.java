@@ -1,6 +1,5 @@
 package net.sattler22.transfer.domain;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -13,12 +12,11 @@ import net.jcip.annotations.Immutable;
  * Address Business Object
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version April 2020
  */
 @Immutable
-public final class Address implements Serializable {
+public final class Address {
 
-    private static final long serialVersionUID = -2393623619353631538L;
     private final String street;
     private final String city;
     private final String state;

@@ -17,7 +17,7 @@ mainClassName = 'net.sattler22.transfer.bootstrap.MoneyTransferBootstrap'
 apply plugin: 'eclipse'
 
 group = 'net.sattler22'
-version = '1.0.2'
+version = '1.0.3'
 
 sourceCompatibility = 1.13
 targetCompatibility = 1.13

@@ -97,6 +97,10 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Upgraded to Gradle 6.1.1  
 :moneybag: Compiled using Java 13  
 
+## [Version 1.0.3] April 2020
+:moneybag: Do not use throws keyword on unchecked exceptions [Effective-Java-74]  
+:moneybag: Remove Java serialization [Effective-Java-85]  
+
 Pete Sattler  
 21 January 2019  
 _peter@sattler22.net_  
