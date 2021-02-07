@@ -19,8 +19,8 @@ apply plugin: 'eclipse'
 group = 'net.sattler22'
 version = '1.0.3'
 
-sourceCompatibility = 1.13
-targetCompatibility = 1.13
+sourceCompatibility = 1.15
+targetCompatibility = 1.15
 
 repositories {
     mavenCentral()
