@@ -1,5 +1,5 @@
 # Money Transfer REST API
-![Money Stack](https://github.com/peter-sattler/money-transfer-api/blob/master/img/money-stack.gif)
+![Money Stack](/images/money-stack.gif)
 
 Design and implement a RESTful API (including data model and the backing implementation) for money transfers between accounts.
 
