@@ -1,4 +1,4 @@
-package net.sattler22.transfer.bootstrap.loader;
+package net.sattler22.transfer.bootstrap;
 
 import java.io.IOException;
 import java.net.URL;
@@ -8,10 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Bootstrap Base Data Loader
  *
+ * @implSpec All sub-classes are required to be thread-safe
  * @author Pete Sattler
- * @version September 2019
+ * @version August 2019
  */
-public abstract class BaseDataLoader {
+abstract sealed class BaseDataLoader permits AccountDataLoader, CustomerDataLoader {
 
     protected final URL resource;
     protected final ObjectMapper objectMapper;
@@ -25,10 +26,10 @@ public abstract class BaseDataLoader {
     }
 
     /**
-     * Loads data
+     * Loads the data
      *
      * @return The number of rows loaded
      * @throws IOException If unable to load the data
      */
-    protected abstract int load() throws IOException;
+    abstract int load() throws IOException;
 }

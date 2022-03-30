@@ -17,19 +17,11 @@ import net.sattler22.transfer.domain.Customer;
  * Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
- * @version April 2020
+ * @version February 2019
  */
-public final class TransferServiceInMemoryImpl implements TransferService {
+public record TransferServiceInMemoryImpl(Bank bank) implements TransferService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransferServiceInMemoryImpl.class);
-    private final Bank bank;
-
-    /**
-     * Constructs a new in-memory money transfer service
-     */
-    public TransferServiceInMemoryImpl(Bank bank) {
-        this.bank = bank;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(TransferServiceInMemoryImpl.class);
 
     @Override
     public Bank getBank() {
@@ -38,7 +30,7 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public Set<Customer> getCustomers() {
-        return bank.getCustomers();
+        return bank.customers();
     }
 
     @Override
@@ -48,11 +40,10 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public boolean deleteCustomer(Customer customer) {
-        final int nbrAccounts = customer.getAccounts().size();
-        if(nbrAccounts > 0) {
-            final String nbrAccountsWord = nbrAccounts == 1 ? "account" : "accounts";
-            throw new IllegalStateException(String.format("%s cannot be deleted because it has %d %s assigned to it", customer, nbrAccounts, nbrAccountsWord));
-        }
+        final var nbrAccounts = customer.accounts().size();
+        if(nbrAccounts > 0)
+            throw new IllegalStateException(String.format("%s cannot be deleted because it has %d account%s assigned to it",
+                                            customer, nbrAccounts, nbrAccounts == 1 ? "" : "s"));
         return bank.deleteCustomer(customer);
     }
 
@@ -63,37 +54,37 @@ public final class TransferServiceInMemoryImpl implements TransferService {
 
     @Override
     public boolean addAccount(Account account) {
-        return account.getOwner().addAccount(account);
+        return account.owner().addAccount(account);
     }
 
     @Override
     public boolean deleteAccount(Account account) {
-        if(account.getBalance().compareTo(ZERO) > 0)
-            throw new IllegalStateException(String.format("Account #%d cannot be deleted because it contains a non-zero balance", account.getNumber()));
-        final Customer owner = account.getOwner();
+        if(account.balance().compareTo(ZERO) > 0)
+            throw new IllegalStateException(String.format("Account #%d cannot be deleted because it contains a non-zero balance", account.number()));
+        final var owner = account.owner();
         return owner.deleteAccount(account);
     }
 
     @Override
     public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) {
-        if(source.getNumber() == target.getNumber())
+        if(source.number() == target.number())
             throw new IllegalArgumentException("Source and target accounts must be different");
         if (amount == null || amount.compareTo(ZERO) <= 0)
             throw new IllegalArgumentException("Transfer amount must be greater than zero");
-        if (amount.compareTo(source.getBalance()) > 0)
+        if (amount.compareTo(source.balance()) > 0)
             throw new IllegalArgumentException("Transfer amount exceeds the amount of available funds");
         //Lock both accounts before making the transfer, but always in the SAME order to avoid deadlocking:
-        final Object lock1 = source.getNumber() < target.getNumber() ? source.getLock() : target.getLock();
-        final Object lock2 = source.getNumber() < target.getNumber() ? target.getLock() : source.getLock();
+        final var lock1 = source.number() < target.number() ? source.lock() : target.lock();
+        final var lock2 = source.number() < target.number() ? target.lock() : source.lock();
         final TransferResult transferResult;
         synchronized (lock1) {
             synchronized (lock2) {
-                LOGGER.info("Source before transfer: {}", source);
-                LOGGER.info("Target before transfer {}", target);
+                logger.info("Source before transfer: {}", source);
+                logger.info("Target before transfer {}", target);
                 source.debit(amount);
                 target.credit(amount);
                 transferResult = new TransferResult(source, target);
-                LOGGER.info("After transfer of ${}, {}", amount, transferResult);
+                logger.info("After transfer of ${}, {}", amount, transferResult);
             }
         }
         return transferResult;

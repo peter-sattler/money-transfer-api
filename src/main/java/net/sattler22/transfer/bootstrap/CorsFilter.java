@@ -2,36 +2,35 @@ package net.sattler22.transfer.bootstrap;
 
 import java.io.IOException;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
 
 /**
  * Money Transfer Cross-Origin Resource Sharing (CORS) Filter
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version August 2019
  */
-public final class CORSFilter implements ContainerResponseFilter {
+public final class CorsFilter implements ContainerResponseFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CORSFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CorsFilter.class);
 
     @Override
     public void filter(ContainerRequestContext request, ContainerResponseContext response) throws IOException {
         if (isCrossOriginRequest(request)) {
             if (isOptionsRequest(request)) {
-                LOGGER.info("CORS preflighted request detected");
+                logger.info("CORS preflighted request detected");
                 response.getHeaders().add("Access-Control-Allow-Credentials", "true");
                 response.getHeaders().add("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, If-Match");
                 response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
             }
-            else {
-                LOGGER.info("CORS simple request detected");
-            }
-            final String origin = request.getHeaderString("Origin");
+            else
+                logger.info("CORS simple request detected");
+            final var origin = request.getHeaderString("Origin");
             response.getHeaders().add("Access-Control-Allow-Origin", origin);
         }
     }

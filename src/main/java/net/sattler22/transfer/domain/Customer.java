@@ -12,6 +12,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -26,7 +27,7 @@ import net.jcip.annotations.Immutable;
  * Customer Business Object
  *
  * @author Pete Sattler
- * @version April 2020
+ * @version February 2019
  */
 @Immutable
 public final class Customer {
@@ -39,11 +40,7 @@ public final class Customer {
     private final String phone;
     private final String email;
     private final List<Image> images;
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private final LocalDate birthDate;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime joinedDate;
     @JsonBackReference
     private final Set<Account> accounts = Collections.synchronizedSet(new HashSet<>());
@@ -51,16 +48,11 @@ public final class Customer {
     /**
      * Constructs a new customer
      */
-    @JsonCreator(mode=Mode.PROPERTIES)
-    public Customer(@JsonProperty("id") String id,
-                    @JsonProperty("firstName") String firstName,
-                    @JsonProperty("lastName") String lastName,
-                    @JsonProperty("gender") Gender gender,
-                    @JsonProperty("address") Address address,
-                    @JsonProperty("phone") String phone,
-                    @JsonProperty("email") String email,
-                    @JsonProperty("images") List<Image> images,
-                    @JsonProperty("birthDate") LocalDate birthDate) {
+    @JsonCreator(mode = Mode.PROPERTIES)
+    public Customer(@JsonProperty("id") String id, @JsonProperty("firstName") String firstName,
+                    @JsonProperty("lastName") String lastName, @JsonProperty("gender") Gender gender,
+                    @JsonProperty("address") Address address, @JsonProperty("phone") String phone, @JsonProperty("email") String email,
+                    @JsonProperty("images") List<Image> images, @JsonProperty("birthDate") LocalDate birthDate) {
         this.id = Objects.requireNonNull(id, "Customer ID is required");
         this.firstName = Objects.requireNonNull(firstName, "First name is required");
         this.lastName = Objects.requireNonNull(lastName, "Last name is required");
@@ -68,48 +60,62 @@ public final class Customer {
         this.address = Objects.requireNonNull(address, "Address is required");
         this.phone = Objects.requireNonNull(phone, "Phone is required");
         this.email = email;
-        this.images = (images != null) ? images : Collections.emptyList() ;
+        this.images = (images != null) ? images : Collections.emptyList();
         this.birthDate = Objects.requireNonNull(birthDate, "Date of birth is required");
         this.joinedDate = LocalDateTime.now();
     }
 
-    public String getId() {
+    @JsonGetter
+    public String id() {
         return id;
     }
 
-    public String getFirstName() {
+    @JsonGetter
+    public String firstName() {
         return firstName;
     }
 
-    public String getLastName() {
+    @JsonGetter
+    public String lastName() {
         return lastName;
     }
 
-    public Gender getGender() {
+    @JsonGetter
+    public Gender gender() {
         return gender;
     }
 
-    public Address getAddress() {
+    @JsonGetter
+    public Address address() {
         return address;
     }
 
-    public String getPhone() {
+    @JsonGetter
+    public String phone() {
         return phone;
     }
 
-    public String getEmail() {
+    @JsonGetter
+    public String email() {
         return email;
     }
 
-    public List<Image> getImages() {
-        return Collections.unmodifiableList(images);
+    @JsonGetter
+    public List<Image> images() {
+        return List.copyOf(images);
     }
 
-    public LocalDate getBirthDate() {
+    @JsonGetter
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    public LocalDate birthDate() {
         return birthDate;
     }
 
-    public LocalDateTime getJoinedDate() {
+    @JsonGetter
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    public LocalDateTime joinedDate() {
         return joinedDate;
     }
 
@@ -134,8 +140,8 @@ public final class Customer {
     /**
      * Get all of the customer's accounts
      */
-    public Set<Account> getAccounts() {
-        return Collections.unmodifiableSet(accounts);
+    public Set<Account> accounts() {
+        return Set.copyOf(accounts);
     }
 
     /**
@@ -144,7 +150,7 @@ public final class Customer {
      * @param number The account number
      */
     public Optional<Account> findAccount(int number) {
-        return accounts.stream().filter(account -> account.getNumber() == number).findFirst();
+        return accounts.stream().filter(account -> account.number() == number).findFirst();
     }
 
     @Override
@@ -160,13 +166,12 @@ public final class Customer {
             return false;
         if (this.getClass() != other.getClass())
             return false;
-        final Customer that = (Customer) other;
+        final var that = (Customer) other;
         return this.id.equals(that.id);
     }
 
     @Override
     public String toString() {
-        return String.format("%s [id=%s, firstName=%s, lastName=%s]",
-                              getClass().getSimpleName(), id, firstName, lastName);
+        return String.format("%s [id=%s, firstName=%s, lastName=%s]", getClass().getSimpleName(), id, firstName, lastName);
     }
 }

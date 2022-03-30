@@ -1,28 +1,25 @@
 package net.sattler22.transfer.api;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Request;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import net.sattler22.transfer.domain.Customer;
-import net.sattler22.transfer.dto.AccountDTO;
-import net.sattler22.transfer.dto.AccountTransferDTO;
 
 /**
  * Money Transfer REST Resource Interface
@@ -30,7 +27,7 @@ import net.sattler22.transfer.dto.AccountTransferDTO;
  * @author Pete Sattler
  * @version September 2019
  */
-public interface MoneyTransferResource {
+public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl {
 
     /**
      * Fetch bank details
@@ -103,12 +100,12 @@ public interface MoneyTransferResource {
      * Add an account
      *
      * @param uriInfo The URI information
-     * @param accountDTO  The account data transfer object (DTO)
+     * @param accountDto  The account data transfer object (DTO)
      */
     @POST
     @Path("/account")
     @Consumes(APPLICATION_JSON)
-    Response addAccount(@Context UriInfo uriInfo, AccountDTO accountDTO);
+    Response addAccount(@Context UriInfo uriInfo, AccountDto accountDto);
 
     /**
      * Parse newly created account number
@@ -141,13 +138,13 @@ public interface MoneyTransferResource {
     /**
      * Account transfer
      *
-     * @param headers The HTTP headers
+     * @param httpHeaders The HTTP headers
      * @param request The HTTP request
-     * @param accountTransferDTO The account transfer data transfer object
+     * @param accountTransferDto The account transfer data transfer object
      */
     @PUT
     @Path("/account/transfer")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Response transfer(@Context HttpHeaders headers, @Context Request request, AccountTransferDTO accountTransferDTO);
+    Response transfer(@Context HttpHeaders httpHeaders, @Context Request request, AccountTransferDto accountTransferDto);
 }

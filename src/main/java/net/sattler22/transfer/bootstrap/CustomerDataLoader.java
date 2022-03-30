@@ -1,4 +1,4 @@
-package net.sattler22.transfer.bootstrap.loader;
+package net.sattler22.transfer.bootstrap;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import net.jcip.annotations.Immutable;
 import net.sattler22.transfer.domain.Bank;
 import net.sattler22.transfer.domain.Customer;
 
@@ -16,30 +17,30 @@ import net.sattler22.transfer.domain.Customer;
  * Bootstrap Customer Data Loader
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version August 2019
  */
-public final class CustomerDataLoader extends BaseDataLoader {
+@Immutable
+final class CustomerDataLoader extends BaseDataLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDataLoader.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerDataLoader.class);
     private final Bank bank;
 
     /**
      * Constructs a new customer data loader
      */
-    public CustomerDataLoader(Bank bank, String resourceName) {
+    CustomerDataLoader(Bank bank, String resourceName) {
         super(resourceName);
         this.bank = bank;
     }
 
     @Override
-    public int load() throws IOException {
-        final File inputFile = new File(resource.getFile());
-        final TypeReference<List<Customer>> typeRef =
-            new TypeReference<List<Customer>>() {};
-        final List<Customer> customers = objectMapper.readValue(inputFile, typeRef);
-        for (Customer customer : customers) {
+    int load() throws IOException {
+        final var inputFile = new File(resource.getFile());
+        final var typeRef = new TypeReference<List<Customer>>() {};
+        final var customers = objectMapper.readValue(inputFile, typeRef);
+        for (final var customer : customers) {
             bank.addCustomer(customer);
-            LOGGER.info("Added {}", customer);
+            logger.info("Added {}", customer);
         }
         return customers.size();
     }

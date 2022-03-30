@@ -8,8 +8,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <jaxb.version>2.3.3</jaxb.version>
-        <jersey.version>2.35</jersey.version>
+        <jaxb.version>3.0.1</jaxb.version>
+        <jersey.version>3.0.4</jersey.version>
         <junit.version>5.8.2</junit.version>
         <slf4j.version>1.7.35</slf4j.version>
     </properties>
@@ -76,12 +76,26 @@
             <groupId>org.glassfish.jersey.test-framework</groupId>
             <artifactId>jersey-test-framework-core</artifactId>
             <version>${jersey.version}</version>
+            <exclusions>
+                <!-- EXCLUDE JUNIT 4 -->
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
             <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
             <version>${jersey.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <!-- EXCLUDE JUNIT 4 -->
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>

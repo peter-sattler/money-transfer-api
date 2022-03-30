@@ -9,6 +9,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.jcip.annotations.Immutable;
@@ -17,7 +18,7 @@ import net.jcip.annotations.Immutable;
  * Banking Institution Business Object
  *
  * @author Pete Sattler
- * @version April 2020
+ * @version February 2019
  */
 @Immutable
 public final class Bank {
@@ -30,26 +31,27 @@ public final class Bank {
     /**
      * Constructs a new banking institution
      */
-    @JsonCreator(mode=Mode.PROPERTIES)
-    public Bank(@JsonProperty("id") int id,
-                @JsonProperty("name") String name) {
+    @JsonCreator(mode = Mode.PROPERTIES)
+    public Bank(@JsonProperty("id") int id, @JsonProperty("name") String name) {
         this.id = id;
         this.name = Objects.requireNonNull(name, "Bank name is required");
     }
 
-    public int getId() {
+    @JsonGetter
+    public int id() {
         return id;
     }
 
-    public String getName() {
+    @JsonGetter
+    public String name() {
         return name;
     }
 
     /**
      * Get all customers of the bank
      */
-    public Set<Customer> getCustomers() {
-        return Collections.unmodifiableSet(customers);
+    public Set<Customer> customers() {
+        return Set.copyOf(customers);
     }
 
     /**
@@ -83,7 +85,7 @@ public final class Bank {
      * @param id The customer identifier
      */
     public Optional<Customer> findCustomer(String id) {
-        return customers.stream().filter(customer -> customer.getId().equals(id)).findFirst();
+        return customers.stream().filter(customer -> customer.id().equals(id)).findFirst();
     }
 
     @Override
@@ -99,7 +101,7 @@ public final class Bank {
             return false;
         if (this.getClass() != other.getClass())
             return false;
-        final Bank that = (Bank) other;
+        final var that = (Bank) other;
         return this.id == that.id;
     }
 

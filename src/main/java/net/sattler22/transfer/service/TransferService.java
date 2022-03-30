@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -23,9 +24,9 @@ import net.sattler22.transfer.domain.Customer;
  * Money Transfer Service Interface
  *
  * @author Pete Sattler
- * @version April 2020
+ * @version February 2019
  */
-public interface TransferService {
+public sealed interface TransferService permits TransferServiceInMemoryImpl {
 
     /**
      * Get the banking institution
@@ -81,8 +82,8 @@ public interface TransferService {
      * @param source The source account
      * @param target The target account
      * @param amount The transfer amount
-     * @throws IllegalArgumentException If the source and target accounts are the same, the transaction
-     *                                  amount is zero or is more than the available amount
+     * @throws IllegalArgumentException If the source and target accounts are the same, the transaction amount is zero or is
+     *                                  more than the available amount
      */
     TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount);
 
@@ -92,8 +93,6 @@ public interface TransferService {
     @Immutable
     final class TransferResult {
 
-        @JsonSerialize(using = LocalDateTimeSerializer.class)
-        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         private final LocalDateTime dateTime;
         private final Account source;
         private final Account target;
@@ -105,29 +104,31 @@ public interface TransferService {
          * @param target The resulting target account
          */
         @JsonCreator(mode = Mode.PROPERTIES)
-        public TransferResult(@JsonProperty("source") Account source,
-                              @JsonProperty("target") Account target) {
+        public TransferResult(@JsonProperty("source") Account source, @JsonProperty("target") Account target) {
             this.dateTime = LocalDateTime.now();
             this.source = Objects.requireNonNull(source, "Source account is required");
             this.target = Objects.requireNonNull(target, "Target account is required");
         }
 
-        public LocalDateTime getDateTime() {
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        public LocalDateTime dateTime() {
             return dateTime;
         }
 
-        public Account getSource() {
+        @JsonGetter
+        public Account source() {
             return source;
         }
 
-        public Account getTarget() {
+        @JsonGetter
+        public Account target() {
             return target;
         }
 
         @Override
         public String toString() {
-            return String.format("%s [dateTime=%s, source=%s, target=%s]",
-                                 getClass().getSimpleName(), dateTime, source, target);
+            return String.format("%s [dateTime=%s, source=%s, target=%s]", getClass().getSimpleName(), dateTime, source, target);
         }
     }
 }

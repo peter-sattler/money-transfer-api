@@ -29,28 +29,29 @@ These instructions will get you a copy of this project up and running on your lo
 ```text
 git clone https://github.com/peter-sattler/money-transfer-api
 cd money-transfer-api
-./mvnw compile exec:java
+./mvnw verify
+./mvnw exec:java
 ```
 
 # Implementation Details
 
-:moneybag: Implemented using Java API for RESTful Web Services (JAX-RS, defined in JSR 370)  
+:moneybag: Implemented using [Jakarta RESTful Web Services](https://projects.eclipse.org/projects/ee4j.jaxrs) (JAX-RS)  
 :moneybag: Made use of Jersey's HK2 dependency injection framework  
 
 # Money Transfer API
 
 Action              | Verb   | Resource Locator (URL)                                    | JSON Payload                    | Status Codes
 :-----------------  |:------ | :-------------------------------------------------------- | :------------------------------ | :-------
-Fetch bank details  | GET    | http://localhost:8080/api/money-transfer/bank             |                                 | 200 (Success)
-Fetch all customers | GET    | http://localhost:8080/api/money-transfer/customers        |                                 | 200 (Success)<br>404 (No customers found)
-Fetch a single customer | GET | http://localhost:8080/api/money-transfer/customer/{id}  |                                 | 200 (Success)<br>404 (Customer not found)
-Add a customer      | POST   | http://localhost:8080/api/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)<br>409 (One or more accounts exist)
-Fetch all accounts  | GET    | http://localhost:8080/api/money-transfer/accounts/{customerId} |                            | 200 (Success)<br>404 (Customer not found)
-Fetch a single account | GET | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
-Add an account      | POST   | http://localhost:8080/api/money-transfer/account          | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)
-Delete an account   | DELETE | http://localhost:8080/api/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
-Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)<br>412 (Concurrent update detected)
+Fetch bank details  | GET    | http://localhost:8080/api/v1/money-transfer/bank             |                                 | 200 (Success)
+Fetch all customers | GET    | http://localhost:8080/api/v1/money-transfer/customers        |                                 | 200 (Success)<br>404 (No customers found)
+Fetch a single customer | GET | http://localhost:8080/api/v1/money-transfer/customer/{id}  |                                 | 200 (Success)<br>404 (Customer not found)
+Add a customer      | POST   | http://localhost:8080/api/v1/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
+Delete a customer   | DELETE | http://localhost:8080/api/v1/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)<br>409 (One or more accounts exist)
+Fetch all accounts  | GET    | http://localhost:8080/api/v1/money-transfer/accounts/{customerId} |                            | 200 (Success)<br>404 (Customer not found)
+Fetch a single account | GET | http://localhost:8080/api/v1/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
+Add an account      | POST   | http://localhost:8080/api/v1/money-transfer/account          | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)
+Delete an account   | DELETE | http://localhost:8080/api/v1/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
+Account transfer    | PUT    | http://localhost:8080/api/v1/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)<br>412 (Concurrent update detected)
 
 # Enhancement History
 
@@ -80,7 +81,6 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Added REST call to find a single account for a customer id  
 :moneybag: BUG FIX - Add account location header should refer to the new account, not just its owner  
 :moneybag: Created money transfer REST resource interface and moved annotations there  
-:moneybag: Moved bootstrap data loaders to a separate package  
 :moneybag: Customers can only be deleted if they don't have any accounts  
 :moneybag: Accounts can only be deleted it they have a zero balance  
 :moneybag: Using regular expressions, check that the account number path parameter is numeric  
