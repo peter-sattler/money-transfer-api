@@ -29,7 +29,7 @@ These instructions will get you a copy of this project up and running on your lo
 ```text
 git clone https://github.com/peter-sattler/money-transfer-api
 cd money-transfer-api
-gradlew run
+./mvnw compile exec:java
 ```
 
 # Implementation Details
@@ -101,6 +101,10 @@ Account transfer    | PUT    | http://localhost:8080/api/money-transfer/account/
 :moneybag: Do not use throws keyword on unchecked exceptions [Effective-Java-74]  
 :moneybag: Remove Java serialization [Effective-Java-85]  
 
+## [Version 1.0.4] March 2022
+:moneybag: Use Maven instead of Gradle  
+:moneybag: Upgraded to Java 17  
+
 Pete Sattler  
-21 January 2019  
+March 2022  
 _peter@sattler22.net_  
