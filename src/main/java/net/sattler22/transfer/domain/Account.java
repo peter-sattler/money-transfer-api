@@ -102,6 +102,7 @@ public final class Account {
         return balance;
     }
 
+    @JsonGetter
     public long version() {
         return version.get();
     }
