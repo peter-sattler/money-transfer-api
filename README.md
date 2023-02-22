@@ -26,10 +26,20 @@ Design and implement a RESTful API (including data model and the backing impleme
 
 These instructions will get you a copy of this project up and running on your local machine. Once the REST service is running, see the [API section](#money-transfer-api) for the available options.
 
+1. Clone this Git repository:
 ```text
 git clone https://github.com/peter-sattler/money-transfer-api
+```
+2. Switch to the application directory:
+```text
 cd money-transfer-api
+```
+3. Run the integration tests:
+```text
 ./mvnw verify
+```
+4. Run the program:
+```text
 ./mvnw exec:java
 ```
 
