@@ -1,101 +1,103 @@
 package net.sattler22.transfer.api;
 
-import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static java.math.BigDecimal.ONE;
-import static net.sattler22.transfer.domain.AccountType.CHECKING;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import jakarta.ws.rs.core.Response.Status;
+import net.sattler22.transfer.domain.AccountType;
+import net.sattler22.transfer.domain.Customer;
+import net.sattler22.transfer.util.TestData;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.Response.Status;
-import net.sattler22.transfer.domain.Customer;
-import net.sattler22.transfer.util.TestDataFactory;
+import java.math.BigDecimal;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * Money Transfer Customer Integration Test Harness
+ * Money Transfer Customer Integration Tests
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version November 2025
+ * @since September 2019
  */
-final class MoneyTransferCustomerIntegrationTest extends MoneyTransferBaseTestHarness {
+final class MoneyTransferCustomerIntegrationTest extends MoneyTransferBaseTest {
 
-    @Test
-    void fetchAllCustomersHappyPathTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var burt = TestDataFactory.burt("234");
-        addCustomerImpl(burt);
-        final var response = target(basePath).path("customers").request().get();
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final Set<Customer> actual = response.readEntity(new GenericType<Set<Customer>>() {});
-        final Set<Customer> expected = new HashSet<>();
-        expected.add(bob);
-        expected.add(burt);
-        assertEquals(expected, actual);
+    @Nested
+    @DisplayName("Get Customer")
+    final class GetTest {
+        @Test
+        void getAllCustomersHappyPathTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Customer burtRentals = addCustomer(TestData.burtRentals("234"));
+            final Customer eileenDover = addCustomer(TestData.eileenDover("789"));
+            final Set<Customer> actual = getAllCustomers();
+            assertEquals(3, actual.size());
+            assertEquals(Set.of(bobWire, burtRentals, eileenDover), actual);
+        }
+
+        @Test
+        void getOneCustomerHappyPathTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Customer actual = getCustomer(bobWire, Status.OK);
+            assertNotNull(actual);
+            assertEquals(bobWire, actual);
+        }
+
+        @Test
+        void getOneCustomerNotFoundTestCase() {
+            final Customer bobWire = TestData.bobWire("123");
+            final Customer actual = getCustomer(bobWire, Status.NOT_FOUND);
+            assertNull(actual);
+        }
     }
 
-    @Test
-    void fetchOneCustomerHappyPathTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var response = target(basePath).path("customer").path(bob.id()).request().get();
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final var actual = response.readEntity(Customer.class);
-        assertEquals(bob, actual);
+    @Nested
+    @DisplayName("Add Customer")
+    final class AddTest {
+        @Test
+        void addCustomerHappyPathTestCase() {
+            final Customer bobWire = TestData.bobWire("123");
+            final Customer actual = addCustomer(bobWire);
+            assertEquals(bobWire, actual);
+        }
+
+        @Test
+        void addCustomerAlreadyExistsTestCase() {
+            final Customer bobWire = TestData.bobWire("123");
+            final Customer actual = addCustomer(bobWire);
+            addCustomer(bobWire, Status.CONFLICT);
+            assertEquals(bobWire, actual);
+        }
     }
 
-    @Test
-    void fetchOneCustomerNotFoundTestCase() {
-        final var response = target(basePath).path("customer").path("0").request().get();
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
+    @Nested
+    @DisplayName("Delete Customer")
+    final class DeleteTest {
+        @Test
+        void deleteCustomerHappyPathTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            deleteCustomer(bobWire, Status.NO_CONTENT);
+            final Customer actual = getCustomer(bobWire, Status.NOT_FOUND);
+            assertNull(actual);
+        }
 
-    @Test
-    void addCustomerHappyPathTestCase() {
-        final var response = addCustomerImpl(TestDataFactory.bob("123"));
-        assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
+        @Test
+        void deleteCustomerNotFoundTestCase() {
+            final Customer bobWire = TestData.bobWire("123");
+            deleteCustomer(bobWire, Status.NOT_FOUND);
+            final Customer actual = getCustomer(bobWire, Status.NOT_FOUND);
+            assertNull(actual);
+        }
 
-    @Test
-    void addCustomerAlreadyExistsTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var response = addCustomerImpl(bob);
-        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void deleteCustomerHappyPathTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var response = deleteCustomerImpl(bob);
-        assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
-    }
-
-    @Test
-    void deleteCustomerNotFoundTestCase() {
-        final var response = deleteCustomerImpl(TestDataFactory.bob("123"));
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-    }
-
-    @Test
-    void deleteCustomerHasAccountsTestCase() {
-        final var burt = TestDataFactory.burt("234");
-        addCustomerImpl(burt);
-        addAccountResponseImpl(CHECKING, burt.id(), ONE);
-        final var response = deleteCustomerImpl(burt);
-        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
+        @Test
+        void deleteCustomerHasAccountsTestCase() {
+            final Customer burtRentals = addCustomer(TestData.burtRentals("234"));
+            addAccount(burtRentals, AccountType.CHECKING, BigDecimal.ONE);
+            deleteCustomer(burtRentals, Status.CONFLICT);
+            final Customer actual = getCustomer(burtRentals, Status.OK);
+            assertNotNull(actual);
+        }
     }
 }

@@ -1,23 +1,21 @@
 package net.sattler22.transfer.service;
 
-import static java.math.BigDecimal.ZERO;
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Bank;
+import net.sattler22.transfer.domain.Customer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.sattler22.transfer.domain.Account;
-import net.sattler22.transfer.domain.Bank;
-import net.sattler22.transfer.domain.Customer;
-
 /**
  * Money Transfer Service In-Memory Implementation
  *
  * @author Pete Sattler
- * @version February 2019
+ * @version November 2025
+ * @since February 2019
  */
 public record TransferServiceInMemoryImpl(Bank bank) implements TransferService {
 
@@ -40,10 +38,10 @@ public record TransferServiceInMemoryImpl(Bank bank) implements TransferService 
 
     @Override
     public boolean deleteCustomer(Customer customer) {
-        final var nbrAccounts = customer.accounts().size();
-        if(nbrAccounts > 0)
+        final int nbrAccounts = customer.accounts().size();
+        if (nbrAccounts > 0)
             throw new IllegalStateException(String.format("%s cannot be deleted because it has %d account%s assigned to it",
-                                            customer, nbrAccounts, nbrAccounts == 1 ? "" : "s"));
+                    customer, nbrAccounts, nbrAccounts == 1 ? "" : "s"));
         return bank.deleteCustomer(customer);
     }
 
@@ -59,23 +57,24 @@ public record TransferServiceInMemoryImpl(Bank bank) implements TransferService 
 
     @Override
     public boolean deleteAccount(Account account) {
-        if(account.balance().compareTo(ZERO) > 0)
-            throw new IllegalStateException(String.format("Account #%d cannot be deleted because it contains a non-zero balance", account.number()));
-        final var owner = account.owner();
+        if (account.balance().compareTo(BigDecimal.ZERO) > 0)
+            throw new IllegalStateException(String.format("Account #%d cannot be deleted because it contains a non-zero balance",
+                    account.number()));
+        final Customer owner = account.owner();
         return owner.deleteAccount(account);
     }
 
     @Override
     public TransferResult transfer(Customer owner, Account source, Account target, BigDecimal amount) {
-        if(source.number() == target.number())
+        if (source.number() == target.number())
             throw new IllegalArgumentException("Source and target accounts must be different");
-        if (amount == null || amount.compareTo(ZERO) <= 0)
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
             throw new IllegalArgumentException("Transfer amount must be greater than zero");
         if (amount.compareTo(source.balance()) > 0)
             throw new IllegalArgumentException("Transfer amount exceeds the amount of available funds");
         //Lock both accounts before making the transfer, but always in the SAME order to avoid deadlocking:
-        final var lock1 = source.number() < target.number() ? source.lock() : target.lock();
-        final var lock2 = source.number() < target.number() ? target.lock() : source.lock();
+        final Object lock1 = source.number() < target.number() ? source.lock() : target.lock();
+        final Object lock2 = source.number() < target.number() ? target.lock() : source.lock();
         final TransferResult transferResult;
         synchronized (lock1) {
             synchronized (lock2) {
@@ -92,6 +91,6 @@ public record TransferServiceInMemoryImpl(Bank bank) implements TransferService 
 
     @Override
     public String toString() {
-        return String.format("%s [bank=%s]", getClass().getSimpleName(), bank);
+        return String.format("%s [%s]", getClass().getSimpleName(), bank);
     }
 }

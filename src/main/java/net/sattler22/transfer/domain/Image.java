@@ -1,8 +1,8 @@
 package net.sattler22.transfer.domain;
 
-import java.net.URI;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.net.URI;
 
 /**
  * Image Business Object

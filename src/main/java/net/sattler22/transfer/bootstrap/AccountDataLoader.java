@@ -1,25 +1,25 @@
 package net.sattler22.transfer.bootstrap;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import jakarta.ws.rs.NotFoundException;
 import net.jcip.annotations.Immutable;
 import net.sattler22.transfer.api.AccountDto;
 import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.Customer;
 import net.sattler22.transfer.service.TransferService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Bootstrap Account Data Loader
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version November 2025
+ * @since August 2019
  */
 @Immutable
 final class AccountDataLoader extends BaseDataLoader {
@@ -37,13 +37,13 @@ final class AccountDataLoader extends BaseDataLoader {
 
     @Override
     int load() throws IOException {
-        final var inputFile = new File(resource.getFile());
-        final var typeRef = new TypeReference<List<AccountDto>>() {};
-        final var accountDtos = objectMapper.readValue(inputFile, typeRef);
-        for (final var accountDto : accountDtos) {
-            final var owner = transferService.findCustomer(accountDto.customerId())
-                                             .orElseThrow(() -> new NotFoundException(String.format("Customer ID [%s] not found", accountDto.customerId())));
-            final var account = new Account(accountDto.type(), owner, accountDto.balance());
+        final File inputFile = new File(resource.getFile());
+        final List<AccountDto> accountDtos = objectMapper.readValue(inputFile, new TypeReference<>() {});
+        for (final AccountDto accountDto : accountDtos) {
+            final Customer owner =
+                    transferService.findCustomer(accountDto.customerId())
+                            .orElseThrow(() -> new NotFoundException(String.format("Customer ID [%s] not found", accountDto.customerId())));
+            final Account account = new Account(owner, accountDto.type(), accountDto.balance());
             owner.addAccount(account);
             logger.info("Added {}", account);
         }

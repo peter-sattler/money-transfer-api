@@ -1,9 +1,9 @@
 package net.sattler22.transfer.api;
 
+import net.sattler22.transfer.domain.Account;
+
 import java.math.BigDecimal;
 import java.util.Objects;
-
-import net.sattler22.transfer.domain.Account;
 
 /**
  * Account Transfer Data Transfer Object (DTO)

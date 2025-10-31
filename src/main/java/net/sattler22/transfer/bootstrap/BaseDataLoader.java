@@ -1,14 +1,14 @@
 package net.sattler22.transfer.bootstrap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URL;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Bootstrap Base Data Loader
  *
- * @implSpec All sub-classes are required to be thread-safe
+ * @implSpec All subclasses are required to be thread-safe
  * @author Pete Sattler
  * @version August 2019
  */

@@ -1,14 +1,5 @@
 package net.sattler22.transfer.domain;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
@@ -20,14 +11,23 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-
 import net.jcip.annotations.Immutable;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Customer Business Object
  *
  * @author Pete Sattler
- * @version February 2019
+ * @version November 2025
+ * @since February 2019
  */
 @Immutable
 public final class Customer {
@@ -42,6 +42,7 @@ public final class Customer {
     private final List<Image> images;
     private final LocalDate birthDate;
     private final LocalDateTime joinedDate;
+
     @JsonBackReference
     private final Set<Account> accounts = Collections.synchronizedSet(new HashSet<>());
 
@@ -138,7 +139,7 @@ public final class Customer {
     }
 
     /**
-     * Get all of the customer's accounts
+     * Get all customer accounts
      */
     public Set<Account> accounts() {
         return Set.copyOf(accounts);
@@ -150,7 +151,9 @@ public final class Customer {
      * @param number The account number
      */
     public Optional<Account> findAccount(int number) {
-        return accounts.stream().filter(account -> account.number() == number).findFirst();
+        return accounts.stream()
+                .filter(account -> account.number() == number)
+                .findFirst();
     }
 
     @Override
@@ -166,7 +169,7 @@ public final class Customer {
             return false;
         if (this.getClass() != other.getClass())
             return false;
-        final var that = (Customer) other;
+        final Customer that = (Customer) other;
         return this.id.equals(that.id);
     }
 

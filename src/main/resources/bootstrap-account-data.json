@@ -1,87 +1,87 @@
 [
-    {
-        "type": "CHECKING",
-        "customerId": "128-44-0604",
-        "balance": "2808.11"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "128-44-0604",
-        "balance": "34321.23"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "160-22-9506",
-        "balance": "500.00"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "160-22-9506",
-        "balance": "1000.00"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "020-74-7700",
-        "balance": "4798.45"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "020-74-7700",
-        "balance": "32985.11"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "676-20-8127",
-        "balance": "1236.75"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "676-20-8127",
-        "balance": "18552.04"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "222-94-2648",
-        "balance": "3721.91"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "222-94-2648",
-        "balance": "6480.08"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "510-82-8692",
-        "balance": "4351.07"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "510-82-8692",
-        "balance": "36740.98"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "501-44-1496",
-        "balance": "1672.73"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "501-44-1496",
-        "balance": "19766.62"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "600-53-8803",
-        "balance": "3175.14"
-    },
-    {
-        "type": "SAVINGS",
-        "customerId": "019-38-9534",
-        "balance": "4894.15"
-    },
-    {
-        "type": "CHECKING",
-        "customerId": "435-52-4432",
-        "balance": "2160.44"
-    }
+  {
+    "customerId": "128-44-0604",
+    "type": "CHECKING",
+    "balance": 2808.11
+  },
+  {
+    "customerId": "128-44-0604",
+    "type": "SAVINGS",
+    "balance": 34321.23
+  },
+  {
+    "customerId": "160-22-9506",
+    "type": "CHECKING",
+    "balance": 500
+  },
+  {
+    "customerId": "160-22-9506",
+    "type": "SAVINGS",
+    "balance": 1000
+  },
+  {
+    "customerId": "020-74-7700",
+    "type": "CHECKING",
+    "balance": 4798.45
+  },
+  {
+    "customerId": "020-74-7700",
+    "type": "SAVINGS",
+    "balance": 32985.11
+  },
+  {
+    "customerId": "676-20-8127",
+    "type": "CHECKING",
+    "balance": 1236.75
+  },
+  {
+    "customerId": "676-20-8127",
+    "type": "SAVINGS",
+    "balance": 18552.04
+  },
+  {
+    "customerId": "222-94-2648",
+    "type": "CHECKING",
+    "balance": 3721.91
+  },
+  {
+    "customerId": "222-94-2648",
+    "type": "SAVINGS",
+    "balance": 6480.08
+  },
+  {
+    "customerId": "510-82-8692",
+    "type": "CHECKING",
+    "balance": 4351.07
+  },
+  {
+    "customerId": "510-82-8692",
+    "type": "SAVINGS",
+    "balance": 36740.98
+  },
+  {
+    "customerId": "501-44-1496",
+    "type": "CHECKING",
+    "balance": 1672.73
+  },
+  {
+    "customerId": "501-44-1496",
+    "type": "SAVINGS",
+    "balance": 19766.62
+  },
+  {
+    "customerId": "600-53-8803",
+    "type": "CHECKING",
+    "balance": 3175.14
+  },
+  {
+    "customerId": "019-38-9534",
+    "type": "SAVINGS",
+    "balance": 4894.15
+  },
+  {
+    "customerId": "435-52-4432",
+    "type": "CHECKING",
+    "balance": 2160.44
+  }
 ]

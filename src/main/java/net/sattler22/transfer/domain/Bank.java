@@ -1,30 +1,31 @@
 package net.sattler22.transfer.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import net.jcip.annotations.Immutable;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import net.jcip.annotations.Immutable;
-
 /**
  * Banking Institution Business Object
  *
  * @author Pete Sattler
- * @version February 2019
+ * @version November 2025
+ * @since February 2019
  */
 @Immutable
 public final class Bank {
 
     private final int id;
     private final String name;
+
     @JsonBackReference
     private final Set<Customer> customers = Collections.synchronizedSet(new HashSet<>());
 
@@ -101,7 +102,7 @@ public final class Bank {
             return false;
         if (this.getClass() != other.getClass())
             return false;
-        final var that = (Bank) other;
+        final Bank that = (Bank) other;
         return this.id == that.id;
     }
 

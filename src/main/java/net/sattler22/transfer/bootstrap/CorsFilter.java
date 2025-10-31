@@ -1,26 +1,24 @@
 package net.sattler22.transfer.bootstrap;
 
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Money Transfer Cross-Origin Resource Sharing (CORS) Filter
  *
  * @author Pete Sattler
- * @version August 2019
+ * @version November 2025
+ * @since August 2019
  */
 public final class CorsFilter implements ContainerResponseFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(CorsFilter.class);
 
     @Override
-    public void filter(ContainerRequestContext request, ContainerResponseContext response) throws IOException {
+    public void filter(ContainerRequestContext request, ContainerResponseContext response) {
         if (isCrossOriginRequest(request)) {
             if (isOptionsRequest(request)) {
                 logger.info("CORS preflighted request detected");
@@ -30,7 +28,7 @@ public final class CorsFilter implements ContainerResponseFilter {
             }
             else
                 logger.info("CORS simple request detected");
-            final var origin = request.getHeaderString("Origin");
+            final String origin = request.getHeaderString("Origin");
             response.getHeaders().add("Access-Control-Allow-Origin", origin);
         }
     }

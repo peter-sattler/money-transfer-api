@@ -1,0 +1,5 @@
+# All text files should be normalized (Convert CRLF => LF)
+* text=auto
+
+# Windows specific files
+*.cmd text eol=crlf

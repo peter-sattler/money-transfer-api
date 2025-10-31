@@ -1,11 +1,5 @@
 package net.sattler22.transfer.service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -14,17 +8,23 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-
 import net.jcip.annotations.Immutable;
 import net.sattler22.transfer.domain.Account;
 import net.sattler22.transfer.domain.Bank;
 import net.sattler22.transfer.domain.Customer;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * Money Transfer Service Interface
  *
  * @author Pete Sattler
- * @version February 2019
+ * @version November 2025
+ * @since February 2019
  */
 public sealed interface TransferService permits TransferServiceInMemoryImpl {
 

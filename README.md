@@ -34,7 +34,7 @@ git clone https://github.com/peter-sattler/money-transfer-api
 ```text
 cd money-transfer-api
 ```
-3. Run the integration tests:
+3. Run the unit and integration tests:
 ```text
 ./mvnw verify
 ```
@@ -50,18 +50,18 @@ cd money-transfer-api
 
 # Money Transfer API
 
-Action              | Verb   | Resource Locator (URL)                                    | JSON Payload                    | Status Codes
-:-----------------  |:------ | :-------------------------------------------------------- | :------------------------------ | :-------
-Fetch bank details  | GET    | http://localhost:8080/api/v1/money-transfer/bank             |                                 | 200 (Success)
-Fetch all customers | GET    | http://localhost:8080/api/v1/money-transfer/customers        |                                 | 200 (Success)<br>404 (No customers found)
-Fetch a single customer | GET | http://localhost:8080/api/v1/money-transfer/customer/{id}  |                                 | 200 (Success)<br>404 (Customer not found)
-Add a customer      | POST   | http://localhost:8080/api/v1/money-transfer/customer         | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>}      | 201 (Success)<br>409 (Customer exists)
-Delete a customer   | DELETE | http://localhost:8080/api/v1/money-transfer/customer/{id}    |                                 | 204 (Success)<br>404 (Customer not found)<br>409 (One or more accounts exist)
-Fetch all accounts  | GET    | http://localhost:8080/api/v1/money-transfer/accounts/{customerId} |                            | 200 (Success)<br>404 (Customer not found)
-Fetch a single account | GET | http://localhost:8080/api/v1/money-transfer/account/{customerId}/{number} |                    | 200 (Success)<br>404 (Customer or account not found)
-Add an account      | POST   | http://localhost:8080/api/v1/money-transfer/account          | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>} | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)
-Delete an account   | DELETE | http://localhost:8080/api/v1/money-transfer/account/{customerId}/{number} |                    | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)
-Account transfer    | PUT    | http://localhost:8080/api/v1/money-transfer/account/transfer | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}     | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)<br>412 (Concurrent update detected)
+| Action                  | Verb   | Resource Locator (URL)                                                    | JSON Payload                                                                                                                                                                                                                                                                                               | Status Codes                                                                                                                                                                              |
+|:------------------------|:-------|:--------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Fetch bank details      | GET    | http://localhost:8080/api/v1/money-transfer/bank                          |                                                                                                                                                                                                                                                                                                            | 200 (Success)                                                                                                                                                                             |
+| Fetch all customers     | GET    | http://localhost:8080/api/v1/money-transfer/customers                     |                                                                                                                                                                                                                                                                                                            | 200 (Success)<br>404 (No customers found)                                                                                                                                                 |
+| Fetch a single customer | GET    | http://localhost:8080/api/v1/money-transfer/customer/{id}                 |                                                                                                                                                                                                                                                                                                            | 200 (Success)<br>404 (Customer not found)                                                                                                                                                 |
+| Add a customer          | POST   | http://localhost:8080/api/v1/money-transfer/customer                      | {<br>"id": "123-456",<br>"firstName": "Barb",<br>"lastName": "Wire",<br>"gender": "FEMALE",<br>"address": {<br>"street": "55 Water St",<br>"city": "New York",<br>"state": "NY",<br>"zip": 10004<br>},<br>"phone": "(212) 623-5089",<br>"email": "barb.wire@fences.cow",<br>"birthDate": "1963-10-28"<br>} | 201 (Success)<br>409 (Customer exists)                                                                                                                                                    |
+| Delete a customer       | DELETE | http://localhost:8080/api/v1/money-transfer/customer/{id}                 |                                                                                                                                                                                                                                                                                                            | 204 (Success)<br>404 (Customer not found)<br>409 (One or more accounts exist)                                                                                                             |
+| Fetch all accounts      | GET    | http://localhost:8080/api/v1/money-transfer/accounts/{customerId}         |                                                                                                                                                                                                                                                                                                            | 200 (Success)<br>404 (Customer not found)                                                                                                                                                 |
+| Fetch a single account  | GET    | http://localhost:8080/api/v1/money-transfer/account/{customerId}/{number} |                                                                                                                                                                                                                                                                                                            | 200 (Success)<br>404 (Customer or account not found)                                                                                                                                      |
+| Add an account          | POST   | http://localhost:8080/api/v1/money-transfer/account                       | {<br>"customerId": "123-456",<br>"type":"CHECKING",<br>"balance": 100.25<br>}                                                                                                                                                                                                                              | 201 (Success)<br>404 (Customer not found)<br>409 (Unable to add account)                                                                                                                  |
+| Delete an account       | DELETE | http://localhost:8080/api/v1/money-transfer/account/{customerId}/{number} |                                                                                                                                                                                                                                                                                                            | 204 (Success)<br>404 (Customer or account not found)<br>409 (Non-zero balance)                                                                                                            |
+| Account transfer        | PUT    | http://localhost:8080/api/v1/money-transfer/account/transfer              | {<br>"customerId": "123-456",<br>"sourceNumber": 123,<br>"targetNumber": 234,<br>"amount": 50<br>}                                                                                                                                                                                                         | 200 (Success)<br>404 (Customer, source or target account not found)<br>409 (Source and target accounts are the same or invalid transfer amount found)<br>412 (Concurrent update detected) |
 
 # Enhancement History
 
@@ -73,11 +73,11 @@ Account transfer    | PUT    | http://localhost:8080/api/v1/money-transfer/accou
 :moneybag: Use JCIP (Java Concurrency In Practice) annotations  
 :moneybag: Fix CRLF  
 
-## [Version 0.0.3] July/August 2019
+## [Version 0.0.3] Summer 2019
 :moneybag: Add integration test harness so API is fully covered  
 :moneybag: Remove restricted class usage from the bootstrap utility  
 :moneybag: Inject transfer service implementation using Jersey's HK2 dependency injection (DI) framework  
-:moneybag: Added gender, address, phone, email, birth date, and joined date fields to Customer  
+:moneybag: Added gender, address, phone, email, birthdate, and joined date fields to Customer  
 :moneybag: Added checking and savings account types  
 :moneybag: Bootstrap utility now automatically loads customer and account data  
 :moneybag: Renamed project from money-transfer to money-transfer-api  
@@ -115,6 +115,9 @@ Account transfer    | PUT    | http://localhost:8080/api/v1/money-transfer/accou
 :moneybag: Use Maven instead of Gradle  
 :moneybag: Upgraded to Java 17  
 
+## [Version 1.0.5] November 2025
+:moneybag: Upgraded to Java 24  
+
 Pete Sattler  
-March 2022  
+November 2025  
 _peter@sattler22.net_  

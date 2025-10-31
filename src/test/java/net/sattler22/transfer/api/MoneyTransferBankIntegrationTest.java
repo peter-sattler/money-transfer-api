@@ -1,28 +1,34 @@
 package net.sattler22.transfer.api;
 
-import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
-
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import net.sattler22.transfer.domain.Bank;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Money Transfer Bank Integration Test Harness
+ * Money Transfer Bank Integration Tests
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version November 2025
+ * @since September 2019
  */
-final class MoneyTransferBankIntegrationTest extends MoneyTransferBaseTestHarness {
+final class MoneyTransferBankIntegrationTest extends MoneyTransferBaseTest {
 
     @Test
-    void fetchBankDetailsHappyPathTestCase() {
-        final var response = target(basePath).path("bank").request().get();
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final var actual = response.readEntity(Bank.class);
-        assertEquals(bank, actual);
+    void getBankDetailsHappyPathTestCase() {
+        final Invocation.Builder getBankRequest = target(basePath)
+                .path("bank")
+                .request();
+        try (final Response getBankResponse = getBankRequest.get()) {
+            final Bank actual = getBankResponse.readEntity(Bank.class);
+            assertEquals(MediaType.APPLICATION_JSON, getBankResponse.getHeaderString(HttpHeaders.CONTENT_TYPE));
+            assertEquals(Status.OK.getStatusCode(), getBankResponse.getStatus());
+            assertEquals(bank, actual);
+        }
     }
 }

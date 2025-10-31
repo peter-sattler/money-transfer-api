@@ -1,262 +1,229 @@
 package net.sattler22.transfer.api;
 
-import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static jakarta.ws.rs.core.HttpHeaders.LOCATION;
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static java.math.BigDecimal.ONE;
-import static java.math.BigDecimal.ZERO;
-import static net.sattler22.transfer.domain.AccountType.CHECKING;
-import static net.sattler22.transfer.domain.AccountType.SAVINGS;
+import jakarta.ws.rs.core.Response.Status;
+import net.sattler22.transfer.domain.Account;
+import net.sattler22.transfer.domain.AccountType;
+import net.sattler22.transfer.domain.Customer;
+import net.sattler22.transfer.service.TransferService.TransferResult;
+import net.sattler22.transfer.util.TestData;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.Response.Status;
-import net.sattler22.transfer.domain.Account;
-import net.sattler22.transfer.service.TransferService.TransferResult;
-import net.sattler22.transfer.util.TestDataFactory;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Money Transfer Account Integration Test Harness
+ * Money Transfer Account Integration Tests
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version November 2025
+ * @since September 2019
  */
-final class MoneyTransferAccountIntegrationTest extends MoneyTransferBaseTestHarness {
+final class MoneyTransferAccountIntegrationTest extends MoneyTransferBaseTest {
 
-    @Test
-    void fetchAccountsForCustomerHappyPathTestCase() {
-        final var burt = TestDataFactory.burt("234");
-        addCustomerImpl(burt);
-        final var expectedAccountSize = 2;
-        final var checkingAccountBalance = ONE;
-        addAccountResponseImpl(CHECKING, burt.id(), checkingAccountBalance);
-        final var savingsAccountBalance = ZERO;
-        addAccountResponseImpl(SAVINGS, burt.id(), savingsAccountBalance);
-        final var response = getAccounts(burt);
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final var actual = response.readEntity(new GenericType<Set<Account>>() {});
-        assertEquals(expectedAccountSize, actual.size());
-        for (final var actualAccount : actual) {
-            assertEquals(burt, actualAccount.owner());
-            final var expectedBalance = actualAccount.type() == CHECKING ? checkingAccountBalance : savingsAccountBalance;
-            assertEquals(expectedBalance, actualAccount.balance());
+    @Nested
+    @DisplayName("Get Account")
+    final class GetTest {
+        @Test
+        void getAllAccountsForCustomerHappyPathTestCase() {
+            final Customer burtRentals = addCustomer(TestData.burtRentals("234"));
+            final BigDecimal checkingBalance = BigDecimal.TWO;
+            final BigDecimal savingsBalance = BigDecimal.TEN;
+            addAccount(burtRentals, AccountType.CHECKING, checkingBalance);
+            addAccount(burtRentals, AccountType.SAVINGS, savingsBalance);
+            final Set<Account> actualAccounts = getAllAccounts(burtRentals, Status.OK);
+            assertEquals(2, actualAccounts.size());
+            for (final Account actualAccount : actualAccounts) {
+                assertEquals(burtRentals, actualAccount.owner());
+                final BigDecimal expectedBalance =
+                        actualAccount.type() == AccountType.CHECKING ? checkingBalance : savingsBalance;
+                assertEquals(expectedBalance, actualAccount.balance());
+            }
+        }
+
+        @Test
+        void getAllAccountsForCustomerNoAccountsTestCase() {
+            final Customer burtRentals = addCustomer(TestData.burtRentals("234"));
+            assertTrue(getAllAccounts(burtRentals, Status.OK).isEmpty());  //Returns OK instead NOT_FOUND
+        }
+
+        @Test
+        void getAllAccountsForCustomerNotFoundTestCase() {
+            final Set<Account> accounts = getAllAccounts(TestData.burtRentals("234"), Status.NOT_FOUND);
+            assertTrue(accounts.isEmpty());
+        }
+
+        @Test
+        void getSingleAccountForCustomerHappyPathTestCase() {
+            final Customer eileenDover = addCustomer(TestData.eileenDover("789"));
+            final AccountType expectedAccountType = AccountType.CHECKING;
+            final BigDecimal expectedBalance = BigDecimal.TEN;
+            final Account searchAccount = addAccount(eileenDover, expectedAccountType, expectedBalance);
+            final Account actual = getAccount(searchAccount, Status.OK);
+            assertNotNull(actual);
+            assertEquals(expectedAccountType, actual.type());
+            assertNotNull(actual.owner());
+            assertEquals(eileenDover, actual.owner());
+            assertEquals(expectedBalance, actual.balance());
+        }
+
+        @Test
+        void getSingleAccountForCustomerNotFoundTestCase() {
+            final Account newAccount = new Account(TestData.bobWire("123"), AccountType.SAVINGS, BigDecimal.TEN);
+            assertNull(getAccount(newAccount, Status.NOT_FOUND));
+        }
+
+        @Test
+        void getSingleAccountForAccountNotFoundTestCase() {
+            final Customer burtRentals = addCustomer(TestData.burtRentals("234"));
+            final Account newAccount = new Account(burtRentals, AccountType.CHECKING, BigDecimal.ZERO);
+            assertNull(getAccount(newAccount, Status.NOT_FOUND));
         }
     }
 
-    @Test
-    void fetchAccountsForCustomerNoAccountsTestCase() {
-        final var burt = TestDataFactory.burt("234");
-        addCustomerImpl(burt);
-        final var response = getAccounts(burt);
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final var actual = response.readEntity(new GenericType<Set<Account>>() {});
-        final Set<Account> expected = new HashSet<>();
-        assertEquals(expected, actual);
+    @Nested
+    @DisplayName("Add Account")
+    final class AddTest {
+        @Test
+        void addAccountHappyPathTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final AccountType expectedAccountType = AccountType.CHECKING;
+            final BigDecimal expectedBalance = BigDecimal.ONE;
+            final Account actual = addAccount(bobWire, expectedAccountType, expectedBalance, Status.CREATED);
+            assertEquals(bobWire, actual.owner());
+            assertEquals(expectedAccountType, actual.type());
+            assertEquals(expectedBalance, actual.balance());
+        }
+
+        @Test
+        void addAccountOwnerNotFoundTestCase() {
+            final Customer bobWire = TestData.bobWire("123");
+            final Account actual = addAccount(bobWire, AccountType.SAVINGS, BigDecimal.ZERO, Status.NOT_FOUND);
+            assertNull(actual);
+        }
     }
 
-    @Test
-    void fetchAccountsForCustomerNotFoundTestCase() {
-        final var burt = TestDataFactory.burt("234");
-        final var response = getAccounts(burt);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
+    @Nested
+    @DisplayName("Delete Account")
+    final class DeleteTest {
+        @Test
+        void deleteAccountHappyPathTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Account account = addAccount(bobWire, AccountType.SAVINGS, BigDecimal.ZERO);
+            deleteAccount(account, Status.NO_CONTENT);
+            final Account actual = getAccount(account, Status.NOT_FOUND);
+            assertNull(actual);
+        }
+
+        @Test
+        void deleteAccountNotFoundTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Account account = new Account(bobWire, AccountType.CHECKING, BigDecimal.ZERO);
+            deleteAccount(account, Status.NOT_FOUND);
+            final Account actual = getAccount(account, Status.NOT_FOUND);
+            assertNull(actual);
+        }
+
+        @Test
+        void deleteAccountNonZeroBalanceTestCase() {
+            final Customer burtRentals = addCustomer(TestData.burtRentals("234"));
+            final Account expected = addAccount(burtRentals, AccountType.CHECKING, BigDecimal.ONE);
+            deleteAccount(expected, Status.CONFLICT);
+            final Account actual = getAccount(expected, Status.OK);
+            assertNotNull(actual);
+            assertEquals(expected, actual);
+        }
+
+        @Test
+        void deleteAccountCustomerNotFoundTestCase() {
+            final Account account = new Account(TestData.bobWire("123"), AccountType.CHECKING, BigDecimal.TEN);
+            deleteAccount(account, Status.NOT_FOUND);
+            final Account actual = getAccount(account, Status.NOT_FOUND);
+            assertNull(actual);
+        }
     }
 
-    @Test
-    void fetchSingleAccountForCustomerHappyPathTestCase() {
-        final var eileen = TestDataFactory.eileen("789");
-        addCustomerImpl(eileen);
-        final var expectedAccountType = CHECKING;
-        final var expectedBalance = ONE;
-        final var accountNumber = addAccountImpl(expectedAccountType, eileen.id(), expectedBalance).number();
-        final var response = getAccount(eileen, accountNumber);
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final var actual = response.readEntity(Account.class);
-        assertEquals(expectedAccountType, actual.type());
-        assertNotNull(actual.owner());
-        assertEquals(eileen.id(), actual.owner().id());
-        assertEquals(expectedBalance, actual.balance());
-    }
+    @Nested
+    @DisplayName("Account Transfer")
+    final class TransferTest {
+        @Test
+        void accountTransferHappyPathTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final BigDecimal sourceAccountInitialBalance = new BigDecimal("100");
+            final BigDecimal targetAccountInitialBalance = new BigDecimal("200");
+            final Account sourceAccount = addAccount(bobWire, AccountType.CHECKING, sourceAccountInitialBalance);
+            final Account targetAccount = addAccount(bobWire, AccountType.SAVINGS, targetAccountInitialBalance);
+            final BigDecimal transferAmount = new BigDecimal("50");
+            final TransferResult transferResult = transfer(bobWire, sourceAccount, targetAccount, transferAmount, Status.OK);
+            assertNotNull(transferResult);
+            assertEquals(sourceAccountInitialBalance.subtract(transferAmount), transferResult.source().balance());
+            assertEquals(targetAccountInitialBalance.add(transferAmount), transferResult.target().balance());
+        }
 
-    @Test
-    void fetchSingleAccountForCustomerCustomerNotFoundTestCase() {
-        final var burt = TestDataFactory.burt("456");
-        addCustomerImpl(burt);
-        final var accountNumber = addAccountImpl(SAVINGS, burt.id(), ONE).number();
-        final var response = getAccount(TestDataFactory.bob("123"), accountNumber);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
+        @Test
+        void accountTransferCustomerNotFoundTestCase() {
+            final Customer bobWire = TestData.bobWire("123");
+            final Account sourceAccount = new Account(bobWire, AccountType.CHECKING, BigDecimal.ONE);
+            final Account targetAccount = new Account(bobWire, AccountType.SAVINGS, BigDecimal.ZERO);
+            final TransferResult transferResult =
+                    transfer(bobWire, sourceAccount, targetAccount, BigDecimal.ONE, Status.NOT_FOUND);
+            assertNull(transferResult);
+        }
 
-    @Test
-    void fetchSingleAccountForCustomerAccountNotFoundTestCase() {
-        final var burt = TestDataFactory.burt("456");
-        addCustomerImpl(burt);
-        final var response = getAccount(burt, 0);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
+        @Test
+        void accountTransferSourceAccountNotFoundTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Account sourceAccount = new Account(bobWire, AccountType.CHECKING, BigDecimal.ONE);
+            final Account targetAccount = addAccount(bobWire, AccountType.SAVINGS, BigDecimal.ZERO);
+            final TransferResult transferResult =
+                    transfer(bobWire, sourceAccount, targetAccount, new BigDecimal("50"), Status.NOT_FOUND);
+            assertNull(transferResult);
+        }
 
-    @Test
-    void addAccountHappyPathTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var response = addAccountResponseImpl(CHECKING, bob.id(), ONE);
-        assertEquals(Status.CREATED.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-        assertNotNull(response.getHeaderString(LOCATION));
-    }
+        @Test
+        void accountTransferTargetAccountNotFoundTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Account sourceAccount = addAccount(bobWire, AccountType.SAVINGS, BigDecimal.ONE);
+            final Account targetAccount = new Account(bobWire, AccountType.CHECKING, BigDecimal.ZERO);
+            final TransferResult transferResult =
+                    transfer(bobWire, sourceAccount, targetAccount, new BigDecimal("75"), Status.NOT_FOUND);
+            assertNull(transferResult);
+        }
 
-    @Test
-    void addAccountOwnerNotFoundTestCase() {
-        final var response = addAccountResponseImpl(SAVINGS, "123", ZERO);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
+        @Test
+        void accountTransferSameSourceAndTargetAccountsTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Account account = addAccount(bobWire, AccountType.CHECKING, new BigDecimal("500"));
+            final TransferResult transferResult =
+                transfer(bobWire, account, account, new BigDecimal("100"), Status.CONFLICT);
+            assertNull(transferResult);
+        }
 
-    @Test
-    void deleteAccountHappyPathTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var accountNumber = addAccountImpl(SAVINGS, bob.id(), ZERO).number();
-        final var response = deleteAccountImpl(bob, accountNumber);
-        assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
+        @Test
+        void accountTransferAmountZeroTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Account sourceAccount = addAccount(bobWire, AccountType.CHECKING, new BigDecimal("100"));
+            final Account targetAccount = addAccount(bobWire, AccountType.SAVINGS, new BigDecimal("200"));
+            final TransferResult transferResult =
+                transfer(bobWire, sourceAccount, targetAccount, BigDecimal.ZERO, Status.CONFLICT);
+            assertNull(transferResult);
+        }
 
-    @Test
-    void deleteAccountNotFoundTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var response = deleteAccountImpl(bob, 0);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void deleteAccountNonZeroBalanceTestCase() {
-        final var burt = TestDataFactory.burt("234");
-        addCustomerImpl(burt);
-        final var accountNumber = addAccountImpl(CHECKING, burt.id(), ONE).number();
-        final var response = deleteAccountImpl(burt, accountNumber);
-        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void deleteAccountCustomerNotFoundTestCase() {
-        final var response = deleteAccountImpl(TestDataFactory.bob("123"), 0);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void accountTransferHappyPathTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var sourceAccountInitialBalance = new BigDecimal("100");
-        final var sourceAccount = addAccountImpl(CHECKING, bob.id(), sourceAccountInitialBalance);
-        final var targetAccountInitialBalance = new BigDecimal("200");
-        final var targetAccount = addAccountImpl(SAVINGS, bob.id(), targetAccountInitialBalance);
-        final var transferAmount = new BigDecimal("50");
-        final var accountTransferDto = new AccountTransferDto(bob.id(), sourceAccount.number(), targetAccount.number(), transferAmount);
-        final var transferVersion = AccountTransferDto.createVersion(sourceAccount, targetAccount);
-        final var response = accountTransferImpl(transferVersion, accountTransferDto);
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-        assertEquals(APPLICATION_JSON, response.getHeaderString(CONTENT_TYPE));
-        final var transferResult = response.readEntity(TransferResult.class);
-        final var expectedSourceAccountBalance = sourceAccountInitialBalance.subtract(transferAmount);
-        final var expectedTargetAccountBalance = targetAccountInitialBalance.add(transferAmount);
-        assertEquals(expectedSourceAccountBalance, transferResult.source().balance());
-        assertEquals(expectedTargetAccountBalance, transferResult.target().balance());
-    }
-
-    @Test
-    void accountTransferCustomerNotFoundTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var sourceAccount = addAccountImpl(CHECKING, bob.id(), ONE);
-        final var targetAccount = addAccountImpl(SAVINGS, bob.id(), ZERO);
-        final var accountTransferDto = new AccountTransferDto("0", sourceAccount.number(), targetAccount.number(), ONE);
-        final var transferVersion = AccountTransferDto.createVersion(sourceAccount, targetAccount);
-        final var response = accountTransferImpl(transferVersion, accountTransferDto);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void accountTransferSourceAccountNotFoundTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var sourceAccount = new Account(CHECKING, bob, ONE);
-        final var targetAccount = addAccountImpl(SAVINGS, bob.id(), ZERO);
-        final var accountTransferDto = new AccountTransferDto(bob.id(), sourceAccount.number(), targetAccount.number(), new BigDecimal("50"));
-        final var transferVersion = AccountTransferDto.createVersion(sourceAccount, targetAccount);
-        final var response = accountTransferImpl(transferVersion, accountTransferDto);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void accountTransferTargetAccountNotFoundTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var sourceAccount = addAccountImpl(SAVINGS, bob.id(), ONE);
-        final var targetAccount = new Account(CHECKING, bob, ZERO);
-        final var accountTransferDto = new AccountTransferDto(bob.id(), sourceAccount.number(), targetAccount.number(), new BigDecimal("50"));
-        final var transferVersion = AccountTransferDto.createVersion(sourceAccount, targetAccount);
-        final var response = accountTransferImpl(transferVersion, accountTransferDto);
-        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void accountTransferSameSourceAndTargetAccountsTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var account = addAccountImpl(CHECKING, bob.id(), new BigDecimal("500"));
-        final var accountTransferDto = new AccountTransferDto(bob.id(), account.number(), account.number(), new BigDecimal("100"));
-        final var transferVersion = AccountTransferDto.createVersion(account, account);
-        final var response = accountTransferImpl(transferVersion, accountTransferDto);
-        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void accountTransferAmountZeroTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var sourceAccount = addAccountImpl(CHECKING, bob.id(), new BigDecimal("100"));
-        final var targetAccount = addAccountImpl(SAVINGS, bob.id(), new BigDecimal("200"));
-        final var accountTransferDto = new AccountTransferDto(bob.id(), sourceAccount.number(), targetAccount.number(), ZERO);
-        final var transferVersion = AccountTransferDto.createVersion(sourceAccount, targetAccount);
-        final var response = accountTransferImpl(transferVersion, accountTransferDto);
-        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
-    }
-
-    @Test
-    void accountTransferInsufficentFundsTestCase() {
-        final var bob = TestDataFactory.bob("123");
-        addCustomerImpl(bob);
-        final var sourceAccount = addAccountImpl(CHECKING, bob.id(), new BigDecimal("100"));
-        final var targetAccount = addAccountImpl(SAVINGS, bob.id(), new BigDecimal("200"));
-        final var transferAmount = sourceAccount.balance().add(new BigDecimal("1"));
-        final var accountTransferDto = new AccountTransferDto(bob.id(), sourceAccount.number(), targetAccount.number(), transferAmount);
-        final var transferVersion = AccountTransferDto.createVersion(sourceAccount, targetAccount);
-        final var response = accountTransferImpl(transferVersion, accountTransferDto);
-        assertEquals(Status.CONFLICT.getStatusCode(), response.getStatus());
-        assertNull(response.getHeaderString(CONTENT_TYPE));
+        @Test
+        void accountTransferInsufficientFundsTestCase() {
+            final Customer bobWire = addCustomer(TestData.bobWire("123"));
+            final Account sourceAccount = addAccount(bobWire, AccountType.CHECKING, new BigDecimal("100"));
+            final Account targetAccount = addAccount(bobWire, AccountType.SAVINGS, new BigDecimal("200"));
+            final BigDecimal transferAmount = sourceAccount.balance().add(BigDecimal.ONE);
+            final TransferResult transferResult =
+                transfer(bobWire, sourceAccount, targetAccount, transferAmount, Status.CONFLICT);
+            assertNull(transferResult);
+        }
     }
 }

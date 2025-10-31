@@ -1,11 +1,5 @@
 package net.sattler22.transfer.api;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Objects;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -16,6 +10,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -25,7 +20,8 @@ import net.sattler22.transfer.domain.Customer;
  * Money Transfer REST Resource Interface
  *
  * @author Pete Sattler
- * @version September 2019
+ * @version November 2025
+ * @since September 2019
  */
 public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl {
 
@@ -34,7 +30,7 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @GET
     @Path("/bank")
-    @Produces(APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response getBank();
 
     /**
@@ -42,7 +38,7 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @GET
     @Path("/customers")
-    @Produces(APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response getAllCustomers();
 
     /**
@@ -52,7 +48,7 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @GET
     @Path("/customer/{id}")
-    @Produces(APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response findCustomer(@PathParam("id") String id);
 
     /**
@@ -63,7 +59,7 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @POST
     @Path("/customer")
-    @Consumes(APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     Response addCustomer(@Context UriInfo uriInfo, Customer customer);
 
     /**
@@ -82,7 +78,7 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @GET
     @Path("/accounts/{customerId}")
-    @Produces(APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response getAllAccounts(@PathParam("customerId") String customerId);
 
     /**
@@ -93,7 +89,7 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @GET
     @Path("/account/{customerId}/{number : \\d+}")
-    @Produces(APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response findAccount(@PathParam("customerId") String customerId, @PathParam("number") int number);
 
     /**
@@ -104,26 +100,8 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @POST
     @Path("/account")
-    @Consumes(APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     Response addAccount(@Context UriInfo uriInfo, AccountDto accountDto);
-
-    /**
-     * Parse newly created account number
-     *
-     * @param locationHeader The location header of the newly created account
-     * @return The new account number
-     */
-    static int parseAccountNumber(String locationHeader) {
-        Objects.requireNonNull(locationHeader, "Location header value is required");
-        final String path;
-        try {
-            path = new URI(locationHeader).getPath();
-        }
-        catch(URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
-        return Integer.parseInt(path.substring(path.lastIndexOf('/') + 1));
-    }
 
     /**
      * Delete an account
@@ -144,7 +122,7 @@ public sealed interface MoneyTransferResource permits MoneyTransferResourceImpl 
      */
     @PUT
     @Path("/account/transfer")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     Response transfer(@Context HttpHeaders httpHeaders, @Context Request request, AccountTransferDto accountTransferDto);
 }

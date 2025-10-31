@@ -2,13 +2,15 @@ package net.sattler22.transfer.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
  * Property File Utilities
  *
  * @author Pete Sattler
- * @version March 2022
+ * @version November 2025
+ * @since March 2022
  */
 public class PropertyFileUtils {
 
@@ -26,10 +28,10 @@ public class PropertyFileUtils {
      * @throws IOException If unable to find the resource or there is an error reading from it
      */
     public static <T> Properties readResourceProperties(Class<T> resourceClass, String resourceName) throws IOException {
-        try (final var resourceInputStream = resourceClass.getClassLoader().getResourceAsStream(resourceName)) {
+        try (final InputStream resourceInputStream = resourceClass.getClassLoader().getResourceAsStream(resourceName)) {
             if (resourceInputStream == null)
                 throw new FileNotFoundException(String.format("Properties file [%s] not found", resourceName));
-            final var properties = new Properties();
+            final Properties properties = new Properties();
             properties.load(resourceInputStream);
             return properties;
         }
