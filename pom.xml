@@ -11,7 +11,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <jaxb.version>4.0.5</jaxb.version>
         <jersey.version>4.0.2</jersey.version>
-        <slf4j.version>2.0.17</slf4j.version>
+        <slf4j.version>2.0.18</slf4j.version>
     </properties>
     <dependencies>
         <dependency>
