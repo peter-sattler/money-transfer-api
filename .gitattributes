@@ -3,3 +3,6 @@
 
 # Windows specific files
 *.cmd text eol=crlf
+
+# Unix Maven Wrapper script
+mvnw text eol=lf
